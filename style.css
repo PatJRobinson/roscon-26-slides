@@ -1,0 +1,598 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
+/* LIGHT */
+/* :root { */
+/*   --ubuntu-orange: #E95420; */
+/*   --ubuntu-orange-dark: #C7461A; */
+/*   --ubuntu-aubergine: #2C001E; */
+/*   --ubuntu-aubergine-soft: #5E2750; */
+/**/
+/*   --panel-bg: rgba(248, 248, 246, 0.88); */
+/*   --panel-bg-strong: rgba(255, 255, 255, 0.94); */
+/*   --panel-border: rgba(80, 60, 70, 0.18); */
+/*   --panel-shadow: 0 10px 30px rgba(20, 10, 20, 0.18); */
+/**/
+/*   --titlebar-bg: linear-gradient(#f6f5f3, #e9e5e1); */
+/*   --titlebar-border: rgba(80, 60, 70, 0.12); */
+/**/
+/*   --text-main: #2C001E; */
+/*   --text-soft: #5b4956; */
+/*   --link: #C7461A; */
+/*   --code-bg: rgba(70, 40, 60, 0.08); */
+/* } */
+
+/* DARK */
+:root {
+  --ubuntu-orange: #E95420;
+  --ubuntu-orange-dark: #C7461A;
+  --ubuntu-aubergine: #2C001E;
+  --ubuntu-aubergine-soft: #5E2750;
+
+  --panel-bg: rgba(40, 20, 35, 0.94);
+  --panel-bg-strong: rgba(34, 18, 30, 0.94);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --panel-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+  --titlebar-bg: #2C2C2C;
+  --titlebar-border: rgba(255, 255, 255, 0.08);
+  --titlebar-text: "dev@robot:~/ros_ws/slides";
+  --titlebar-text-color: #ffffff;
+
+  --text-main: #f4e9ef;
+  --text-soft: #d6c7cf;
+  --link: #ff9e7a;
+  --code-bg: rgba(255, 255, 255, 0.08);
+}
+
+/* whole deck background */
+html,
+body,
+#app,
+.slidev-layout,
+.slidev-page {
+  font-family: 'Ubuntu', sans-serif;
+  color: var(--text-main);
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.035) 0,
+      rgba(255,255,255,0.035) 1px,
+      transparent 1px,
+      transparent 22px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0,0,0,0.02) 0,
+      rgba(0,0,0,0.02) 1px,
+      transparent 1px,
+      transparent 22px
+    ),
+    linear-gradient(180deg, #e8dde3 0%, #d4c7cf 100%);
+
+
+}
+
+
+/* keep content inside a soft app-like panel */
+.slidev-layout {
+  padding: 2rem;
+}
+
+/* one clean central surface */
+.ubuntu-window {
+  background:
+    radial-gradient(
+      ellipse at top center,
+      rgba(255,255,255,0.03) 0%,
+      rgba(255,255,255,0.01) 35%,
+      rgba(0,0,0,0.02) 100%
+    ),
+   var(--panel-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  box-shadow: var(--panel-shadow);
+  padding: 2rem 2.25rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  padding-top: 3.25rem;
+  overflow: hidden;
+}
+
+.ubuntu-window > *:first-child {
+  margin-top: 0.5rem;
+}
+
+.ubuntu-window svg {
+  margin-top: 0.75rem;
+}
+
+.ubuntu-window::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 34px;
+  border-bottom: 1px solid var(--titlebar-border);
+  border-radius: 14px 14px 0 0;
+  background: var(--titlebar-bg);
+}
+
+.ubuntu-window::after {
+  content: var(--titlebar-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.8rem;
+  color: var(--titlebar-text-color);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* headings */
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3,
+.slidev-layout h4,
+.slidev-layout p,
+.slidev-layout li,
+.slidev-layout td,
+.slidev-layout th,
+.slidev-layout blockquote,
+.slidev-layout strong {
+   color: var(--ubuntu-aubergine);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.slidev-layout h1 {
+  margin-top: 0;
+  border-bottom: 3px solid var(--ubuntu-orange);
+  display: inline-block;
+  padding-bottom: 0.15em;
+  margin-bottom: 0.7em;
+}
+
+.slidev-layout.text-center h1,
+.slidev-layout.text-center h2,
+.slidev-layout.text-center h3,
+.slidev-layout.text-center h4,
+.slidev-layout.text-center p,
+.slidev-layout.text-center li,
+.slidev-layout.text-center div {
+  color: var(--ubuntu-aubergine);
+}
+
+/* headings and text inside windows */
+.slidev-layout .ubuntu-window h1,
+.slidev-layout .ubuntu-window h2,
+.slidev-layout .ubuntu-window h3,
+.slidev-layout .ubuntu-window h4,
+.slidev-layout .ubuntu-window p,
+.slidev-layout .ubuntu-window li,
+.slidev-layout .ubuntu-window td,
+.slidev-layout .ubuntu-window th,
+.slidev-layout .ubuntu-window blockquote,
+.slidev-layout .ubuntu-window strong {
+  color: var(--text-main);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.slidev-layout .ubuntu-window h1 {
+  margin-top: 0;
+  border-bottom: 3px solid var(--ubuntu-orange);
+  display: inline-block;
+  padding-bottom: 0.15em;
+  margin-bottom: 0.7em;
+}
+
+
+/* .ubuntu-window h1, */
+/* .ubuntu-window h2, */
+/* .ubuntu-window h3, */
+/* .ubuntu-window h4, */
+/* .ubuntu-window p, */
+/* .ubuntu-window li, */
+/* .ubuntu-window td, */
+/* .ubuntu-window th, */
+/* .ubuntu-window blockquote, */
+/* .ubuntu-window strong { */
+/*   color: var(--text-main); */
+/*   font-weight: 500; */
+/*   letter-spacing: 0; */
+/* } */
+/**/
+/* .slidev-layout h1, */
+/* .slidev-layout h2, */
+/* .slidev-layout h3, */
+/* .slidev-layout h4 { */
+/*   color: var(--ubuntu-aubergine); */
+/*   font-weight: 500; */
+/*   letter-spacing: 0; */
+/* } */
+/**/
+/* .slidev-layout h1 { */
+/**/
+/*   margin-top: 0; */
+/*   border-bottom: 3px solid var(--ubuntu-orange); */
+/*   display: inline-block; */
+/*   padding-bottom: 0.15em; */
+/*   margin-bottom: 0.7em; */
+/* } */
+
+/* body text */
+.slidev-layout p,
+.slidev-layout li,
+.slidev-layout td,
+.slidev-layout th,
+.slidev-layout blockquote {
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+.slidev-layout strong {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.slidev-layout a {
+  color: var(--link);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
+}
+
+/* code */
+code {
+  background: var(--code-bg) !important;
+  color: var(--text-main) !important;
+  border-radius: 6px;
+  padding: 0.12rem 0.35rem;
+}
+
+pre {
+  background: var(--panel-bg-strong);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+pre code,
+.shiki code {
+  background: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+pre,
+.shiki {
+  background: var(--panel-bg-strong) !important;
+  color: var(--text-main) !important;
+}
+
+.shiki span {
+  color: inherit;
+}
+
+/* catch all code headers */
+.shiki-header,
+pre + .shiki-header,
+.slidev-code-header {
+  background: var(--titlebar-bg) !important;
+  border-bottom: 1px solid var(--titlebar-border) !important;
+  color: var(--text-soft) !important;
+}
+
+/* tables */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--panel-bg-strong);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid rgba(60, 40, 50, 0.08);
+}
+
+th {
+  background: rgba(233, 84, 32, 0.10);
+  color: var(--text-main);
+  text-align: left;
+}
+
+/* blockquotes */
+blockquote {
+  background: var(--panel-bg-strong);
+  border-left: 5px solid var(--ubuntu-orange);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+}
+
+/* subtle "system app" buttons */
+button,
+.btn,
+a.button {
+  font-family: 'Ubuntu', sans-serif;
+  color: var(--text-main);
+  background: linear-gradient(#fdfdfc, #ece9e6);
+  border: 1px solid rgba(90, 70, 80, 0.28);
+  border-radius: 8px;
+  padding: 0.38rem 0.85rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    0 1px 2px rgba(0,0,0,0.08);
+  text-decoration: none;
+}
+
+button:hover,
+.btn:hover,
+a.button:hover {
+  background: linear-gradient(#ffffff, #f1eeeb);
+}
+
+/* bullets */
+.slidev-layout ul li::marker {
+  color: var(--ubuntu-orange);
+}
+
+/* 'hand-drawn' annotations */
+.draw-circle {
+  stroke-dasharray: 754;
+  stroke-dashoffset: 754;
+}
+
+.slidev-vclick-current .draw-circle {
+  animation: draw 1s ease forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.annotation-card {
+  background: rgba(44, 0, 30, 0.92);
+  color: #f4e9ef;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.annotation-card-title,
+.annotation-card-body {
+  margin: 0;
+  color: var(--ubuntu-aubergine);
+  white-space: normal;
+}
+
+.annotation-card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.annotation-card-body {
+  padding-top: 0.45rem;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  opacity: 0.92;
+}
+
+.annotation-fade {
+  opacity: 1;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* when active (Slidev adds this class) */
+.slidev-vclick-current .annotation-fade {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ROSCon presentation primitives */
+.evidence-chip,
+.evidence-card,
+.remaining-card,
+.question-card,
+.probe-option,
+.controller-card,
+.summary-cell {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+}
+
+.evidence-chip strong,
+.evidence-card h3,
+.remaining-card,
+.question-card,
+.probe-option h3,
+.controller-card h2,
+.summary-cell strong {
+  color: #ffb092;
+}
+
+.evidence-chip span,
+.evidence-card p,
+.remaining-card p,
+.question-card p,
+.probe-option p,
+.controller-card p,
+.summary-cell span {
+  color: var(--text-main);
+}
+
+.card-kicker,
+.disclosure {
+  color: #ffb092;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.warn-card {
+  border-color: rgba(255, 158, 122, 0.55);
+  background: rgba(233, 84, 32, 0.12);
+}
+
+.terminal-card {
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  background: var(--panel-bg-strong);
+}
+
+.terminal-title {
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--titlebar-border);
+  background: var(--titlebar-bg);
+  color: var(--text-soft);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.terminal-card pre {
+  border-radius: 0;
+}
+
+.flow-node,
+.stage-box,
+.summary-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 5rem;
+  gap: 0.3rem;
+}
+
+.flow-node,
+.stage-box {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.flow-arrow {
+  color: var(--ubuntu-orange);
+  font-size: 2rem;
+}
+
+.stage-box span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--ubuntu-orange);
+  color: #fff;
+  font-weight: 700;
+}
+
+.stage-box strong,
+.stage-box small,
+.summary-cell strong,
+.summary-cell span {
+  display: block;
+}
+
+.stage-box strong {
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+.stage-box small,
+.summary-cell span {
+  color: var(--text-soft);
+  font-size: 0.75rem;
+}
+
+.evidence-strip {
+  border-left: 4px solid var(--ubuntu-orange);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.8rem 1rem;
+  color: var(--text-main);
+}
+
+.video-placeholder {
+  display: flex;
+  min-height: 17rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(255, 158, 122, 0.7);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.25), rgba(233, 84, 32, 0.12));
+  color: var(--text-main);
+  text-align: center;
+}
+
+.probe-option {
+  position: relative;
+  min-height: 11rem;
+}
+
+.probe-option.selected {
+  border-color: var(--ubuntu-orange);
+  box-shadow: 0 0 0 2px rgba(233, 84, 32, 0.2);
+}
+
+.selected-label {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.65rem;
+  color: #ffb092;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.controller-card {
+  min-height: 14rem;
+}
+
+.controller-card .result-line {
+  margin: 1rem 0;
+  color: var(--text-main);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.fail-card {
+  border-color: rgba(255, 158, 122, 0.42);
+}
+
+.pass-card {
+  border-color: rgba(112, 216, 157, 0.5);
+}
+
+.pass-card .result-line {
+  color: #a9f1c4;
+}
+
+.summary-cell {
+  min-height: 6rem;
+}
