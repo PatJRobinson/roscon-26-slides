@@ -596,3 +596,295 @@ a.button:hover {
 .summary-cell {
   min-height: 6rem;
 }
+
+/* Dense content slides: preserve the same visual language while keeping the
+   first authoring pass inside the 16:9 frame. */
+.compact-slide.slidev-layout {
+  padding: 1.35rem 1.65rem;
+}
+
+.compact-slide.slidev-layout h1 {
+  margin-bottom: 0.4em;
+  font-size: 2rem;
+}
+
+.compact-slide .ubuntu-window {
+  padding: 2.55rem 1.7rem 1.25rem;
+}
+
+.compact-slide .mt-12 {
+  margin-top: 1.5rem !important;
+}
+
+.compact-slide .mt-10 {
+  margin-top: 1.25rem !important;
+}
+
+.compact-slide .mt-8 {
+  margin-top: 1rem !important;
+}
+
+.compact-slide .mt-6 {
+  margin-top: 0.8rem !important;
+}
+
+.compact-slide .p-6 {
+  padding: 1rem !important;
+}
+
+.compact-slide .text-3xl {
+  font-size: 1.65rem !important;
+  line-height: 1.2 !important;
+}
+
+.compact-slide .text-2xl {
+  font-size: 1.28rem !important;
+  line-height: 1.25 !important;
+}
+
+.compact-slide .text-xl {
+  font-size: 1.05rem !important;
+  line-height: 1.35 !important;
+}
+
+.compact-slide .text-6xl {
+  font-size: 3.5rem !important;
+}
+
+.compact-slide .evidence-card,
+.compact-slide .probe-option,
+.compact-slide .controller-card {
+  padding: 0.8rem 0.9rem;
+}
+
+.compact-slide .controller-card {
+  min-height: 11rem;
+}
+
+.compact-slide .video-placeholder {
+  min-height: 13rem;
+}
+
+.disclosure {
+  display: inline-block;
+  border: 1px solid rgba(94, 39, 80, 0.25);
+  border-radius: 8px;
+  background: rgba(255, 249, 245, 0.88);
+  padding: 0.35rem 0.65rem;
+  color: var(--ubuntu-aubergine) !important;
+  font-weight: 600;
+}
+
+.ubuntu-window .disclosure {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffcfbd !important;
+}
+
+.readable-callout,
+.slidev-layout .ubuntu-window blockquote.readable-callout {
+  border-left-color: var(--ubuntu-orange) !important;
+  background: #fff6f0 !important;
+  color: var(--ubuntu-aubergine) !important;
+}
+
+.question-slide.slidev-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.question-slide .question-window {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.code-sequence-slide.slidev-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.code-sequence-window {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.code-terminal {
+  width: min(100%, 820px);
+}
+
+.terminal-body {
+  position: relative;
+  min-height: 17rem;
+  padding: 1.8rem 2rem 2rem;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.terminal-command,
+.terminal-output,
+.topic-annotation {
+  font-size: 1.35rem;
+  line-height: 1.55;
+}
+
+.terminal-command {
+  color: #ffcfbd;
+}
+
+.terminal-prompt {
+  color: var(--ubuntu-orange);
+  font-weight: 700;
+}
+
+.terminal-output {
+  margin: 0.1rem 0 0.85rem 1.8rem;
+  color: var(--text-main);
+}
+
+.topic-output {
+  margin-bottom: 0.4rem;
+}
+
+.topic-annotation {
+  margin-top: 0.8rem;
+  color: #ffb092;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.graph-window {
+  padding-bottom: 1rem;
+}
+
+.ros-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ros-graph .graph-heading {
+  fill: #ffb092;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ros-graph .graph-node,
+.ros-graph .graph-topic,
+.ros-graph .graph-frame {
+  stroke-width: 2;
+}
+
+.ros-graph .graph-node {
+  fill: rgba(255, 255, 255, 0.07);
+  stroke: rgba(255, 255, 255, 0.32);
+}
+
+.ros-graph .graph-topic {
+  fill: rgba(233, 84, 32, 0.2);
+  stroke: #e95420;
+}
+
+.ros-graph .graph-frame {
+  fill: rgba(255, 255, 255, 0.1);
+  stroke: #ffb092;
+}
+
+.ros-graph .graph-label {
+  fill: #f4e9ef;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 18px;
+}
+
+.ros-graph .graph-edge,
+.ros-graph .graph-missing {
+  fill: none;
+  stroke: #ffcfbd;
+  stroke-width: 3;
+}
+
+.ros-graph .graph-edge {
+  marker-end: url(#ros-arrow);
+}
+
+.ros-graph .graph-missing {
+  stroke: #ff8b72;
+  stroke-dasharray: 9 8;
+  marker-end: url(#ros-arrow);
+}
+
+.ros-graph marker path {
+  fill: #ffcfbd;
+}
+
+.ros-graph .graph-missing-label {
+  fill: #ffb092;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ros-graph .graph-note {
+  fill: #d6c7cf;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+}
+
+.warrant-window {
+  padding-bottom: 1.5rem;
+}
+
+.warrant-symbol {
+  color: #ffb092;
+  font-size: 4rem;
+  font-weight: 700;
+}
+
+.frame-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--text-main);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.frame-pair span:first-child,
+.frame-pair span:last-child {
+  border: 1px solid #ffb092;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.6rem 0.8rem;
+}
+
+.frame-arrow {
+  color: #ff8b72;
+  font-size: 1.8rem;
+}
+
+.missing-tag {
+  display: inline-block;
+  border: 1px dashed #ff8b72;
+  border-radius: 999px;
+  background: rgba(233, 84, 32, 0.16);
+  padding: 0.35rem 0.8rem;
+  color: #ffb092;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
