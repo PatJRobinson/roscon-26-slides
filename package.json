@@ -5,7 +5,8 @@
   "scripts": {
     "build": "slidev build",
     "dev": "slidev --open",
-    "export": "slidev export"
+    "export": "slidev export",
+    "export:review": "bash scripts/export-supervisor-review.sh"
   },
   "dependencies": {
     "@slidev/cli": "^52.14.1",

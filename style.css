@@ -21,25 +21,52 @@
 /*   --code-bg: rgba(70, 40, 60, 0.08); */
 /* } */
 
-/* DARK */
+/* CORE PALETTE
+   The deck now has two distinct visual layers:
+   1) the dark aubergine presentation surface used by ordinary slides;
+   2) explicit terminal/system views nested inside that surface.
+
+   This keeps the deck tonally continuous while letting a terminal mean
+   "we are inspecting/interacting with the system", rather than simply
+   "this is a slide".
+*/
 :root {
   --ubuntu-orange: #E95420;
   --ubuntu-orange-dark: #C7461A;
   --ubuntu-aubergine: #2C001E;
   --ubuntu-aubergine-soft: #5E2750;
 
-  --panel-bg: rgba(40, 20, 35, 0.94);
-  --panel-bg-strong: rgba(34, 18, 30, 0.94);
-  --panel-border: rgba(255, 255, 255, 0.12);
-  --panel-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  /* outer frame */
+  --deck-bg-top: #eee5ea;
+  --deck-bg-bottom: #d9ccd3;
+  --deck-grid-light: rgba(255, 255, 255, 0.035);
+  --deck-grid-dark: rgba(0, 0, 0, 0.02);
 
-  --titlebar-bg: #2C2C2C;
+  /* ordinary slide surface */
+  --surface-bg: rgba(38, 41, 45, 0.98);
+  --surface-bg-strong: rgba(29, 32, 36, 0.99);
+  --surface-border: rgba(255, 255, 255, 0.12);
+  --surface-shadow: 0 12px 32px rgba(20, 6, 16, 0.34);
+
+  /* terminal / system view */
+  --terminal-bg: rgba(44, 0, 30, 0.98);
+  --terminal-titlebar-bg: rgba(56, 52, 58, 0.98);
+  --terminal-border: rgba(255, 255, 255, 0.16);
+  --terminal-shadow: 0 8px 22px rgba(0, 0, 0, 0.30);
+  --terminal-dot-muted: #6e6870;
+
+  /* compatibility aliases used by existing component styles */
+  --panel-bg: var(--surface-bg);
+  --panel-bg-strong: var(--surface-bg-strong);
+  --panel-border: var(--surface-border);
+  --panel-shadow: var(--surface-shadow);
+  --titlebar-bg: var(--terminal-titlebar-bg);
   --titlebar-border: rgba(255, 255, 255, 0.08);
-  --titlebar-text: "dev@robot:~/ros_ws/slides";
   --titlebar-text-color: #ffffff;
 
   --text-main: #f4e9ef;
   --text-soft: #d6c7cf;
+  --text-dim: #bcaeb6;
   --link: #ff9e7a;
   --code-bg: rgba(255, 255, 255, 0.08);
 }
@@ -48,94 +75,109 @@
 html,
 body,
 #app,
-.slidev-layout,
 .slidev-page {
   font-family: 'Ubuntu', sans-serif;
-  color: var(--text-main);
-
   background:
     repeating-linear-gradient(
       0deg,
-      rgba(255,255,255,0.035) 0,
-      rgba(255,255,255,0.035) 1px,
+      var(--deck-grid-light) 0,
+      var(--deck-grid-light) 1px,
       transparent 1px,
       transparent 22px
     ),
     repeating-linear-gradient(
       90deg,
-      rgba(0,0,0,0.02) 0,
-      rgba(0,0,0,0.02) 1px,
+      var(--deck-grid-dark) 0,
+      var(--deck-grid-dark) 1px,
       transparent 1px,
       transparent 22px
     ),
-    linear-gradient(180deg, #e8dde3 0%, #d4c7cf 100%);
-
-
+    linear-gradient(180deg, var(--deck-bg-top) 0%, var(--deck-bg-bottom) 100%);
 }
 
-
-/* keep content inside a soft app-like panel */
+/* ORDINARY SLIDE
+   Keep the pale deck frame visible; dark technical surfaces belong to the
+   terminal/system-view components below. */
 .slidev-layout {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
   padding: 2rem;
+  overflow: hidden;
+
+  color: var(--ubuntu-aubergine);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-/* one clean central surface */
+/* Existing markup uses .ubuntu-window as the main content wrapper.
+   It is now intentionally neutral: no titlebar, no fake terminal chrome,
+   no second giant dark box inside the slide. */
 .ubuntu-window {
-  background:
-    radial-gradient(
-      ellipse at top center,
-      rgba(255,255,255,0.03) 0%,
-      rgba(255,255,255,0.01) 35%,
-      rgba(0,0,0,0.02) 100%
-    ),
-   var(--panel-bg);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid var(--panel-border);
-  border-radius: 14px;
-  box-shadow: var(--panel-shadow);
-  padding: 2rem 2.25rem;
-  max-width: 1100px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
   position: relative;
-  padding-top: 3.25rem;
-  overflow: hidden;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .ubuntu-window > *:first-child {
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 .ubuntu-window svg {
   margin-top: 0.75rem;
 }
 
-.ubuntu-window::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 34px;
-  border-bottom: 1px solid var(--titlebar-border);
-  border-radius: 14px 14px 0 0;
-  background: var(--titlebar-bg);
+.ubuntu-window::before,
+.ubuntu-window::after {
+  content: none;
 }
 
-.ubuntu-window::after {
-  content: var(--titlebar-text);
+/* Optional compatibility modifier: if a slide genuinely needs the old
+   full-surface terminal treatment, add class="ubuntu-window terminal-mode".
+   Prefer a nested .terminal-card for new slides. */
+.ubuntu-window.terminal-mode {
+  padding: 3.2rem 2rem 2rem;
+  overflow: hidden;
+  background: var(--terminal-bg);
+  border: 1px solid var(--terminal-border);
+  border-radius: 12px;
+  box-shadow: var(--terminal-shadow);
+}
+
+.ubuntu-window.terminal-mode::before {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0 0 auto 0;
+  height: 34px;
+  display: block;
+  background: var(--terminal-titlebar-bg);
+  border-bottom: 1px solid var(--titlebar-border);
+}
+
+.ubuntu-window.terminal-mode::after {
+  content: "dev@robot:~/ros_ws";
+  position: absolute;
+  inset: 0 0 auto 0;
   height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.8rem;
   color: var(--titlebar-text-color);
-  opacity: 0.9;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.78rem;
+  opacity: 0.88;
   pointer-events: none;
 }
 
@@ -150,17 +192,17 @@ body,
 .slidev-layout th,
 .slidev-layout blockquote,
 .slidev-layout strong {
-   color: var(--ubuntu-aubergine);
+  color: var(--ubuntu-aubergine);
   font-weight: 500;
   letter-spacing: 0;
 }
 
 .slidev-layout h1 {
   margin-top: 0;
-  border-bottom: 3px solid var(--ubuntu-orange);
-  display: inline-block;
-  padding-bottom: 0.15em;
   margin-bottom: 0.7em;
+  display: inline-block;
+  border-bottom: 3px solid var(--ubuntu-orange);
+  padding-bottom: 0.15em;
 }
 
 .slidev-layout.text-center h1,
@@ -169,8 +211,14 @@ body,
 .slidev-layout.text-center h4,
 .slidev-layout.text-center p,
 .slidev-layout.text-center li,
-.slidev-layout.text-center div {
+.slidev-layout.text-center > div {
   color: var(--ubuntu-aubergine);
+}
+
+/* Accent a word or short phrase without changing the overall visual rhythm. */
+.accent,
+.slidev-layout .accent {
+  color: #ff9e7a !important;
 }
 
 /* headings and text inside windows */
@@ -184,7 +232,7 @@ body,
 .slidev-layout .ubuntu-window th,
 .slidev-layout .ubuntu-window blockquote,
 .slidev-layout .ubuntu-window strong {
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
   font-weight: 500;
   letter-spacing: 0;
 }
@@ -237,12 +285,12 @@ body,
 .slidev-layout td,
 .slidev-layout th,
 .slidev-layout blockquote {
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
   line-height: 1.5;
 }
 
 .slidev-layout strong {
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
   font-weight: 700;
 }
 
@@ -313,7 +361,7 @@ td {
 
 th {
   background: rgba(233, 84, 32, 0.10);
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
   text-align: left;
 }
 
@@ -325,26 +373,24 @@ blockquote {
   padding: 0.9rem 1rem;
 }
 
-/* subtle "system app" buttons */
+/* subtle system-view controls */
 button,
 .btn,
 a.button {
   font-family: 'Ubuntu', sans-serif;
-  color: var(--text-main);
-  background: linear-gradient(#fdfdfc, #ece9e6);
-  border: 1px solid rgba(90, 70, 80, 0.28);
+  color: var(--ubuntu-aubergine);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
   padding: 0.38rem 0.85rem;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.85),
-    0 1px 2px rgba(0,0,0,0.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
   text-decoration: none;
 }
 
 button:hover,
 .btn:hover,
 a.button:hover {
-  background: linear-gradient(#ffffff, #f1eeeb);
+  background: rgba(255, 255, 255, 0.11);
 }
 
 /* bullets */
@@ -381,7 +427,7 @@ a.button:hover {
 .annotation-card-title,
 .annotation-card-body {
   margin: 0;
-  color: var(--ubuntu-aubergine);
+  color: var(--text-main);
   white-space: normal;
 }
 
@@ -441,7 +487,7 @@ a.button:hover {
 .probe-option p,
 .controller-card p,
 .summary-cell span {
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
 }
 
 .card-kicker,
@@ -458,23 +504,55 @@ a.button:hover {
 }
 
 .terminal-card {
+  position: relative;
   overflow: hidden;
-  border: 1px solid var(--panel-border);
-  border-radius: 10px;
-  background: var(--panel-bg-strong);
+  border: 1px solid var(--terminal-border);
+  border-radius: 12px;
+  background:
+    radial-gradient(
+      ellipse at top center,
+      rgba(255,255,255,0.025) 0%,
+      rgba(0,0,0,0.02) 100%
+    ),
+    var(--terminal-bg);
+  box-shadow: var(--terminal-shadow);
 }
 
 .terminal-title {
-  padding: 0.55rem 0.85rem;
+  position: relative;
+  min-height: 2.25rem;
+  box-sizing: border-box;
+  padding: 0.6rem 4.25rem;
   border-bottom: 1px solid var(--titlebar-border);
-  background: var(--titlebar-bg);
+  background: var(--terminal-titlebar-bg);
   color: var(--text-soft);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Familiar terminal controls, deliberately subtle. */
+.terminal-title::before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  width: 0.56rem;
+  height: 0.56rem;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: var(--ubuntu-orange);
+  box-shadow:
+    0.9rem 0 0 var(--terminal-dot-muted),
+    1.8rem 0 0 var(--terminal-dot-muted);
 }
 
 .terminal-card pre {
+  margin: 0;
+  border: 0;
   border-radius: 0;
+  box-shadow: none;
+  background: transparent !important;
 }
 
 .flow-node,
@@ -520,13 +598,13 @@ a.button:hover {
 }
 
 .stage-box strong {
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
   font-size: 1rem;
 }
 
 .stage-box small,
 .summary-cell span {
-  color: var(--text-soft);
+  color: var(--ubuntu-aubergine-soft);
   font-size: 0.75rem;
 }
 
@@ -535,7 +613,7 @@ a.button:hover {
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.06);
   padding: 0.8rem 1rem;
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
 }
 
 .video-placeholder {
@@ -547,7 +625,7 @@ a.button:hover {
   border: 1px dashed rgba(255, 158, 122, 0.7);
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.25), rgba(233, 84, 32, 0.12));
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
   text-align: center;
 }
 
@@ -576,7 +654,7 @@ a.button:hover {
 
 .controller-card .result-line {
   margin: 1rem 0;
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -609,7 +687,7 @@ a.button:hover {
 }
 
 .compact-slide .ubuntu-window {
-  padding: 2.55rem 1.7rem 1.25rem;
+  padding: 0;
 }
 
 .compact-slide .mt-12 {
@@ -688,6 +766,32 @@ a.button:hover {
   color: var(--ubuntu-aubergine) !important;
 }
 
+/* Sparse conceptual/statement slide: the dark surface stays, but all
+   interface chrome disappears. */
+.statement-slide.slidev-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.statement-slide .ubuntu-window,
+.statement-slide .statement-window {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.statement-slide .statement {
+  max-width: 15ch;
+  margin: 0;
+  color: var(--ubuntu-aubergine);
+  font-size: clamp(2.4rem, 5vw, 4.6rem);
+  line-height: 1.08;
+  font-weight: 400;
+}
+
 .question-slide.slidev-layout {
   display: flex;
   flex-direction: column;
@@ -719,13 +823,13 @@ a.button:hover {
 }
 
 .code-terminal {
-  width: min(100%, 820px);
+  width: min(100%, 900px);
 }
 
 .terminal-body {
   position: relative;
-  min-height: 17rem;
-  padding: 1.8rem 2rem 2rem;
+  min-height: 16rem;
+  padding: 1.65rem 2rem 1.9rem;
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
@@ -762,8 +866,41 @@ a.button:hover {
   font-weight: 600;
 }
 
+/* Generic inspectable artefact surface for rqt graphs, TF trees, logs,
+   GUI captures, etc. Use this when the visual is evidence from the system but
+   it is not literally a terminal. */
+.system-view {
+  overflow: hidden;
+  background: var(--terminal-bg);
+  border: 1px solid var(--terminal-border);
+  border-radius: 12px;
+  box-shadow: var(--terminal-shadow);
+}
+
+.system-view-header {
+  min-height: 2.1rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid var(--titlebar-border);
+  background: rgba(58, 32, 52, 0.76);
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+}
+
+.system-view-body {
+  padding: 1.1rem 1.25rem;
+}
+
 .graph-window {
-  padding-bottom: 1rem;
+  padding: 1rem 1.25rem 1.25rem;
+  overflow: hidden;
+  background: var(--terminal-bg);
+  border: 1px solid var(--terminal-border);
+  border-radius: 12px;
+  box-shadow: var(--terminal-shadow);
 }
 
 .ros-graph {
@@ -844,6 +981,9 @@ a.button:hover {
 
 .warrant-window {
   padding-bottom: 1.5rem;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .warrant-symbol {
@@ -857,7 +997,7 @@ a.button:hover {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  color: var(--text-main);
+  color: var(--ubuntu-aubergine);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   font-size: 1.45rem;
   font-weight: 700;
@@ -887,4 +1027,27 @@ a.button:hover {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+/* Keep dark technical artefacts light-on-dark after ordinary slide text is
+ * moved back to aubergine. */
+.terminal-card,
+.terminal-card .terminal-body,
+.ubuntu-window.terminal-mode,
+.system-view,
+.graph-window {
+  color: var(--text-main);
+}
+
+.ubuntu-window.terminal-mode h1,
+.ubuntu-window.terminal-mode h2,
+.ubuntu-window.terminal-mode h3,
+.ubuntu-window.terminal-mode h4,
+.ubuntu-window.terminal-mode p,
+.ubuntu-window.terminal-mode li,
+.ubuntu-window.terminal-mode td,
+.ubuntu-window.terminal-mode th,
+.ubuntu-window.terminal-mode blockquote,
+.ubuntu-window.terminal-mode strong {
+  color: var(--text-main);
 }

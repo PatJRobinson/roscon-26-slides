@@ -31,7 +31,6 @@ ROSCon 2026 · working presentation draft
 <div class="evidence-chip"><strong>revisit</strong><br /><span>what still holds when the system changes?</span></div>
 </div>
 
-<div class="mt-10 text-center text-sm disclosure">prepared presentation material · narrative and visual authoring draft</div>
 </div>
 
 <!--
@@ -44,7 +43,7 @@ transition: slide-left
 class: question-slide
 ---
 
-# A question
+<!-- # A question -->
 
 <div class="ubuntu-window question-window max-w-5xl mx-auto text-center">
 <div class="text-3xl">What does it mean for a system to work?</div>
@@ -85,13 +84,13 @@ class: question-slide
 
 ---
 transition: slide-left
-class: question-slide
+class: question-slide statement-slide
 ---
 
-# What travels?
+<!-- # What travels? -->
 
-<div class="ubuntu-window question-window max-w-5xl mx-auto text-center">
-<div class="text-3xl">The software may travel.<br />The understanding may not.</div>
+<div class="ubuntu-window question-window statement-window max-w-5xl mx-auto text-center">
+<div class="text-3xl">The software may travel.<br />The understanding might not.</div>
 </div>
 
 ---
@@ -103,7 +102,7 @@ class: compact-slide code-sequence-slide
 
 <div class="ubuntu-window code-sequence-window max-w-5xl mx-auto">
 <div class="terminal-card code-terminal">
-<div class="terminal-title">prepared terminal sequence · mocked</div>
+<div class="terminal-title">> ~/ros_ws/slides</div>
 <div class="terminal-body">
 <div v-click="1" class="terminal-command"><span class="terminal-prompt">&gt;</span> ros2 node list</div>
 <div v-click="2" class="terminal-output">robot_node</div>
@@ -114,8 +113,6 @@ class: compact-slide code-sequence-slide
 </div>
 </div>
 
-<div class="mt-4 text-center disclosure">prepared command/output sequence · mocked presentation interaction</div>
-
 ---
 transition: slide-left
 class: compact-slide graph-slide
@@ -124,7 +121,7 @@ class: compact-slide graph-slide
 # Let's take a fairly simple example
 
 <div class="ubuntu-window graph-window max-w-5xl mx-auto">
-<div class="text-center disclosure mb-3">staged explanatory ROS graph · nodes, topics, and frames</div>
+<div class="text-center disclosure mb-3">explanatory ROS graph · nodes, topics, and frames</div>
 
 <svg class="ros-graph" viewBox="0 0 1000 430" role="img" aria-label="ROS graph showing nodes, topics, and an unresolved odom to base_link frame relationship">
   <defs>
@@ -223,32 +220,6 @@ transition: slide-left
 class: compact-slide
 ---
 
-# Integration is work through which we build an understanding
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="grid grid-cols-5 gap-3 items-center text-center">
-<div class="flow-node">people</div><div class="flow-arrow">↔</div>
-<div class="flow-node">software</div><div class="flow-arrow">↔</div>
-<div class="flow-node">configuration</div>
-<div class="flow-node">infrastructure</div><div class="flow-arrow">↔</div>
-<div class="flow-node">runtime</div><div class="flow-arrow">↔</div>
-<div class="flow-node">deployment context</div>
-</div>
-
-<div class="mt-12 grid grid-cols-3 gap-8 text-left">
-<div><h3>We assume</h3><p>what should be true for this realisation.</p></div>
-<div><h3>We probe</h3><p>what question would discriminate between explanations.</p></div>
-<div><h3>We establish</h3><p>what the evidence supports—and what remains unknown.</p></div>
-</div>
-
-</div>
-
----
-transition: slide-left
-class: compact-slide
----
-
 # Four things to keep together
 
 <div class="ubuntu-window max-w-5xl mx-auto">
@@ -338,7 +309,7 @@ transition: slide-left
 
 <div class="grid grid-cols-2 gap-8 items-center">
 <div class="terminal-card">
-<div class="terminal-title">prepared presentation interaction · mocked</div>
+<div class="terminal-title">~~/ros_ws/slides</div>
 <pre class="!m-0 !border-0 !shadow-none">roti explain --stage presence
 topics: /tf /tf_static /scan
 required edge: odom -> base_link
