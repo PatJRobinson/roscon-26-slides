@@ -71,11 +71,12 @@ class: question-slide
 </ul>
 </div>
 
-<div class="rounded-xl border border-orange-300/30 bg-black/20 p-6 text-center">
-<div class="text-5xl mb-5">✓ ✓ ✓</div>
+<div class="question-card p-6 text-center">
+<!-- <div class="text-5xl mb-5">✓ ✓ ✓</div> -->
 <div class="text-2xl font-semibold text-orange-200">…but the robot still does not behave as expected.</div>
 </div>
 </div>
+
 
 <div class="mt-10 text-center text-2xl font-semibold">What knowledge failed to travel with the software?</div>
 </div>
@@ -121,8 +122,6 @@ class: compact-slide graph-slide
 # Let's take a fairly simple example
 
 <div class="ubuntu-window graph-window max-w-5xl mx-auto">
-<div class="text-center disclosure mb-3">explanatory ROS graph · nodes, topics, and frames</div>
-
 <svg class="ros-graph" viewBox="0 0 1000 430" role="img" aria-label="ROS graph showing nodes, topics, and an unresolved odom to base_link frame relationship">
   <defs>
     <marker id="ros-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -275,8 +274,6 @@ evidence</pre>
 </div>
 </div>
 
-<div class="text-center mt-5 disclosure">conceptual introduction · presentation representation, not a product-readiness claim</div>
-
 ---
 transition: slide-left
 ---
@@ -296,8 +293,6 @@ transition: slide-left
 <div class="mt-12 text-center text-2xl">The point is not to display more telemetry.</div>
 <div class="mt-4 text-center text-3xl font-semibold text-orange-200">The point is to change the question as the evidence changes.</div>
 </div>
-
-<div class="mt-5 text-center disclosure">mocked interaction · retained evidence · staged visual context are labelled at the point of use</div>
 
 ---
 transition: slide-left
@@ -322,7 +317,6 @@ observed: edge absent</pre>
 </div>
 </div>
 
-<div class="evidence-strip mt-8"><strong>evidence:</strong> captured real-provider evidence · retained run · provenance caveats unresolved</div>
 </div>
 
 ---
@@ -346,8 +340,6 @@ structural relationship established
 calibration and authority: unknown</pre></div>
 </div>
 </div>
-
-<div class="mt-5 text-center disclosure">captured real-provider evidence · compressed three-beat structural passage</div>
 
 ---
 transition: slide-left
@@ -382,7 +374,6 @@ class: compact-slide
 <div class="video-placeholder">
 <div class="text-6xl">▶</div>
 <div class="mt-4 text-xl font-semibold">Gazebo GUI failure clip</div>
-<div class="mt-3 text-sm disclosure">captured/replayed visual context · asset to select or capture</div>
 </div>
 <div>
 <div class="card-kicker">what we see</div>
@@ -438,8 +429,6 @@ class: compact-slide
 <div><h3>What remains unknown</h3><p>This is not general RPP superiority, a complete MPPI diagnosis, repeatability, or production readiness.</p></div>
 </div>
 </div>
-
-<div class="mt-5 text-center disclosure">captured real-provider evidence · bounded contrast · provenance caveats retained</div>
 
 ---
 transition: slide-left
@@ -500,7 +489,6 @@ transition: slide-left
 </div>
 
 <div class="mt-12 text-center text-xl">Recognition, qualification, disagreement.</div>
-<div class="mt-4 text-center disclosure">informal conference feedback is not research data</div>
 </div>
 
 ---
@@ -518,7 +506,6 @@ class: compact-slide
 
 <div class="mt-12 text-lg">If your work involves integration, debugging, testing, deployment, handover, or assurance, I’d like to hear about it.</div>
 
-<div class="mt-8 disclosure">separate interview-study invitation · use the approved expression-of-interest route</div>
 </div>
 
 <!-- Close on the accepted audience takeaway, then move to questions/invitation. -->

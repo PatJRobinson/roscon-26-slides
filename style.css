@@ -1,34 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
 
-/* LIGHT */
-/* :root { */
-/*   --ubuntu-orange: #E95420; */
-/*   --ubuntu-orange-dark: #C7461A; */
-/*   --ubuntu-aubergine: #2C001E; */
-/*   --ubuntu-aubergine-soft: #5E2750; */
-/**/
-/*   --panel-bg: rgba(248, 248, 246, 0.88); */
-/*   --panel-bg-strong: rgba(255, 255, 255, 0.94); */
-/*   --panel-border: rgba(80, 60, 70, 0.18); */
-/*   --panel-shadow: 0 10px 30px rgba(20, 10, 20, 0.18); */
-/**/
-/*   --titlebar-bg: linear-gradient(#f6f5f3, #e9e5e1); */
-/*   --titlebar-border: rgba(80, 60, 70, 0.12); */
-/**/
-/*   --text-main: #2C001E; */
-/*   --text-soft: #5b4956; */
-/*   --link: #C7461A; */
-/*   --code-bg: rgba(70, 40, 60, 0.08); */
-/* } */
-
 /* CORE PALETTE
-   The deck now has two distinct visual layers:
-   1) the dark aubergine presentation surface used by ordinary slides;
-   2) explicit terminal/system views nested inside that surface.
-
-   This keeps the deck tonally continuous while letting a terminal mean
-   "we are inspecting/interacting with the system", rather than simply
-   "this is a slide".
+   The deck has two deliberate visual layers:
+   1) a warm, light presentation canvas with readable aubergine text;
+   2) explicit dark terminal/system views for inspectable technical artefacts.
 */
 :root {
   --ubuntu-orange: #E95420;
@@ -37,20 +12,22 @@
   --ubuntu-aubergine-soft: #5E2750;
 
   /* outer frame */
-  --deck-bg-top: #eee5ea;
-  --deck-bg-bottom: #d9ccd3;
-  --deck-grid-light: rgba(255, 255, 255, 0.035);
-  --deck-grid-dark: rgba(0, 0, 0, 0.02);
+  --deck-bg-top: #f7f3ee;
+  --deck-bg-bottom: #ebe4dd;
+  --deck-grid-light: rgba(255, 255, 255, 0.28);
+  --deck-grid-dark: rgba(44, 0, 30, 0.035);
 
-  /* ordinary slide surface */
-  --surface-bg: rgba(38, 41, 45, 0.98);
-  --surface-bg-strong: rgba(29, 32, 36, 0.99);
-  --surface-border: rgba(255, 255, 255, 0.12);
-  --surface-shadow: 0 12px 32px rgba(20, 6, 16, 0.34);
+  /* ordinary light surfaces */
+  --surface-bg: #f8f2ec;
+  --surface-bg-strong: #fffaf6;
+  --surface-border: #cdbdc1;
+  --surface-shadow: 0 8px 24px rgba(44, 0, 30, 0.09);
+  --surface-border-strong: #a9959d;
+  --surface-accent-bg: #fff0e7;
 
-  /* terminal / system view */
-  --terminal-bg: rgba(44, 0, 30, 0.98);
-  --terminal-titlebar-bg: rgba(56, 52, 58, 0.98);
+  /* terminal / system view: deliberately opaque dark artefacts */
+  --terminal-bg: #2c001e;
+  --terminal-titlebar-bg: #39343a;
   --terminal-border: rgba(255, 255, 255, 0.16);
   --terminal-shadow: 0 8px 22px rgba(0, 0, 0, 0.30);
   --terminal-dot-muted: #6e6870;
@@ -64,11 +41,19 @@
   --titlebar-border: rgba(255, 255, 255, 0.08);
   --titlebar-text-color: #ffffff;
 
+  /* technical artefact text */
   --text-main: #f4e9ef;
   --text-soft: #d6c7cf;
   --text-dim: #bcaeb6;
-  --link: #ff9e7a;
-  --code-bg: rgba(255, 255, 255, 0.08);
+  --link: #a83f1d;
+  --code-bg: #f0e7e0;
+
+  /* normal light-theme text and accent colours */
+  --light-text: #2c001e;
+  --light-text-soft: #5e4b57;
+  --light-text-muted: #5e4b57;
+  --accent-ink: #a33d1c;
+  --accent-ink-strong: #8d3216;
 }
 
 /* whole deck background */
@@ -95,9 +80,7 @@ body,
     linear-gradient(180deg, var(--deck-bg-top) 0%, var(--deck-bg-bottom) 100%);
 }
 
-/* ORDINARY SLIDE
-   Keep the pale deck frame visible; dark technical surfaces belong to the
-   terminal/system-view components below. */
+/* Ordinary slides stay light; dark technical surfaces are nested artefacts. */
 .slidev-layout {
   box-sizing: border-box;
   width: 100%;
@@ -113,9 +96,7 @@ body,
   box-shadow: none;
 }
 
-/* Existing markup uses .ubuntu-window as the main content wrapper.
-   It is now intentionally neutral: no titlebar, no fake terminal chrome,
-   no second giant dark box inside the slide. */
+/* Existing markup uses .ubuntu-window as the main content wrapper. */
 .ubuntu-window {
   width: 100%;
   max-width: none;
@@ -218,7 +199,15 @@ body,
 /* Accent a word or short phrase without changing the overall visual rhythm. */
 .accent,
 .slidev-layout .accent {
-  color: #ff9e7a !important;
+  color: var(--accent-ink) !important;
+}
+
+/* Slidev's orange utility shades are too pale on the light canvas. Keep
+   orange as a readable accent while preserving the dark technical palette
+   through the explicit terminal/graph selectors below. */
+.slidev-layout .text-orange-200,
+.slidev-layout .text-orange-300 {
+  color: var(--accent-ink) !important;
 }
 
 /* headings and text inside windows */
@@ -243,6 +232,33 @@ body,
   display: inline-block;
   padding-bottom: 0.15em;
   margin-bottom: 0.7em;
+}
+
+/* Technical artefacts opt back into light-on-dark text. This is explicit so
+   the former .ubuntu-window inheritance cannot leak into terminals. */
+.slidev-layout .terminal-card h1,
+.slidev-layout .terminal-card h2,
+.slidev-layout .terminal-card h3,
+.slidev-layout .terminal-card h4,
+.slidev-layout .terminal-card p,
+.slidev-layout .terminal-card li,
+.slidev-layout .terminal-card strong,
+.slidev-layout .terminal-card td,
+.slidev-layout .terminal-card th,
+.slidev-layout .terminal-card blockquote,
+.slidev-layout .terminal-card pre,
+.slidev-layout .terminal-card code,
+.slidev-layout .system-view h1,
+.slidev-layout .system-view h2,
+.slidev-layout .system-view h3,
+.slidev-layout .system-view h4,
+.slidev-layout .system-view p,
+.slidev-layout .system-view li,
+.slidev-layout .system-view strong,
+.slidev-layout .system-view td,
+.slidev-layout .system-view th,
+.slidev-layout .system-view blockquote {
+  color: var(--text-main);
 }
 
 
@@ -313,7 +329,7 @@ pre {
   border: 1px solid var(--panel-border);
   border-radius: 10px;
   padding: 1rem;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
 }
 
 pre code,
@@ -356,12 +372,12 @@ table {
 th,
 td {
   padding: 0.65rem 0.8rem;
-  border-bottom: 1px solid rgba(60, 40, 50, 0.08);
+  border-bottom: 1px solid #dfd2d0;
 }
 
 th {
-  background: rgba(233, 84, 32, 0.10);
-  color: var(--ubuntu-aubergine);
+  background: var(--surface-accent-bg);
+  color: var(--light-text);
   text-align: left;
 }
 
@@ -378,19 +394,19 @@ button,
 .btn,
 a.button {
   font-family: 'Ubuntu', sans-serif;
-  color: var(--ubuntu-aubergine);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--light-text);
+  background: var(--surface-bg-strong);
+  border: 1px solid var(--surface-border);
   border-radius: 8px;
   padding: 0.38rem 0.85rem;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
   text-decoration: none;
 }
 
 button:hover,
 .btn:hover,
 a.button:hover {
-  background: rgba(255, 255, 255, 0.11);
+  background: var(--surface-accent-bg);
 }
 
 /* bullets */
@@ -464,43 +480,48 @@ a.button:hover {
 .probe-option,
 .controller-card,
 .summary-cell {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
   border-radius: 12px;
   padding: 1rem 1.15rem;
+  box-shadow: 0 3px 10px rgba(44, 0, 30, 0.045);
 }
 
 .evidence-chip strong,
 .evidence-card h3,
-.remaining-card,
 .question-card,
 .probe-option h3,
 .controller-card h2,
 .summary-cell strong {
-  color: #ffb092;
+  color: var(--light-text);
 }
 
 .evidence-chip span,
 .evidence-card p,
+.remaining-card,
 .remaining-card p,
 .question-card p,
 .probe-option p,
 .controller-card p,
 .summary-cell span {
-  color: var(--ubuntu-aubergine);
+  color: var(--light-text-soft);
 }
 
-.card-kicker,
-.disclosure {
-  color: #ffb092;
+.remaining-card .text-2xl,
+.remaining-card strong {
+  color: var(--light-text);
+}
+
+.card-kicker {
+  color: var(--accent-ink-strong);
   font-size: 0.78rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .warn-card {
-  border-color: rgba(255, 158, 122, 0.55);
-  background: rgba(233, 84, 32, 0.12);
+  border: 1px solid #d88d6c;
+  background: var(--surface-accent-bg);
 }
 
 .terminal-card {
@@ -568,9 +589,9 @@ a.button:hover {
 
 .flow-node,
 .stage-box {
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--surface-border);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-bg);
 }
 
 .flow-arrow {
@@ -598,22 +619,25 @@ a.button:hover {
 }
 
 .stage-box strong {
-  color: var(--ubuntu-aubergine);
+  color: var(--light-text);
   font-size: 1rem;
 }
 
 .stage-box small,
 .summary-cell span {
-  color: var(--ubuntu-aubergine-soft);
+  color: var(--light-text-muted);
   font-size: 0.75rem;
 }
 
 .evidence-strip {
   border-left: 4px solid var(--ubuntu-orange);
   border-radius: 7px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-bg);
+  border-top: 1px solid var(--surface-border);
+  border-right: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--surface-border);
   padding: 0.8rem 1rem;
-  color: var(--ubuntu-aubergine);
+  color: var(--light-text-soft);
 }
 
 .video-placeholder {
@@ -622,10 +646,10 @@ a.button:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px dashed rgba(255, 158, 122, 0.7);
+  border: 1px dashed #c77a5b;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.25), rgba(233, 84, 32, 0.12));
-  color: var(--ubuntu-aubergine);
+  background: linear-gradient(135deg, #f1e8e1, #fff2e9);
+  color: var(--light-text);
   text-align: center;
 }
 
@@ -643,7 +667,7 @@ a.button:hover {
   position: absolute;
   right: 0.75rem;
   bottom: 0.65rem;
-  color: #ffb092;
+  color: var(--accent-ink-strong);
   font-size: 0.72rem;
   text-transform: uppercase;
 }
@@ -654,21 +678,21 @@ a.button:hover {
 
 .controller-card .result-line {
   margin: 1rem 0;
-  color: var(--ubuntu-aubergine);
+  color: var(--light-text);
   font-size: 1.5rem;
   font-weight: 700;
 }
 
 .fail-card {
-  border-color: rgba(255, 158, 122, 0.42);
+  border-color: #d88d6c;
 }
 
 .pass-card {
-  border-color: rgba(112, 216, 157, 0.5);
+  border-color: #6ea987;
 }
 
 .pass-card .result-line {
-  color: #a9f1c4;
+  color: #276c49;
 }
 
 .summary-cell {
@@ -741,22 +765,6 @@ a.button:hover {
 
 .compact-slide .video-placeholder {
   min-height: 13rem;
-}
-
-.disclosure {
-  display: inline-block;
-  border: 1px solid rgba(94, 39, 80, 0.25);
-  border-radius: 8px;
-  background: rgba(255, 249, 245, 0.88);
-  padding: 0.35rem 0.65rem;
-  color: var(--ubuntu-aubergine) !important;
-  font-weight: 600;
-}
-
-.ubuntu-window .disclosure {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(0, 0, 0, 0.2);
-  color: #ffcfbd !important;
 }
 
 .readable-callout,
@@ -987,7 +995,7 @@ a.button:hover {
 }
 
 .warrant-symbol {
-  color: #ffb092;
+  color: var(--ubuntu-aubergine-soft);
   font-size: 4rem;
   font-weight: 700;
 }
@@ -1005,24 +1013,24 @@ a.button:hover {
 
 .frame-pair span:first-child,
 .frame-pair span:last-child {
-  border: 1px solid #ffb092;
+  border: 1px solid var(--surface-border-strong);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-bg);
   padding: 0.6rem 0.8rem;
 }
 
 .frame-arrow {
-  color: #ff8b72;
+  color: var(--accent-ink);
   font-size: 1.8rem;
 }
 
 .missing-tag {
   display: inline-block;
-  border: 1px dashed #ff8b72;
+  border: 1px dashed var(--accent-ink);
   border-radius: 999px;
-  background: rgba(233, 84, 32, 0.16);
+  background: var(--surface-accent-bg);
   padding: 0.35rem 0.8rem;
-  color: #ffb092;
+  color: var(--accent-ink-strong);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.05em;
