@@ -902,8 +902,13 @@ a.button:hover {
   padding: 1.1rem 1.25rem;
 }
 
-.graph-window {
-  padding: 1rem 1.25rem 1.25rem;
+.tf-focus-window {
+  display: flex;
+  min-height: 21rem;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 2.5rem;
+  padding: 1.5rem 1.25rem 2rem;
   overflow: hidden;
   background: var(--terminal-bg);
   border: 1px solid var(--terminal-border);
@@ -911,80 +916,109 @@ a.button:hover {
   box-shadow: var(--terminal-shadow);
 }
 
-.ros-graph {
-  display: block;
-  width: 100%;
-  height: auto;
+.tf-observation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0.25rem 0 0.75rem;
+  color: var(--text-soft);
+  font-size: 1.05rem;
 }
 
-.ros-graph .graph-heading {
-  fill: #ffb092;
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+.tf-observation-label {
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.ros-graph .graph-node,
-.ros-graph .graph-topic,
-.ros-graph .graph-frame {
-  stroke-width: 2;
-}
-
-.ros-graph .graph-node {
-  fill: rgba(255, 255, 255, 0.07);
-  stroke: rgba(255, 255, 255, 0.32);
-}
-
-.ros-graph .graph-topic {
-  fill: rgba(233, 84, 32, 0.2);
-  stroke: #e95420;
-}
-
-.ros-graph .graph-frame {
-  fill: rgba(255, 255, 255, 0.1);
-  stroke: #ffb092;
-}
-
-.ros-graph .graph-label {
-  fill: #f4e9ef;
+.tf-topic {
+  padding: 0.28rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 18px;
+  font-size: 1rem;
 }
 
-.ros-graph .graph-edge,
-.ros-graph .graph-missing {
-  fill: none;
-  stroke: #ffcfbd;
-  stroke-width: 3;
-}
-
-.ros-graph .graph-edge {
-  marker-end: url(#ros-arrow);
-}
-
-.ros-graph .graph-missing {
-  stroke: #ff8b72;
-  stroke-dasharray: 9 8;
-  marker-end: url(#ros-arrow);
-}
-
-.ros-graph marker path {
-  fill: #ffcfbd;
-}
-
-.ros-graph .graph-missing-label {
-  fill: #ffb092;
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 15px;
+.tf-present {
+  color: #a8ddad;
   font-weight: 700;
 }
 
-.ros-graph .graph-note {
-  fill: #d6c7cf;
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 16px;
+.tf-chain {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) minmax(9rem, 1.2fr) minmax(8rem, 1.1fr) minmax(4rem, 0.55fr) minmax(6rem, 1fr);
+  align-items: center;
+  gap: 0.35rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.tf-frame {
+  display: flex;
+  min-height: 5.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0.4rem;
+  border: 2px solid #ffb092;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.tf-missing {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.tf-missing span {
+  color: #ffb092;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.tf-gap-status {
+  padding: 0.22rem 0.55rem;
+  border: 1px solid rgba(255, 176, 146, 0.55);
+  border-radius: 999px;
+}
+
+.tf-missing-line,
+.tf-observed-line {
+  position: relative;
+  width: 100%;
+  border-top: 3px dashed #ff8b72;
+  color: #ff8b72;
+}
+
+.tf-observed-line {
+  border-top-style: solid;
+  border-top-color: #ffcfbd;
+  color: #ffcfbd;
+}
+
+.tf-missing-line::after,
+.tf-observed-line::after {
+  position: absolute;
+  top: -0.43rem;
+  right: 0;
+  width: 0.55rem;
+  height: 0.55rem;
+  transform: rotate(45deg);
+  border-top: 0.2rem solid currentColor;
+  border-right: 0.2rem solid currentColor;
+  content: '';
 }
 
 .warrant-window {
@@ -1043,7 +1077,7 @@ a.button:hover {
 .terminal-card .terminal-body,
 .ubuntu-window.terminal-mode,
 .system-view,
-.graph-window {
+.tf-focus-window {
   color: var(--text-main);
 }
 

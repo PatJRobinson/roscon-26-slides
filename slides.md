@@ -78,7 +78,6 @@ class: question-slide
 </div>
 
 
-<div class="mt-10 text-center text-2xl font-semibold">What knowledge failed to travel with the software?</div>
 </div>
 
 <!-- Staged opening scenario; not a claim about a particular handover study. -->
@@ -116,63 +115,31 @@ class: compact-slide code-sequence-slide
 
 ---
 transition: slide-left
-class: compact-slide graph-slide
+class: compact-slide
 ---
 
-# Let's take a fairly simple example
+# The required transform is not observed
 
-<div class="ubuntu-window graph-window max-w-5xl mx-auto">
-<svg class="ros-graph" viewBox="0 0 1000 430" role="img" aria-label="ROS graph showing nodes, topics, and an unresolved odom to base_link frame relationship">
-  <defs>
-    <marker id="ros-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" />
-    </marker>
-  </defs>
+<div class="ubuntu-window tf-focus-window max-w-5xl mx-auto">
+  <div class="tf-observation">
+    <span class="tf-observation-label">observed topics</span>
+    <span class="tf-topic">/tf</span>
+    <span class="tf-topic">/tf_static</span>
+    <span class="tf-present">present</span>
+  </div>
 
-  <text class="graph-heading" x="80" y="34">nodes</text>
-  <text class="graph-heading" x="375" y="34">topics</text>
-  <text class="graph-heading" x="690" y="34">frame relationships</text>
+<div class="tf-chain" role="img" aria-label="The /tf and /tf_static topics are present. The required transform from odom to base_link is not observed; base_link connects to laser.">
+<div class="tf-frame">odom</div>
+<div class="tf-missing">
+<span>required transform</span>
+<div class="tf-missing-line" aria-hidden="true"></div>
+<span class="tf-gap-status">not observed</span>
+</div>
+<div class="tf-frame">base_link</div>
+<div class="tf-observed-line" aria-hidden="true"></div>
+<div class="tf-frame">laser</div>
+</div>
 
-  <rect class="graph-node" x="55" y="55" width="220" height="58" rx="10" />
-  <text class="graph-label" x="165" y="90" text-anchor="middle">robot_state_publisher</text>
-
-  <rect class="graph-node" x="55" y="185" width="220" height="58" rx="10" />
-  <text class="graph-label" x="165" y="220" text-anchor="middle">controller_server</text>
-
-  <rect class="graph-node" x="55" y="315" width="220" height="58" rx="10" />
-  <text class="graph-label" x="165" y="350" text-anchor="middle">scan_source</text>
-
-  <rect class="graph-topic" x="350" y="72" width="150" height="52" rx="26" />
-  <text class="graph-label" x="425" y="104" text-anchor="middle">/tf · /tf_static</text>
-
-  <rect class="graph-topic" x="350" y="198" width="150" height="52" rx="26" />
-  <text class="graph-label" x="425" y="230" text-anchor="middle">/cmd_vel</text>
-
-  <rect class="graph-topic" x="350" y="328" width="150" height="52" rx="26" />
-  <text class="graph-label" x="425" y="360" text-anchor="middle">/scan</text>
-
-  <line class="graph-edge" x1="275" y1="84" x2="350" y2="92" marker-end="url(#ros-arrow)" />
-  <line class="graph-edge" x1="275" y1="214" x2="350" y2="224" marker-end="url(#ros-arrow)" />
-  <line class="graph-edge" x1="275" y1="344" x2="350" y2="354" marker-end="url(#ros-arrow)" />
-
-  <rect class="graph-frame" x="665" y="58" width="145" height="52" rx="10" />
-  <text class="graph-label" x="737" y="90" text-anchor="middle">odom</text>
-
-  <rect class="graph-frame" x="665" y="188" width="145" height="52" rx="10" />
-  <text class="graph-label" x="737" y="220" text-anchor="middle">base_link</text>
-
-  <rect class="graph-frame" x="845" y="188" width="110" height="52" rx="10" />
-  <text class="graph-label" x="900" y="220" text-anchor="middle">laser</text>
-
-  <line class="graph-edge" x1="500" y1="98" x2="665" y2="84" marker-end="url(#ros-arrow)" />
-  <line class="graph-missing" x1="737" y1="110" x2="737" y2="188" marker-end="url(#ros-arrow)" />
-  <line class="graph-edge" x1="810" y1="214" x2="845" y2="214" marker-end="url(#ros-arrow)" />
-  <line class="graph-edge" x1="500" y1="354" x2="900" y2="242" marker-end="url(#ros-arrow)" />
-
-  <text class="graph-missing-label" x="760" y="153">required edge not observed</text>
-  <text class="graph-note" x="737" y="292" text-anchor="middle">topics are present</text>
-  <text class="graph-note" x="737" y="318" text-anchor="middle">the needed relationship is not yet established</text>
-</svg>
 </div>
 
 ---
