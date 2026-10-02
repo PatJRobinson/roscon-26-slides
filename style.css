@@ -12,10 +12,8 @@
   --ubuntu-aubergine-soft: #5E2750;
 
   /* outer frame */
-  --deck-bg-top: #f7f3ee;
-  --deck-bg-bottom: #ebe4dd;
-  --deck-grid-light: rgba(255, 255, 255, 0.28);
-  --deck-grid-dark: rgba(44, 0, 30, 0.035);
+  --deck-bg-top: #f7f4f0;
+  --deck-bg-bottom: #f3eee9;
 
   /* ordinary light surfaces */
   --surface-bg: #f8f2ec;
@@ -62,22 +60,7 @@ body,
 #app,
 .slidev-page {
   font-family: 'Ubuntu', sans-serif;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      var(--deck-grid-light) 0,
-      var(--deck-grid-light) 1px,
-      transparent 1px,
-      transparent 22px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      var(--deck-grid-dark) 0,
-      var(--deck-grid-dark) 1px,
-      transparent 1px,
-      transparent 22px
-    ),
-    linear-gradient(180deg, var(--deck-bg-top) 0%, var(--deck-bg-bottom) 100%);
+  background: linear-gradient(180deg, var(--deck-bg-top) 0%, var(--deck-bg-bottom) 100%);
 }
 
 /* Ordinary slides stay light; dark technical surfaces are nested artefacts. */
