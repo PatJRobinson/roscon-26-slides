@@ -1,7 +1,7 @@
 ---
-title: Making integration visible
+title: How can a robot move?
 info: |
-  ## Making integration visible
+  ## How can a robot move?
   Working understandings, evidence, and a ROS 2 navigation failure
 class: text-center compact-slide
 drawings:
@@ -16,7 +16,7 @@ mdc: true
 
 <div class="text-center">
 
-# Making integration visible
+# How can a robot move?
 
 ## Working understandings, evidence, and a ROS 2 navigation failure
 
