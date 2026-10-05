@@ -1077,118 +1077,157 @@ a.button:hover {
   color: var(--text-main);
 }
 
-/* Quiet concept diagram for the handover problem. */
-.account-slide.slidev-layout { display: flex; flex-direction: column; }
-.account-slide h1 { margin-bottom: 0.45em; }
+/* Slide 8: a plain explanation with room between the two ideas. */
+.account-slide.slidev-layout {
+  display: flex;
+  flex-direction: column;
+}
+
 .account-window {
   display: flex;
   flex: 1;
   min-height: 0;
   flex-direction: column;
   justify-content: center;
-  gap: 2rem;
+  gap: 2.5rem;
 }
-.account-map {
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) 3rem minmax(0, 1.2fr);
-  align-items: center;
-  gap: 1rem;
+
+.account-slide .account-window h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1.65rem;
+  font-weight: 500;
+  line-height: 1.25;
 }
-.account-eyebrow {
-  color: var(--accent-ink-strong);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.component-list {
-  margin-top: 0.8rem;
-  color: var(--ubuntu-aubergine);
-  font-size: 1.35rem;
-  line-height: 1.6;
-}
-.parts-footnote {
-  margin-top: 1rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid var(--surface-border);
+
+.account-slide .account-window p {
+  margin: 0;
   color: var(--light-text-soft);
-  font-size: 0.9rem;
+  font-size: 1.35rem;
+  line-height: 1.55;
 }
-.parts-footnote span { margin-right: 0.35rem; }
-.account-assembly {
-  color: var(--accent-ink-strong);
-  font-size: 2rem;
-  text-align: center;
-}
-.realisation-stage {
-  padding: 1.2rem 1.3rem 1rem;
-  border-radius: 12px;
-  background: #f4ebe8;
-}
-.account-stage-heading {
+
+/* Script-led deck: plain explanations, consistent evidence rows. */
+.simple-slide.slidev-layout {
   display: flex;
   flex-direction: column;
-  gap: 0.18rem;
-  margin-bottom: 1rem;
+  padding: 2rem 2.5rem;
 }
-.account-stage-title {
-  color: var(--ubuntu-aubergine);
-  font-size: 1.35rem;
-  font-weight: 600;
+.simple-slide.slidev-layout h1 {
+  flex: none;
+  align-self: flex-start;
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 1.25rem;
+  border-bottom-width: 2px;
 }
-.relationship-graph {
+.simple-slide .slide-content {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  padding: 0.4rem 0 1rem;
-}
-.relationship-node {
-  padding: 0.55rem 0.75rem;
-  border: 1px solid #d4c4c8;
-  border-radius: 7px;
-  background: var(--surface-bg-strong);
-  color: var(--light-text);
-  font-size: 0.88rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.relationship-link {
-  display: flex;
-  min-width: 2rem;
   flex: 1;
-  align-items: center;
-  color: var(--accent-ink-strong);
-}
-.relationship-link span { height: 1px; flex: 1; background: #b97057; }
-.relationship-link b { font-size: 1rem; font-weight: 500; }
-.account-note {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 0.6rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid #d8c9cd;
-  color: var(--light-text-soft);
-  font-size: 0.82rem;
-}
-.account-note strong { color: var(--accent-ink-strong); }
-.handover-summary {
-  display: flex;
+  min-height: 0;
+  flex-direction: column;
   justify-content: center;
-  gap: 2.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--surface-border);
+  gap: 1.25rem;
+}
+.simple-slide p { margin: 0; font-size: 1.3rem; line-height: 1.45; }
+.simple-slide h2 { margin: 0 0 0.7rem; font-size: 1.5rem; font-weight: 500; }
+.simple-slide ul { margin: 0; font-size: 1.3rem; line-height: 1.7; }
+.simple-slide .plain-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.simple-slide .account-rows {
+  display: grid;
+  grid-template-columns: 10.5rem 1fr;
+  gap: 1rem 1.75rem;
+  margin: 0;
+  align-items: baseline;
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+.simple-slide .account-rows dt { font-weight: 500; color: var(--ubuntu-aubergine); }
+.simple-slide .account-rows dd { margin: 0; color: var(--light-text-soft); }
+.simple-slide .inspection-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 1.25rem;
+}
+.simple-slide .inspection-pair .terminal-body {
+  min-height: 0;
+  padding: 1.2rem 1.25rem 1.4rem;
+}
+.simple-slide .inspection-pair .terminal-command,
+.simple-slide .inspection-pair .terminal-output { font-size: 1.05rem; }
+.simple-slide .inspection-pair .terminal-output { margin-left: 1rem; }
+.simple-slide .inspection-pair .topic-annotation { font-size: 0.95rem; }
+.simple-slide .tf-inspection { display: grid; gap: 0.7rem; }
+.simple-slide .tf-command {
+  padding: 0.8rem 1rem;
+  color: #ffcfbd;
+  font: 0.88rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.simple-slide .tf-graph {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 1rem 0.5rem;
+  text-align: center;
+}
+.simple-slide .tf-branch { display: grid; justify-items: center; gap: 0.15rem; }
+.simple-slide .tf-branch span {
+  padding: 0.45rem 0.55rem;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 0.4rem;
+  font: 0.88rem ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.simple-slide .tf-branch i { color: #ffb092; font-style: normal; }
+.simple-slide table {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 1.12rem;
+}
+.simple-slide th { background: transparent; font-weight: 500; border-bottom: 1px solid var(--surface-border-strong); }
+.simple-slide td { font-weight: 400; }
+.simple-slide td, .simple-slide th { padding: 0.55rem 0.65rem; line-height: 1.35; }
+.simple-slide tr:last-child td { border-bottom: 0; }
+.simple-slide .provenance, .simple-slide .production-pending, .simple-slide .prepared-label {
+  font-size: 0.8rem;
+  line-height: 1.4;
   color: var(--light-text-soft);
-  font-size: 0.95rem;
 }
-.handover-summary strong { color: var(--ubuntu-aubergine); }
-.handover-summary b { margin: 0 0.25rem; color: var(--accent-ink-strong); font-weight: 500; }
-.handover-summary em { color: var(--accent-ink-strong); font-style: normal; }
-
-@media (max-width: 700px) {
-  .account-window { justify-content: flex-start; overflow-y: auto; }
-  .account-map { grid-template-columns: 1fr; gap: 1rem; }
-  .account-assembly { transform: rotate(90deg); }
-  .handover-summary { flex-direction: column; gap: 0.7rem; }
+.simple-slide .production-pending, .simple-slide .pending-inline { color: var(--accent-ink-strong); }
+.simple-slide .prepared-label { margin-bottom: -0.75rem; }
+.simple-slide pre.demo-terminal {
+  margin: 0;
+  padding: 1.4rem 1.65rem;
+  border: 0;
+  border-radius: 5px;
+  box-shadow: none;
+  background: var(--terminal-bg) !important;
+  color: var(--text-main) !important;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
+.simple-slide.quiet-question .slide-content { align-items: center; text-align: center; }
+.simple-slide.quiet-question p { font-size: 2.35rem; line-height: 1.4; }
+.simple-slide.title-slide { justify-content: center; }
+.simple-slide.title-slide h1 { font-size: 2.6rem; margin-top: 5rem; }
+.simple-slide.title-slide .slide-content { justify-content: flex-start; }
+.simple-slide.plain-account .slide-content { gap: 2.5rem; }
+.simple-slide .spaced-lines { display: flex; flex-direction: column; gap: 1.75rem; }
+.simple-slide .spaced-lines p { font-size: 1.65rem; }
+.simple-slide .understanding-map { text-align: center; font-size: 1.25rem; }
+.simple-slide .understanding-map span { margin: 0 3rem; }
+.simple-slide .understanding-map p { font-size: 1.6rem; }
+.simple-slide .map-connectors { color: var(--surface-border-strong); line-height: 1.3; }
+.simple-slide .frame-line { font-family: ui-monospace, monospace; font-size: 2rem; }
+.simple-slide .timing-diagram { width: 75%; margin: 0 auto; text-align: center; font-size: 1rem; }
+.simple-slide .buffer-line { border-top: 3px solid var(--ubuntu-aubergine-soft); margin: 0.6rem 0 0.15rem; }
+.simple-slide .unknown-result { font-size: 3rem; }
+.simple-slide .frontier-line { border-top: 1px solid var(--surface-border-strong); padding-top: 0.75rem; font-size: 1.05rem; }
+.simple-slide .signup-placeholder { display: flex; width: 12rem; height: 12rem; align-items: center; justify-content: center; flex-direction: column; border: 1px dashed var(--surface-border-strong); text-align: center; font-size: 1.15rem; }
+.simple-slide .signup-placeholder small { margin-top: 0.75rem; color: var(--light-text-soft); }
+.simple-slide .next-question { color: var(--accent-ink-strong); }
+/* Preserve the existing observation/relationship comparison. */
+.simple-slide.warrant-slide .slide-content { display: block; padding-top: 1.5rem; }

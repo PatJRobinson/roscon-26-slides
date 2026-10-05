@@ -1,151 +1,123 @@
 ---
 title: How can a robot move?
 info: |
-  ## How can a robot move?
   Working understandings, evidence, and a ROS 2 navigation failure
-class: text-center compact-slide
-drawings:
-  persist: false
-transition: slide-left
+class: simple-slide title-slide
+transition: none
 duration: 45min
 monaco: false
 mdc: true
+drawings:
+  persist: false
 ---
-
-<div class="ubuntu-window text-left max-w-5xl mx-auto">
-
-<div class="text-center">
 
 # How can a robot move?
 
-## Working understandings, evidence, and a ROS 2 navigation failure
+<div class="slide-content">
 
-Patrick Robinson<br />
-ROSCon 2026 · working presentation draft
+<p>Working understandings, evidence, and a ROS 2 navigation failure</p><p>Patrick Robinson<br>ROSCon 2026</p>
 
 </div>
 
-<div class="mt-12 grid grid-cols-3 gap-5 text-left">
-<div class="evidence-chip"><strong>inspect</strong><br /><span>what is actually represented?</span></div>
-<div class="evidence-chip"><strong>challenge</strong><br /><span>which assumption should we test?</span></div>
-<div class="evidence-chip"><strong>revisit</strong><br /><span>what still holds when the system changes?</span></div>
+<!--
+Slide 1. Title slide. Begin the opening on the next slide.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide quiet-question
+---
+
+<div class="slide-content">
+
+<p>What does it mean for a system to work?</p>
+
+</div>
+
+<!--
+Slide 2. Opening · 0:00. Working means a particular configuration, robot, environment and set of conditions.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Someone gives you a ROS 2 system
+
+<div class="slide-content">
+
+<p>It worked on their machine.</p><ul><li>The packages are there.</li><li>The launch files run.</li><li>The graph appears.</li><li>The README tells you what to type.</li></ul><p>The robot still does not behave as expected.</p>
+
+</div>
+
+<!--
+Slide 3. Opening. This is a staged handover scenario.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide quiet-question
+---
+
+<div class="slide-content">
+
+<p>The software may travel.<br>The understanding may not.</p>
+
+</div>
+
+<!--
+Slide 4. Opening. Reused components can lose the understanding established around them.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Inspecting the ROS system
+
+<div class="slide-content">
+
+<div class="inspection-pair">
+<div class="terminal-card"><div class="terminal-title">ROS 2 inspection · staged example</div><div class="terminal-body"><div v-click="1" class="terminal-command">❯ ros2 node list</div><div v-click="2" class="terminal-output">robot_node</div><div v-click="3" class="terminal-command">❯ ros2 topic list</div><div v-click="4" class="terminal-output">/tf<br>/tf_static<br>/scan<br>/cmd_vel</div><div v-click="5" class="topic-annotation">What relationships between these?</div></div></div>
+<div v-click="6" class="tf-inspection">
+<div class="terminal-card"><div class="terminal-title">TF2 structure · generated with tf2_tools</div><div class="tf-command">❯ ros2 run tf2_tools view_frames</div></div>
+<div class="system-view"><div class="system-view-header">frames.pdf · schematic frame graph</div><div class="tf-graph"><div class="tf-branch"><span>map</span><i>↓</i><span>odom</span></div><div class="tf-branch"><span>base_link</span><i>↓</i><span>scan</span></div></div></div>
+</div>
 </div>
 
 </div>
 
 <!--
-Presenter note: Open with the handover question. The deck is an authoring
-scaffold, not evidence that the complete demo or talk package exists.
+Slide 5. First example · 2:00–5:00. ROS tools provide useful observations. The engineer supplies the question and interpretation.
+Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
 ---
-transition: slide-left
-class: question-slide
+class: simple-slide
 ---
 
-<div class="ubuntu-window question-window max-w-5xl mx-auto text-center">
-<div class="text-3xl">What does it mean for a system to work?</div>
+# Is the required relationship available?
+
+<div class="slide-content">
+
+<dl class="account-rows"><dt>Observation</dt><dd>/tf and /tf_static are present</dd><dt>Question</dt><dd>Is odom → base_link available?</dd><dt>Observation</dt><dd>odom → base_link not observed</dd></dl>
+
 </div>
+
+<!--
+Slide 6. First example. Topic presence alone does not establish transform traffic or this particular relationship. Inspect the frame data.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
 
 ---
-transition: slide-left
-class: question-slide
----
-
-# A system can travel without its understanding
-
-<div class="ubuntu-window text-xl leading-snug max-w-5xl mx-auto">
-
-<div class="grid grid-cols-2 gap-10 items-center">
-<div>
-
-<p class="text-2xl">Someone gives you a ROS 2 system that worked on their machine.</p>
-
-<ul class="mt-8 space-y-3">
-<li>The packages are there.</li>
-<li>The launch files run.</li>
-<li>The graph appears.</li>
-<li>The README tells you what to type.</li>
-</ul>
-</div>
-
-<div class="question-card p-6 text-center">
-<!-- <div class="text-5xl mb-5">✓ ✓ ✓</div> -->
-<div class="text-2xl font-semibold text-orange-200">…but the robot still does not behave as expected.</div>
-</div>
-</div>
-
-
-</div>
-
-<!-- Staged opening scenario; not a claim about a particular handover study. -->
-
----
-transition: slide-left
-class: question-slide statement-slide
----
-
-<!-- # What travels? -->
-
-<div class="ubuntu-window question-window statement-window max-w-5xl mx-auto text-center">
-<div class="text-3xl">The software may travel.<br />The understanding might not.</div>
-</div>
-
----
-transition: slide-left
-class: compact-slide code-sequence-slide
----
-
-# What ordinary visibility can tell us
-
-<div class="ubuntu-window code-sequence-window max-w-5xl mx-auto">
-<div class="terminal-card code-terminal">
-<div class="terminal-title">> ~/ros_ws/slides</div>
-<div class="terminal-body">
-<div v-click="1" class="terminal-command"><span class="terminal-prompt">&gt;</span> ros2 node list</div>
-<div v-click="2" class="terminal-output">robot_node</div>
-<div v-click="3" class="terminal-command"><span class="terminal-prompt">&gt;</span> ros2 topic list</div>
-<div v-click="4" v-mark="{ at: 5, color: 'orange', type: 'box' }" class="terminal-output topic-output">/tf<br />/tf_static<br />/scan<br />/cmd_vel</div>
-<div v-click="5" class="topic-annotation">↳ what relationships between these?</div>
-</div>
-</div>
-</div>
-
----
-transition: slide-left
-class: compact-slide
----
-
-# The required transform is not observed
-
-<div class="ubuntu-window tf-focus-window max-w-5xl mx-auto">
-  <div class="tf-observation">
-    <span class="tf-observation-label">observed topics</span>
-    <span class="tf-topic">/tf</span>
-    <span class="tf-topic">/tf_static</span>
-    <span class="tf-present">present</span>
-  </div>
-
-<div class="tf-chain" role="img" aria-label="The /tf and /tf_static topics are present. The required transform from odom to base_link is not observed; base_link connects to laser.">
-<div class="tf-frame">odom</div>
-<div class="tf-missing">
-<span>required transform</span>
-<div class="tf-missing-line" aria-hidden="true"></div>
-<span class="tf-gap-status">not observed</span>
-</div>
-<div class="tf-frame">base_link</div>
-<div class="tf-observed-line" aria-hidden="true"></div>
-<div class="tf-frame">laser</div>
-</div>
-
-</div>
-
----
-transition: slide-left
-class: compact-slide warrant-slide
+class: simple-slide compact-slide warrant-slide
 ---
 
 # Presence is not the relationship
+
+<div class="slide-content">
 
 <div class="ubuntu-window warrant-window max-w-5xl mx-auto">
 
@@ -174,400 +146,560 @@ class: compact-slide warrant-slide
 </div>
 </div>
 
+
+
+</div>
+
 <!--
-Land the distinction between observation and warrant before widening the
-argument beyond this particular missing relationship.
+Slide 7. First example. We supplied the reasoning around these observations. Did we record it? Pause before discussing where that account belongs.
+Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
 ---
-transition: slide-left
-class: compact-slide account-slide
+class: simple-slide plain-account
 ---
 
-<h1>The system account is specific to this realisation</h1>
+# The system account is specific to this realisation
 
-<div class="ubuntu-window account-window max-w-5xl mx-auto">
+<div class="slide-content">
 
-<div class="account-map" role="img" aria-label="Reusable packages, nodes, sensors, controllers, and libraries carry their documentation. A system account describes the relationships, configuration, and conditions of one realisation.">
-  <section class="parts-stage">
-    <div class="account-eyebrow">Designed for reuse</div>
-    <div class="component-list">Packages · nodes · sensors · controllers · libraries</div>
-    <div class="parts-footnote"><span>▤</span> Documentation travels with the parts</div>
-  </section>
-
-  <div class="account-assembly" aria-hidden="true">→</div>
-
-  <section class="realisation-stage">
-    <div class="account-stage-heading">
-      <span class="account-eyebrow">One configuration · these conditions</span>
-      <span class="account-stage-title">This realisation</span>
-    </div>
-    <div class="relationship-graph" aria-hidden="true">
-      <div class="relationship-node">sensor</div>
-      <div class="relationship-link"><span></span><b>→</b></div>
-      <div class="relationship-node">nav node</div>
-      <div class="relationship-link"><span></span><b>→</b></div>
-      <div class="relationship-node">controller</div>
-    </div>
-    <div class="account-note"><strong>System account</strong><span>relationships · configuration · conditions</span></div>
-  </section>
-</div>
-
-<div class="handover-summary">
-  <span><strong>Software</strong> <b>→</b> repository</span>
-  <span><strong>Understanding</strong> <b>→</b> <em>often no obvious home</em></span>
-</div>
+<section><h2>The parts are reusable</h2><p>Packages, nodes, sensors, controllers, libraries.<br>Their documentation travels with them.</p></section><section><h2>The system account is specific</h2><p>How those parts relate, how they are configured,<br>and the conditions in which they work together.</p></section>
 
 </div>
 
+<!--
+Slide 8. First example. Supports the modularity passage following the presence comparison.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
 
 ---
-transition: slide-left
-class: compact-slide
+class: simple-slide
 ---
 
-# Four things to keep together
+# Each answer changes the next question
 
-<div class="ubuntu-window max-w-5xl mx-auto">
+<div class="slide-content">
 
-<div class="grid grid-cols-4 gap-4">
-<div class="evidence-card"><div class="card-kicker">01</div><h3>Assumption</h3><p>What must be true?</p></div>
-<div class="evidence-card"><div class="card-kicker">02</div><h3>Probe</h3><p>What did we inspect or change?</p></div>
-<div class="evidence-card"><div class="card-kicker">03</div><h3>Evidence</h3><p>What did the probe produce?</p></div>
-<div class="evidence-card"><div class="card-kicker">04</div><h3>Claim</h3><p>What does that warrant?</p></div>
+<dl class="account-rows"><dt>Presence</dt><dd>What is there?</dd><dt>Structure</dt><dd>Is the relationship there?</dd><dt>Runtime</dt><dd>Is it available when it is needed?</dd><dt>Behaviour</dt><dd>Can the system accomplish the task?</dd></dl>
+
 </div>
 
-<div class="mt-12 grid grid-cols-2 gap-8 items-center">
-<div class="text-xl">
-<p class="font-semibold">A claim is not a feeling of progress.</p>
-<p>It is a bounded statement tied to a named realisation, a selected probe, and inspectable evidence.</p>
-</div>
-<div class="remaining-card">
-<div class="card-kicker">always retain</div>
-<div class="text-2xl font-semibold mt-3">remaining unknown</div>
-<p>What have we not established yet?</p>
-</div>
-</div>
-</div>
+<!--
+Slide 9. 5:00–8:00. Integration is an evolving inquiry. Each answer makes a more specific next question possible.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
 
 ---
-transition: slide-left
+class: simple-slide
 ---
 
-# Rotifer: a representation for revisiting the reasoning
+# Six months later
 
-<div class="ubuntu-window max-w-5xl mx-auto">
+<div class="slide-content">
 
-<div class="grid grid-cols-3 gap-5 text-center items-center">
-<div class="terminal-card">
-<div class="terminal-title">authored source</div>
-<pre class="!m-0 !border-0 !shadow-none">source show
-experiment:
-  goal: corridor_follow</pre>
-</div>
-<div class="text-5xl text-orange-300">→</div>
-<div class="terminal-card">
-<div class="terminal-title">resolved run</div>
-<pre class="!m-0 !border-0 !shadow-none">roti explain
-assumptions
-providers
-evidence</pre>
-</div>
+<div class="spaced-lines"><p>Where did we get to?</p><p>What had we ruled out?</p><p>What was the next question?</p></div>
+
 </div>
 
-<div class="mt-10 grid grid-cols-2 gap-8">
-<div><h3>What the representation can do</h3><ul><li>make selected reasoning inspectable;</li><li>keep evidence and claims connected;</li><li>make a changed realisation visible.</li></ul></div>
-<div><h3>What it does not do</h3><ul><li>choose the next experiment automatically;</li><li>make a mock interaction a live CLI;</li><li>carry warrant into another system.</li></ul></div>
-</div>
-</div>
+<!--
+Slide 10. 5:00–8:00. The artefacts may remain while the connections between them are lost.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
 
 ---
-transition: slide-left
+class: simple-slide
 ---
 
-# The demonstration: five changes in what we can warrant
+# Where does the understanding live?
 
-<div class="ubuntu-window max-w-5xl mx-auto">
+<div class="slide-content">
 
-<div class="grid grid-cols-5 gap-3 text-center">
-<div class="stage-box"><span>1</span><strong>Presence</strong><small>what exists?</small></div>
-<div class="stage-box"><span>2</span><strong>Structure</strong><small>what connects?</small></div>
-<div class="stage-box"><span>3</span><strong>Runtime</strong><small>can it exchange?</small></div>
-<div class="stage-box"><span>4</span><strong>Behaviour</strong><small>what happened?</small></div>
-<div class="stage-box"><span>5</span><strong>Contrast</strong><small>what changes?</small></div>
-</div>
-
-<div class="mt-12 text-center text-2xl">The point is not to display more telemetry.</div>
-<div class="mt-4 text-center text-3xl font-semibold text-orange-200">The point is to change the question as the evidence changes.</div>
-</div>
-
----
-transition: slide-left
----
-
-# Stage 1 — Presence
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="grid grid-cols-2 gap-8 items-center">
-<div class="terminal-card">
-<div class="terminal-title">~~/ros_ws/slides</div>
-<pre class="!m-0 !border-0 !shadow-none">roti explain --stage presence
-topics: /tf /tf_static /scan
-required edge: odom -> base_link
-observed: edge absent</pre>
-</div>
-<div>
-<div class="card-kicker">bounded claim</div>
-<p class="text-2xl font-semibold">Topic presence does not establish the required frame relationship.</p>
-<p class="mt-6">We have narrowed the problem. We have not explained the behaviour.</p>
-</div>
-</div>
+<div class="understanding-map"><div>Code <span>Configuration</span> Tests</div><div class="map-connectors" aria-hidden="true">╲　　　　 │　　　　 ╱</div><p>What has been established?</p><div class="map-connectors" aria-hidden="true">╱　　　　 │　　　　 ╲</div><div>Tools <span>Records</span> People</div></div>
 
 </div>
 
----
-transition: slide-left
-class: compact-slide repl-slide
----
-
-# Stage 1 — Presence: inspect the source and account
-
-<MockRepl :stage="1" />
-
-<!-- Prepared command surface; roti run is not live execution. -->
+<!--
+Slide 11. 8:00–11:00. Connect what we were trying to establish, evidence, conclusion and unresolved questions.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
 
 ---
-transition: slide-left
+class: simple-slide
 ---
 
-# Stage 2 — Structural compatibility
+# The Rotifer workflow
 
-<div class="ubuntu-window max-w-5xl mx-auto">
+<div class="slide-content">
 
-<div class="grid grid-cols-3 gap-4 text-center">
-<div class="evidence-card"><div class="card-kicker">probe</div><h3>odometry</h3><p>which provider publishes it?</p></div>
-<div class="evidence-card"><div class="card-kicker">probe</div><h3>scan</h3><p>which frame does it use?</p></div>
-<div class="evidence-card"><div class="card-kicker">probe</div><h3>TF</h3><p>who owns the relationship?</p></div>
-</div>
-
-<div class="mt-10 grid grid-cols-2 gap-8 items-center">
-<div class="text-2xl font-semibold">A connected graph is not yet an interpretable system.</div>
-<div class="terminal-card"><pre class="!m-0 !border-0 !shadow-none">assumption → probe → evidence
-structural relationship established
-calibration and authority: unknown</pre></div>
-</div>
-</div>
-
----
-transition: slide-left
-class: compact-slide repl-slide
----
-
-# Stage 2 — Structure: follow each relationship
-
-<MockRepl :stage="2" />
-
-<!-- Provider rows and run identities remain explicit placeholders. -->
-
----
-transition: slide-left
-class: compact-slide
----
-
-# Stage 3 — Runtime compatibility
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="grid grid-cols-3 gap-5">
-<div class="evidence-card"><div class="card-kicker">timing</div><h3>scan timestamps</h3><p>are messages current enough?</p></div>
-<div class="evidence-card"><div class="card-kicker">availability</div><h3>TF buffer</h3><p>can the transform be resolved?</p></div>
-<div class="evidence-card"><div class="card-kicker">state</div><h3>lifecycle / action</h3><p>is the runtime ready?</p></div>
-</div>
-
-<blockquote class="mt-10 text-xl readable-callout">Latest-time connectivity was not enough. The runtime had to exchange interpretable information under the tested conditions.</blockquote>
-
-<div class="mt-8 evidence-strip"><strong>bounded claim:</strong> runtime compatibility is established for the selected conditions—not behavioural success, localisation quality, or correct costmap semantics.</div>
-</div>
-
----
-transition: slide-left
-class: compact-slide repl-slide
----
-
-# Stage 3 — Runtime: compare transform availability
-
-<MockRepl :stage="3" />
-
-<!-- Failure and compatible results are separate runs under identified conditions. -->
-
----
-transition: slide-left
-class: compact-slide
----
-
-# Stage 4 — Behavioural evidence
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="grid grid-cols-2 gap-8 items-center">
-<div class="video-placeholder">
-<div class="text-6xl">▶</div>
-<div class="mt-4 text-xl font-semibold">Gazebo GUI failure clip</div>
-</div>
-<div>
-<div class="card-kicker">what we see</div>
-<p class="text-2xl font-semibold">The goal is accepted. The corridor looks plausible. The robot does not translate.</p>
-<div class="evidence-strip mt-6"><strong>paired evidence:</strong> footprint · local feasibility · commands/odometry · MPPI progress</div>
-</div>
-</div>
-
-<div class="mt-8 grid grid-cols-2 gap-6">
-<div class="remaining-card"><div class="card-kicker">weakened</div><p>several simple substrate and geometry explanations</p></div>
-<div class="warn-card rounded-xl p-5"><div class="card-kicker">remaining</div><p>controller behaviour remains unresolved</p></div>
-</div>
-</div>
-
-<!-- The GUI is supporting context for retained evidence, not a replacement. -->
-
----
-transition: slide-left
-class: compact-slide repl-slide
----
-
-# Stage 4 — Behaviour: inspect the observed failure
-
-<MockRepl :stage="4" />
-
-<!-- Evidence provenance distinguishes bag topics from native result files. -->
-
----
-transition: slide-left
-class: compact-slide
----
-
-# The next question is a human choice
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="text-center text-xl mb-8">After the accepted goal does not progress, several explanations remain plausible.</div>
-
-<div class="grid grid-cols-3 gap-5 text-center">
-<div class="probe-option"><div class="text-4xl">⌖</div><h3>pose/path consistency</h3><p>Is the reported motion coherent?</p></div>
-<div class="probe-option selected"><div class="text-4xl">▦</div><h3>local feasibility</h3><p>Is the corridor actually free?</p><div class="selected-label">selected next probe</div></div>
-<div class="probe-option"><div class="text-4xl">→</div><h3>controller progress</h3><p>What commands and progress are visible?</p></div>
-</div>
-
-<div class="mt-10 text-center text-2xl font-semibold text-orange-200">Rotifer can preserve the reasoning. It does not choose the probe.</div>
-</div>
-
----
-transition: slide-left
-class: compact-slide
----
-
-# Stage 5 — Controlled contrast
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="grid grid-cols-2 gap-8 items-stretch">
-<div class="controller-card fail-card"><div class="card-kicker">preserved substrate</div><h2>MPPI</h2><div class="result-line">no forward translation</div><p>failure remains controller-specific and incompletely explained.</p></div>
-<div class="controller-card pass-card"><div class="card-kicker">changed controller</div><h2>Regulated Pure Pursuit</h2><div class="result-line">bounded goal success</div><p>positive command and forward odometry are observed.</p></div>
-</div>
-
-<div class="mt-10 grid grid-cols-2 gap-8">
-<div><h3>What changes</h3><p>The controlled contrast weakens “the substrate cannot work” as the full explanation.</p></div>
-<div><h3>What remains unknown</h3><p>This is not general RPP superiority, a complete MPPI diagnosis, repeatability, or production readiness.</p></div>
-</div>
-</div>
-
----
-transition: slide-left
-class: compact-slide repl-slide
----
-
-# Stage 5 — Contrast: what changed in the account?
-
-<MockRepl :stage="5" />
-
-<!-- RPP evidence is paired with the earlier MPPI observation, with unknowns retained. -->
-
----
-transition: slide-left
----
-
-# What the representation made visible
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="grid grid-cols-5 gap-2 text-center">
-<div class="summary-cell"><strong>assumption</strong><span>what must be true</span></div>
-<div class="summary-cell"><strong>probe</strong><span>what we chose to inspect</span></div>
-<div class="summary-cell"><strong>evidence</strong><span>what the named run produced</span></div>
-<div class="summary-cell"><strong>claim</strong><span>what it warrants</span></div>
-<div class="summary-cell"><strong>unknown</strong><span>what still needs work</span></div>
-</div>
-
-<div class="mt-12 grid grid-cols-2 gap-8 items-center">
-<div class="text-2xl font-semibold">A procedure or claim structure may travel.</div>
-<div class="remaining-card text-xl">Claim truth and evidential warrant must be re-established in another realisation.</div>
-</div>
-</div>
-
----
-transition: slide-left
----
-
-# What this talk is—and is not—claiming
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="grid grid-cols-2 gap-10">
-<div>
-<h2>This is</h2>
-<ul class="space-y-3"><li>a bounded representational proposition;</li><li>a worked Nav2 evidence sequence;</li><li>an invitation to recognise, qualify, or disagree.</li></ul>
-</div>
-<div>
-<h2>This is not</h2>
-<ul class="space-y-3"><li>a product launch or complete account of integration;</li><li>automatic reasoning or intelligent experiment selection;</li><li>portable warrant, a flight check, or practitioner validation.</li></ul>
-</div>
-</div>
-
-<blockquote class="mt-10 text-xl readable-callout">The caveats are not an apology. They are part of making the claim inspectable.</blockquote>
-</div>
-
----
-transition: slide-left
----
-
-# Where does this fit—or break?
-
-<div class="ubuntu-window max-w-5xl mx-auto">
-
-<div class="grid grid-cols-3 gap-5">
-<div class="question-card"><div class="text-4xl">?</div><p>Where does important integration understanding live in your projects?</p></div>
-<div class="question-card"><div class="text-4xl">↔</div><p>Which boundaries or responsibilities does this representation hide?</p></div>
-<div class="question-card"><div class="text-4xl">!</div><p>What existing practice handles this better?</p></div>
-</div>
-
-<div class="mt-12 text-center text-xl">Recognition, qualification, disagreement.</div>
-</div>
-
----
-transition: slide-left
-class: compact-slide
----
-
-# A functioning robot depends on working understandings
-
-<div class="ubuntu-window max-w-5xl mx-auto text-center">
-
-<p class="text-3xl leading-snug">Those understandings are distributed across people, tools, configuration, infrastructure, and deployment context.</p>
-
-<p class="mt-10 text-2xl font-semibold text-orange-200">Rotifer is one attempt to make selected parts explicit enough to inspect, challenge, and revisit as the system changes.</p>
-
-<div class="mt-12 text-lg">If your work involves integration, debugging, testing, deployment, handover, or assurance, I’d like to hear about it.</div>
+<dl class="account-rows"><dt>source show</dt><dd>Authored investigation</dd><dt>roti explain</dt><dd>Current account</dd><dt>roti run</dt><dd>New observations</dd><dt>roti explain</dt><dd>Updated account</dd></dl><p class="provenance">The demonstration uses prepared interactions over retained evidence.</p>
 
 </div>
 
-<!-- Close on the accepted audience takeaway, then move to questions/invitation. -->
+<!--
+Slide 12. 11:00–18:00. Define realisation as these providers, configuration, conditions and task. The engineer chooses the question and interprets the result. Distinguish authored, observed and concluded.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Stage 1 · The authored investigation
+
+<div class="slide-content">
+
+<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
+<pre class="demo-terminal">❯ select nav2_corridor_gazebo_substrate/&#10;❯ source show&#10;&#10;experiment:  nav2_corridor_gazebo_substrate&#10;realisation: &lt;realisation ID&gt;&#10;provider:    &lt;provider ID and role&gt;&#10;required:    odom → base_link&#10;question:    Is this relationship available here?&#10;conditions:  &lt;robot, environment and runtime conditions&gt;</pre>
+
+</div>
+
+<!--
+Slide 13. 18:00–21:00. Authored by an engineer. Exact identities and conditions require evidence verification.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# The account before the run
+
+<div class="slide-content">
+
+<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
+<pre class="demo-terminal">❯ roti explain &lt;target to verify&gt;&#10;&#10;requires:    odom → base_link&#10;assumption:  required relationship is available&#10;account:     NOT ESTABLISHED&#10;basis:       &lt;declaration or earlier retained evidence&gt;&#10;&#10;next question:&#10;  Inspect the transform data for this realisation.</pre>
+
+</div>
+
+<!--
+Slide 14. Stage 1. Show the existing account before collecting observations.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Run the presence investigation
+
+<div class="slide-content">
+
+<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
+<pre class="demo-terminal">❯ roti run presence_check&#10;&#10;investigation: presence_check&#10;run:           &lt;retained run ID&gt;&#10;status:        observations retained</pre>
+
+</div>
+
+<!--
+Slide 15. Stage 1. Prepared representation of the execution boundary; this command does not execute ROS.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# What was observed?
+
+<div class="slide-content">
+
+<table><thead><tr><th>Inspected</th><th>Observation</th></tr></thead><tbody><tr><td>/tf and /tf_static</td><td>Present</td></tr><tr><td>odom → base_link</td><td>Not observed</td></tr></tbody></table><p class="provenance">Captured observation described in the script · run identity to verify</p><p class="production-pending">To complete: Exact observed frames, edges and retained run reference.</p>
+
+</div>
+
+<!--
+Slide 16. Stage 1. This is a presentation summary of the script, not a newly verified observation.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Stage 1 · What we have established
+
+<div class="slide-content">
+
+<dl class="account-rows"><dt>Assumption</dt><dd>The odometry-to-base relationship is available.</dd><dt>Probe</dt><dd>Inspect topics and transform/frame data.</dd><dt>Evidence</dt><dd>TF topics present; required edge not observed.</dd><dt>Claim</dt><dd>The required relationship was not observed in this run.</dd><dt>Still open</dt><dd>Structure, timing and navigation behaviour.</dd></dl>
+
+</div>
+
+<!--
+Slide 17. Stage 1. What must change to establish the relationship?
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Stage 2 · Required relationships
+
+<div class="slide-content">
+
+<table><thead><tr><th>Requirement</th><th>Declared provider / current account</th></tr></thead><tbody><tr><td>odom → base_link</td><td>Odometry provider · to verify</td></tr><tr><td>Scan source and frame</td><td>Scan provider · to verify</td></tr><tr><td>base_link → scan</td><td>Frame provider · to verify</td></tr></tbody></table><p class="provenance">Prepared source / explain view · exact provider rows and basis pending</p>
+
+</div>
+
+<!--
+Slide 18. 21:00–24:00. Establish one relationship at a time. Do not imply all requirements were repaired at once.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Establishing odometry
+
+<div class="slide-content">
+
+<div v-click="1"><dl class="account-rows"><dt>Authored change</dt><dd><span class="pending-inline">Odometry provider/change to verify</span></dd></dl></div><div v-click="2"><dl class="account-rows"><dt>Observation</dt><dd>odom → base_link observed</dd></dl></div><div v-click="3"><dl class="account-rows"><dt>Account</dt><dd>Relationship established for the inspected realisation</dd></dl></div><p class="provenance">Prepared sequence · retained structural run and actual change to verify</p>
+
+</div>
+
+<!--
+Slide 19. Stage 2. Declaration → retained observation → updated account. The scan requirements remain open.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Establishing the scan relationships
+
+<div class="slide-content">
+
+<div v-click="1"><dl class="account-rows"><dt>Authored source</dt><dd>Scan topic and frame · exact declaration to verify</dd></dl></div><div v-click="2"><dl class="account-rows"><dt>Observation</dt><dd>Scan source/frame and base_link → scan</dd></dl></div><div v-click="3"><dl class="account-rows"><dt>Account</dt><dd>Scan relationships established for this realisation</dd></dl></div><p class="provenance">Prepared sequence · retained observations and run identities to verify</p>
+
+</div>
+
+<!--
+Slide 20. Stage 2. Show the actual provider and frame changes once verified.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# The structural account
+
+<div class="slide-content">
+
+<p><span class="frame-line">odom ─── base_link ─── scan</span></p><dl class="account-rows"><dt>Established</dt><dd>Odometry relationship, scan source/frame, base-to-scan relationship</dd><dt>Still open</dt><dd>Timing, lifecycle, costmap behaviour, navigation success</dd></dl><p class="provenance">Prepared summary of the script’s retained structural observations</p>
+
+</div>
+
+<!--
+Slide 21. Stage 2. Availability at each required timestamp remains untested here.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Stage 3 · Is the transform available in time?
+
+<div class="slide-content">
+
+<table><thead><tr><th>Requirement</th><th>Current account</th></tr></thead><tbody><tr><td>odom → base_link</td><td>Structurally established</td></tr><tr><td>base_link → scan</td><td>Structurally established</td></tr><tr><td>Map / lifecycle / action</td><td>Retained status to verify</td></tr><tr><td>Scan-timestamp lookup</td><td>To investigate</td></tr></tbody></table><p class="provenance">Prepared source / explain view · selected investigation and basis to verify</p>
+
+</div>
+
+<!--
+Slide 22. 24:00–27:00. Establish what is already supported before runtime observations.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Runtime observations
+
+<div class="slide-content">
+
+<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
+<pre class="demo-terminal">❯ roti run runtime_compatibility&#10;run: &lt;runtime-surface run ID&gt;&#10;status: observations retained<div v-click><table><thead><tr><th>Interface</th><th>Observed state</th></tr></thead><tbody><tr><td>Map / lifecycle / action</td><td>Exact retained states to verify</td></tr><tr><td>TF relationships</td><td>Available</td></tr></tbody></table></div></pre>
+
+</div>
+
+<!--
+Slide 23. Stage 3. Keep the retained runtime surface distinct from successful task behaviour.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Lookup at the scan timestamp fails
+
+<div class="slide-content">
+
+<table><thead><tr><th>Lookup</th><th>Result</th></tr></thead><tbody><tr><td>Latest available transform</td><td>Succeeded</td></tr><tr><td>Transform at scan timestamp</td><td>Failed</td></tr></tbody></table><p class="production-pending">To complete: Scan timestamp, transform-buffer bounds, diagnostic and run identity.</p><p class="provenance">Timing-failure observation described in the script</p>
+
+</div>
+
+<!--
+Slide 24. Stage 3. The script does not supply buffer bounds or the scan timestamp. Add the minimal evidence-based timeline when verified; do not invent whether the scan fell before or after the buffer.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Lookup succeeds under changed conditions
+
+<div class="slide-content">
+
+<div class="timing-diagram"><span>Available transform data</span><div class="buffer-line"></div><span>↑<br>Scan timestamp</span></div><table><thead><tr><th>Lookup</th><th>Result</th></tr></thead><tbody><tr><td>Latest available transform</td><td>Succeeded</td></tr><tr><td>Transform at scan timestamp</td><td>Succeeded</td></tr></tbody></table><p class="provenance">Schematic · separate timing-compatible run; not a replay of the failure</p><p class="production-pending">To complete: Run identity and exact changed runtime conditions.</p>
+
+</div>
+
+<!--
+Slide 25. Stage 3. Diagram shows the qualitative relationship in the script, not measured timestamps. Preserve the separate-run boundary.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Stage 3 · The updated account
+
+<div class="slide-content">
+
+<dl class="account-rows"><dt>Assumption</dt><dd>Transform data is available when the scan needs it.</dd><dt>Probe</dt><dd>Compare latest-time and scan-time lookups.</dd><dt>Evidence</dt><dd>Scan-time lookup failed, then succeeded in a separate run.</dd><dt>Claim</dt><dd>The required lookup succeeded under the tested conditions.</dd><dt>Still open</dt><dd>Localisation, downstream costmaps and task success.</dd></dl><p class="provenance">Prepared explain update · basis: timing-compatible run, reference pending</p>
+
+</div>
+
+<!--
+Slide 26. Stage 3. Only claim compatibility under the recorded conditions.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Stage 4 · No forward progress
+
+<div class="slide-content">
+
+<div class="plain-columns"><section><h2>Recorded topics</h2><p>Valid path<br>Free sampled corridor<br>Zero forward command<br>No translation</p><p class="production-pending">To complete: Attach the packaged topic replay.</p></section><section><h2>Native result records</h2><p>Goal accepted<br>Result timed out</p><p class="production-pending">To complete: Attach the native result excerpts.</p></section></div><p class="provenance">Script summary · two separate attempts, 2026-10-02 20:33:41Z and 20:38:41Z · revision 19ee3b7d…</p>
+
+</div>
+
+<!--
+Slide 27. 27:00–30:00. No Gazebo GUI video exists. Assets are not present in this deck. These are text summaries from the authoritative script, not replayed or independently verified evidence. Bags omit submitted goal and final-result reply.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# The behavioural account
+
+<div class="slide-content">
+
+<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
+<pre class="demo-terminal">❯ source show&#10;  &lt;selected realisation, task and controller&gt;&#10;&#10;❯ roti explain &lt;behavioural investigation&gt;&#10;  substrate / goal / path / corridor: &lt;retained basis&gt;&#10;  forward progress: not established&#10;&#10;question:&#10;  Does the robot progress towards the goal?</pre>
+
+</div>
+
+<!--
+Slide 28. Stage 4. Existing account does not independently diagnose the controller.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# What the captures show
+
+<div class="slide-content">
+
+<table><thead><tr><th>Observation</th><th>Result</th><th>Source</th></tr></thead><tbody><tr><td>Goal</td><td>Accepted</td><td>Native result</td></tr><tr><td>Path</td><td>Valid path</td><td>Bag topic</td></tr><tr><td>Local corridor</td><td>Sampled free to 0.6 m</td><td>Bag / native probe</td></tr><tr><td>Forward command</td><td>Zero</td><td>Bag topic</td></tr><tr><td>Translation</td><td>None</td><td>Bag topic</td></tr><tr><td>Action result</td><td>Timeout</td><td>Native result</td></tr></tbody></table><p class="provenance">Two attempts · 20:33:41Z / 20:38:41Z · native run IDs not emitted<br>Bags omit the submitted goal and final-result reply.</p>
+
+</div>
+
+<!--
+Slide 29. Stage 4. Source revision 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8. Fresh task 0.5 m; do not conflate with older 3.5 m trial. Observations transcribed from script pending source verification.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# An unresolved behavioural failure
+
+<div class="slide-content">
+
+<dl class="account-rows"><dt>Assumption</dt><dd>The robot can progress towards the accepted goal.</dd><dt>Probe</dt><dd>Inspect path, corridor, commands, odometry and action result.</dd><dt>Evidence</dt><dd>Goal accepted; timeout; no forward command or translation.</dd><dt>Claim</dt><dd>Expected forward progress did not occur in these conditions.</dd><dt>Still open</dt><dd>The cause of the failure.</dd></dl><p v-click class="next-question">What do we investigate next?</p>
+
+</div>
+
+<!--
+Slide 30. Stage 4. Let the failure register. Reserve candidate explanations for probe selection, following the script checklist.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Choosing the controller contrast
+
+<div class="slide-content">
+
+<div class="plain-columns"><section><h2>MPPI</h2><p>Earlier observation:<br>no forward progress</p></section><section><h2>RPP</h2><p>Result not yet shown<br><span class="unknown-result">?</span></p></section></div><p>Keep the setup comparable. Change the controller.</p>
+
+</div>
+
+<!--
+Slide 31. 30:00–33:00. Human choice: geometry, feasible commands and MPPI behaviour are possible investigations. Explain what either outcome could distinguish. Do not reveal success here. Comparability must be verified.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Stage 5 · What happened with RPP?
+
+<div class="slide-content">
+
+<table><thead><tr><th>Observation</th><th>Result</th><th>Source</th></tr></thead><tbody><tr><td>Forward command</td><td>Observed</td><td>Recorded topic</td></tr><tr><td>Translational motion</td><td>Observed</td><td>Odometry</td></tr><tr><td>Goal completion</td><td>Success reported</td><td>Native result</td></tr></tbody></table><p class="provenance">Fresh RPP observation described in the script · source records still to attach</p><p class="production-pending">To complete: RPP revision, recorder start, task identity and run reference.</p>
+
+</div>
+
+<!--
+Slide 32. 33:00–37:00. Reveal evidence before interpretation. Native record supports acceptance and success; bags omit submitted goal and final-result reply.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# What did the comparison establish?
+
+<div class="slide-content">
+
+<table><thead><tr><th>MPPI</th><th>RPP</th></tr></thead><tbody><tr><td>No forward progress</td><td>Forward command and translation</td></tr><tr><td>Earlier failure</td><td>Goal success reported</td></tr></tbody></table><dl class="account-rows"><dt>Comparison</dt><dd>Controller changed; common conditions and other differences to verify</dd><dt>Supported</dt><dd>This setup completed the task with RPP under the tested conditions.</dd><dt>Still open</dt><dd>Why did MPPI stall here? How repeatable is the RPP result?</dd></dl>
+
+</div>
+
+<!--
+Slide 33. Stage 5. General substrate inability is insufficient as the full explanation, subject to verified comparability. No claim of general RPP superiority, isolated defect or complete diagnosis.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Replace the laser provider
+
+<div class="slide-content">
+
+<p>Earlier realisation → changed laser provider</p><table><thead><tr><th>Part of the account</th><th>After the change</th></tr></thead><tbody><tr><td>Odometry independent of the laser</td><td>May retain its basis</td></tr><tr><td>Scan source and frame relationship</td><td>Needs checking again</td></tr><tr><td>Scan timing</td><td>Needs checking again</td></tr><tr><td>Navigation behaviour</td><td>Needs checking for this realisation</td></tr></tbody></table><p class="provenance">Staged dependency example · implemented reopening behaviour to verify</p>
+
+</div>
+
+<!--
+Slide 34. 37:00–39:00. The earlier evidence remains about the earlier system. Support only survives where the relevant dependencies and conditions remain unchanged.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# What Rotifer tries to retain
+
+<div class="slide-content">
+
+<dl class="account-rows"><dt>Context</dt><dd>Particular system and conditions</dd><dt>Question</dt><dd>What are we trying to establish?</dd><dt>Investigation</dt><dd>What did we choose to do?</dd><dt>Evidence</dt><dd>What did we retain?</dd><dt>Account</dt><dd>What can we say now? What is still open?</dd></dl><p class="provenance">source show → roti run → roti explain</p>
+
+</div>
+
+<!--
+Slide 35. 39:00–43:00. Step back to the research proposition. Avoid repeating the RPP result and the full handover argument.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# The current account after change
+
+<div class="slide-content">
+
+<div class="plain-columns"><section><h2>Still supported</h2><p>Conclusions whose basis remains applicable.</p></section><section><h2>Reopened or unresolved</h2><p>Dependencies affected by the change.<br>Questions the earlier work left open.</p></section></div><div class="frontier-line">Where the investigation has reached</div><p>Evidence and investigations remain available underneath.</p><p class="provenance">Staged account view</p>
+
+</div>
+
+<!--
+Slide 36. Reflection. Brief reprise of the frontier visual. The transferred account gives someone a basis to inspect and continue the work.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# What this demonstration establishes
+
+<div class="slide-content">
+
+<dl class="account-rows"><dt>Proposition</dt><dd>Preserve the question, evidence, conclusion and open work around a particular system.</dd><dt>Demonstration</dt><dd>Prepared interactions over retained observations. Rotifer is still in development.</dd><dt>Research questions</dt><dd>What is useful to practitioners? What does this account miss?</dd></dl>
+
+</div>
+
+<!--
+Slide 37. Reflection. Practitioner fit and completeness remain research questions. Interface is a prepared representation, not a finished end-to-end CLI.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# What does this look like in your work?
+
+<div class="slide-content">
+
+<div class="spaced-lines"><p>Where does the understanding live?</p><p>What would this account miss?</p><p>What do you already do well?</p></div>
+
+</div>
+
+<!--
+Slide 38. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
+
+---
+class: simple-slide
+---
+
+# Interview study
+
+<div class="slide-content">
+
+<p>Do you work on robotic systems?</p><p>I’m interested in experiences of integration, testing,<br>debugging, deployment and handover.</p><div class="plain-columns"><section><div class="signup-placeholder">Interview sign-up QR<br><small>Link required</small></div></section><section><p>Find out more or express interest.<br>Participation is optional.</p><p class="production-pending">Email: Patrick2.Robinson@live.uwe.ac.uk</p></section></div>
+
+</div>
+
+<!--
+Slide 39. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
+Authoritative content: say-show-script.md (updated 2026-10-03).
+-->
