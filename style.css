@@ -1076,3 +1076,119 @@ a.button:hover {
 .ubuntu-window.terminal-mode strong {
   color: var(--text-main);
 }
+
+/* Quiet concept diagram for the handover problem. */
+.account-slide.slidev-layout { display: flex; flex-direction: column; }
+.account-slide h1 { margin-bottom: 0.45em; }
+.account-window {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+}
+.account-map {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) 3rem minmax(0, 1.2fr);
+  align-items: center;
+  gap: 1rem;
+}
+.account-eyebrow {
+  color: var(--accent-ink-strong);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.component-list {
+  margin-top: 0.8rem;
+  color: var(--ubuntu-aubergine);
+  font-size: 1.35rem;
+  line-height: 1.6;
+}
+.parts-footnote {
+  margin-top: 1rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--surface-border);
+  color: var(--light-text-soft);
+  font-size: 0.9rem;
+}
+.parts-footnote span { margin-right: 0.35rem; }
+.account-assembly {
+  color: var(--accent-ink-strong);
+  font-size: 2rem;
+  text-align: center;
+}
+.realisation-stage {
+  padding: 1.2rem 1.3rem 1rem;
+  border-radius: 12px;
+  background: #f4ebe8;
+}
+.account-stage-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  margin-bottom: 1rem;
+}
+.account-stage-title {
+  color: var(--ubuntu-aubergine);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+.relationship-graph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0 1rem;
+}
+.relationship-node {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #d4c4c8;
+  border-radius: 7px;
+  background: var(--surface-bg-strong);
+  color: var(--light-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.relationship-link {
+  display: flex;
+  min-width: 2rem;
+  flex: 1;
+  align-items: center;
+  color: var(--accent-ink-strong);
+}
+.relationship-link span { height: 1px; flex: 1; background: #b97057; }
+.relationship-link b { font-size: 1rem; font-weight: 500; }
+.account-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid #d8c9cd;
+  color: var(--light-text-soft);
+  font-size: 0.82rem;
+}
+.account-note strong { color: var(--accent-ink-strong); }
+.handover-summary {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--surface-border);
+  color: var(--light-text-soft);
+  font-size: 0.95rem;
+}
+.handover-summary strong { color: var(--ubuntu-aubergine); }
+.handover-summary b { margin: 0 0.25rem; color: var(--accent-ink-strong); font-weight: 500; }
+.handover-summary em { color: var(--accent-ink-strong); font-style: normal; }
+
+@media (max-width: 700px) {
+  .account-window { justify-content: flex-start; overflow-y: auto; }
+  .account-map { grid-template-columns: 1fr; gap: 1rem; }
+  .account-assembly { transform: rotate(90deg); }
+  .handover-summary { flex-direction: column; gap: 0.7rem; }
+}

@@ -43,8 +43,6 @@ transition: slide-left
 class: question-slide
 ---
 
-<!-- # A question -->
-
 <div class="ubuntu-window question-window max-w-5xl mx-auto text-center">
 <div class="text-3xl">What does it mean for a system to work?</div>
 </div>
@@ -183,6 +181,48 @@ argument beyond this particular missing relationship.
 
 ---
 transition: slide-left
+class: compact-slide account-slide
+---
+
+<h1>The system account is specific to this realisation</h1>
+
+<div class="ubuntu-window account-window max-w-5xl mx-auto">
+
+<div class="account-map" role="img" aria-label="Reusable packages, nodes, sensors, controllers, and libraries carry their documentation. A system account describes the relationships, configuration, and conditions of one realisation.">
+  <section class="parts-stage">
+    <div class="account-eyebrow">Designed for reuse</div>
+    <div class="component-list">Packages · nodes · sensors · controllers · libraries</div>
+    <div class="parts-footnote"><span>▤</span> Documentation travels with the parts</div>
+  </section>
+
+  <div class="account-assembly" aria-hidden="true">→</div>
+
+  <section class="realisation-stage">
+    <div class="account-stage-heading">
+      <span class="account-eyebrow">One configuration · these conditions</span>
+      <span class="account-stage-title">This realisation</span>
+    </div>
+    <div class="relationship-graph" aria-hidden="true">
+      <div class="relationship-node">sensor</div>
+      <div class="relationship-link"><span></span><b>→</b></div>
+      <div class="relationship-node">nav node</div>
+      <div class="relationship-link"><span></span><b>→</b></div>
+      <div class="relationship-node">controller</div>
+    </div>
+    <div class="account-note"><strong>System account</strong><span>relationships · configuration · conditions</span></div>
+  </section>
+</div>
+
+<div class="handover-summary">
+  <span><strong>Software</strong> <b>→</b> repository</span>
+  <span><strong>Understanding</strong> <b>→</b> <em>often no obvious home</em></span>
+</div>
+
+</div>
+
+
+---
+transition: slide-left
 class: compact-slide
 ---
 
@@ -288,6 +328,17 @@ observed: edge absent</pre>
 
 ---
 transition: slide-left
+class: compact-slide repl-slide
+---
+
+# Stage 1 — Presence: inspect the source and account
+
+<MockRepl :stage="1" />
+
+<!-- Prepared command surface; roti run is not live execution. -->
+
+---
+transition: slide-left
 ---
 
 # Stage 2 — Structural compatibility
@@ -310,6 +361,17 @@ calibration and authority: unknown</pre></div>
 
 ---
 transition: slide-left
+class: compact-slide repl-slide
+---
+
+# Stage 2 — Structure: follow each relationship
+
+<MockRepl :stage="2" />
+
+<!-- Provider rows and run identities remain explicit placeholders. -->
+
+---
+transition: slide-left
 class: compact-slide
 ---
 
@@ -327,6 +389,17 @@ class: compact-slide
 
 <div class="mt-8 evidence-strip"><strong>bounded claim:</strong> runtime compatibility is established for the selected conditions—not behavioural success, localisation quality, or correct costmap semantics.</div>
 </div>
+
+---
+transition: slide-left
+class: compact-slide repl-slide
+---
+
+# Stage 3 — Runtime: compare transform availability
+
+<MockRepl :stage="3" />
+
+<!-- Failure and compatible results are separate runs under identified conditions. -->
 
 ---
 transition: slide-left
@@ -356,6 +429,17 @@ class: compact-slide
 </div>
 
 <!-- The GUI is supporting context for retained evidence, not a replacement. -->
+
+---
+transition: slide-left
+class: compact-slide repl-slide
+---
+
+# Stage 4 — Behaviour: inspect the observed failure
+
+<MockRepl :stage="4" />
+
+<!-- Evidence provenance distinguishes bag topics from native result files. -->
 
 ---
 transition: slide-left
@@ -396,6 +480,17 @@ class: compact-slide
 <div><h3>What remains unknown</h3><p>This is not general RPP superiority, a complete MPPI diagnosis, repeatability, or production readiness.</p></div>
 </div>
 </div>
+
+---
+transition: slide-left
+class: compact-slide repl-slide
+---
+
+# Stage 5 — Contrast: what changed in the account?
+
+<MockRepl :stage="5" />
+
+<!-- RPP evidence is paired with the earlier MPPI observation, with unknowns retained. -->
 
 ---
 transition: slide-left
