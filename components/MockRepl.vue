@@ -5,6 +5,23 @@ const props = defineProps({
   stage: { type: Number, default: 1 },
 })
 
+// `totalElapsedSeconds` from the pinned runs' runtime_timing.json evidence.
+// Stage 1–2: selected-evidence/phase-a-stages-1-2/<run>/runtime_timing.json
+// Stage 3: selected-evidence/phase-a-stage-3/<run>/runtime_timing.json
+// Stage 4–5: selected-evidence/one-shot-captures/<run>/native/runtime_timing.json
+// Timings include provider startup/readiness and experiment evaluation.
+const runDurationsSeconds = {
+  presence_check: 16.155,
+  odometry_link: 16.074,
+  scan_source: 24.4,
+  scan_integration: 34.451,
+  runtime_surface: 184.049,
+  timing_follow_up: 23.13,
+  goal_and_path: 48.57,
+  local_corridor_check: 49.085,
+  rpp_attempt: 21.572,
+}
+
 const stageData = {
   1: {
     name: 'Presence',
@@ -59,6 +76,8 @@ question:     is odom → base_link present?`,
       'evidence show odometry_link': `counted capture · evaluation passed 20/20 checks
 observed: odom → base_link present
 scope: this structural relationship only`,
+      'roti run odometry_link': `evaluation:   20/20 declared checks passed
+capture:      counted real-provider run`,
       'source show scan_source': `experiment:   Scan source
 realisation@scenario: warehouse_teleop@gazebo_nav2_scan_substrate
 provider:     provider/model supplies the scan stream
@@ -68,6 +87,8 @@ frame:        vehicle_blue/laser_frame/scan`,
 /scan source and frame observed
 base_link → scan frame: NOT OBSERVED
 the scan frame was disconnected in this configuration`,
+      'roti run scan_source': `evaluation:   21/21 declared checks passed
+capture:      counted real-provider run`,
       'source show scan_integration': `experiment:   Scan integration
 realisation@scenario: warehouse_teleop@gazebo_nav2_scan_tf_substrate
 provider:     realisation supplies the scan-frame transform
@@ -75,6 +96,8 @@ question:     is base_link → scan connected?`,
       'evidence show scan_integration': `counted capture · evaluation passed 19/19 checks
 observed: base_link → vehicle_blue/laser_frame/scan
 scan frame connected in this configuration`,
+      'roti run scan_integration': `evaluation:   19/19 declared checks passed
+capture:      counted real-provider run`,
       'roti explain structural_compatibility': `observed across three separate configurations:
   odom → base_link present
   /scan source and frame present
@@ -90,7 +113,7 @@ INTEGRATION base_link → scan present in final scan-TF run
 Three distinct configurations · not one continuous repair
 Still open: scan-time availability · navigation behaviour`,
     },
-    suggestions: ['source show odometry_link', 'evidence show odometry_link', 'source show scan_source', 'evidence show scan_source', 'source show scan_integration', 'evidence show scan_integration', 'roti explain structural_compatibility', 'stage summary'],
+    suggestions: ['source show odometry_link', 'roti run odometry_link', 'evidence show odometry_link', 'source show scan_source', 'roti run scan_source', 'evidence show scan_source', 'source show scan_integration', 'roti run scan_integration', 'evidence show scan_integration', 'roti explain structural_compatibility', 'stage summary'],
   },
   3: {
     name: 'Runtime',
@@ -109,6 +132,9 @@ account: runtime surface present; scan-time lookup failed`,
       'roti run runtime_surface': `evaluation:   21/21 declared checks passed
 capture:      counted real-provider run
 observation:  2,358 scan drops recorded`,
+      'roti run timing_follow_up': `evaluation:   21/21 declared checks passed
+capture:      counted real-provider run
+observation:  no scan drops observed`,
       'evidence show timing_follow_up': `experiment:   Timing follow-up
 realisation@scenario: warehouse_teleop@gazebo_nav2_costmap_timing
 scan rate:    10 Hz
@@ -125,7 +151,7 @@ SCAN         153.4 s: transform unavailable · 2,358 drops
 FOLLOW-UP    10 Hz · transform available · no drops observed
 STILL OPEN   Separate configuration; cause not isolated`,
     },
-    suggestions: ['source show runtime_surface', 'roti explain runtime_surface', 'roti run runtime_surface', 'evidence show timing_follow_up', 'stage summary'],
+    suggestions: ['source show runtime_surface', 'roti explain runtime_surface', 'roti run runtime_surface', 'roti run timing_follow_up', 'evidence show timing_follow_up', 'stage summary'],
   },
   4: {
     name: 'Behaviour',
@@ -138,6 +164,10 @@ controller:   MPPI`,
 realisation@scenario: warehouse_teleop@gazebo_nav2_goal_base_footprint
 probe:        one-shot local-feasibility check
 controller:   MPPI`,
+      'roti run goal_and_path': `evaluation:   39/39 declared checks passed
+capture:      one-shot real-provider attempt`,
+      'roti run local_corridor_check': `evaluation:   33/33 declared checks passed
+capture:      one-shot real-provider attempt`,
       'roti explain goal_and_path': `goal:         accepted
 global path:  valid path observed
 local check:  sampled corridor clear to 0.6 m
@@ -162,7 +192,7 @@ COMMAND       no forward command
 ODOMETRY      no translational progress
 STILL OPEN    Cause of failure`,
     },
-    suggestions: ['source show goal_and_path', 'source show local_corridor_check', 'roti explain goal_and_path', 'evidence show goal_and_path', 'evidence show local_corridor_check', 'stage summary'],
+    suggestions: ['source show goal_and_path', 'roti run goal_and_path', 'source show local_corridor_check', 'roti run local_corridor_check', 'roti explain goal_and_path', 'evidence show goal_and_path', 'evidence show local_corridor_check', 'stage summary'],
   },
   5: {
     name: 'Controlled contrast',
@@ -171,6 +201,8 @@ STILL OPEN    Cause of failure`,
 realisation@scenario: warehouse_teleop@gazebo_nav2_goal_base_footprint
 task:         0.5 m map-frame navigation goal
 controller:   RPP`,
+      'roti run rpp_attempt': `evaluation:   39/39 declared checks passed
+capture:      one-shot real-provider attempt`,
       'roti explain controller_progress': `QUESTION
   Could this system support the task with a different controller?
 
@@ -214,12 +246,13 @@ STILL OPEN
 This does not establish general RPP superiority or a complete
 diagnosis of the MPPI failure.`,
     },
-    suggestions: ['source show rpp_attempt', 'roti explain controller_progress', 'evidence show mppi', 'evidence show rpp_attempt', 'stage summary'],
+    suggestions: ['source show rpp_attempt', 'roti run rpp_attempt', 'roti explain controller_progress', 'evidence show mppi', 'evidence show rpp_attempt', 'stage summary'],
   },
 }
 
 const stage = computed(() => stageData[props.stage] || stageData[1])
 const input = ref('')
+const isRunning = ref(false)
 const transcript = ref(null)
 const inputId = `mock-repl-stage-${props.stage}`
 
@@ -241,6 +274,8 @@ function helpOutput() {
 }
 
 async function submit(raw = input.value) {
+  if (isRunning.value) return
+
   const command = raw.trim().replace(/\s+/g, ' ')
   if (!command) return
 
@@ -258,8 +293,19 @@ async function submit(raw = input.value) {
       output = scripted[Math.min(index, scripted.length - 1)]
       responseCursors.value[key] = index + 1
     } else output = scripted || 'No scripted response for that command. Type help to see the commands prepared for this stage.'
-    entries.value.push({ kind: 'exchange', command, output })
+    const wireName = key.startsWith('roti run ') ? key.slice('roti run '.length) : null
+    const runDuration = wireName ? runDurationsSeconds[wireName] : 0
+    const entry = { kind: 'exchange', command, output: runDuration ? 'experiment running...' : output }
+    entries.value.push(entry)
     input.value = ''
+    if (runDuration) {
+      isRunning.value = true
+      await nextTick()
+      if (transcript.value) transcript.value.scrollTop = transcript.value.scrollHeight
+      await new Promise((resolve) => window.setTimeout(resolve, runDuration * 1000))
+      entry.output = output
+      isRunning.value = false
+    }
   }
 
   await nextTick()
@@ -301,6 +347,7 @@ function reset() {
         :list="`${inputId}-commands`"
         class="mock-repl-input"
         type="text"
+        :disabled="isRunning"
         autocomplete="off"
         spellcheck="false"
         placeholder="Click here and type a command, then press Enter"
@@ -312,8 +359,8 @@ function reset() {
         <option value="help" />
         <option value="clear" />
       </datalist>
-      <button class="mock-repl-run" type="button" @click="submit()">Run</button>
-      <button class="mock-repl-reset" type="button" aria-label="Reset this mock REPL" @click="reset">Reset</button>
+      <button class="mock-repl-run" type="button" :disabled="isRunning" @click="submit()">Run</button>
+      <button class="mock-repl-reset" type="button" :disabled="isRunning" aria-label="Reset this mock REPL" @click="reset">Reset</button>
     </div>
     <footer class="mock-repl-footer">Stage {{ props.stage }} of 5 · outputs are scripted; evidence provenance remains attached to the cited runs.</footer>
   </section>
