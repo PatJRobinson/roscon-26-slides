@@ -249,13 +249,20 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ select nav2_corridor_gazebo_substrate/&#10;❯ source show&#10;&#10;experiment:  nav2_corridor_gazebo_substrate&#10;realisation: &lt;realisation ID&gt;&#10;provider:    &lt;provider ID and role&gt;&#10;required:    odom → base_link&#10;question:    Is this relationship available here?&#10;conditions:  &lt;robot, environment and runtime conditions&gt;</pre>
+<pre class="demo-terminal">❯ select nav2_corridor_gazebo_substrate
+❯ source show
+
+experiment:   nav2_corridor_gazebo_substrate
+realisation:  warehouse_teleop@gazebo_nav2_substrate
+provider:     gazebo (Nav2 substrate)
+required:     odom → base_link
+conditions:   ROS 2 Jazzy; headless provider-backed substrate run</pre>
 
 </div>
 
 <!--
-Slide 13. 18:00–21:00. Authored by an engineer. Exact identities and conditions require evidence verification.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 13. Stage 1 source declaration and selected realisation.
+Evidence source: say-show-script.md and slide-evidence-manifest.md (updated 2026-10-05).
 -->
 
 ---
@@ -267,13 +274,21 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ roti explain &lt;target to verify&gt;&#10;&#10;requires:    odom → base_link&#10;assumption:  required relationship is available&#10;account:     NOT ESTABLISHED&#10;basis:       &lt;declaration or earlier retained evidence&gt;&#10;&#10;next question:&#10;  Inspect the transform data for this realisation.</pre>
+<pre class="demo-terminal">❯ roti explain nav2_corridor_gazebo_substrate
+
+requires:    odom → base_link
+assumption:  required odometry-to-base relationship is available
+account:     NOT ESTABLISHED
+basis:       authored experiment declaration; no retained edge evidence yet
+
+next question:
+  Inspect transform/frame data for this realisation.</pre>
 
 </div>
 
 <!--
-Slide 14. Stage 1. Show the existing account before collecting observations.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 14. Stage 1 account before the retained run.
+Evidence source: say-show-script.md and slide-evidence-manifest.md (updated 2026-10-05).
 -->
 
 ---
@@ -285,13 +300,20 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ roti run presence_check&#10;&#10;investigation: presence_check&#10;run:           &lt;retained run ID&gt;&#10;status:        observations retained</pre>
+<pre class="demo-terminal">❯ roti run presence_check
+
+investigation: presence_check
+experiment:   nav2_corridor_gazebo_substrate
+run:          20261001T151956.546871Z-ba4189019e54
+result:       evaluation passed 17/17
+status:       counted real-provider capture
+disclosure:   copied-bundle replay verified; logs retained</pre>
 
 </div>
 
 <!--
-Slide 15. Stage 1. Prepared representation of the execution boundary; this command does not execute ROS.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 15. Prepared representation of the execution boundary; it does not execute ROS.
+The capture is counted and integrity-checked; stable talk-bundle replay completed.
 -->
 
 ---
@@ -302,13 +324,18 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Inspected</th><th>Observation</th></tr></thead><tbody><tr><td>/tf and /tf_static</td><td>Present</td></tr><tr><td>odom → base_link</td><td>Not observed</td></tr></tbody></table><p class="provenance">Captured observation described in the script · run identity to verify</p><p class="production-pending">To complete: Exact observed frames, edges and retained run reference.</p>
+<table><thead><tr><th>Inspected</th><th>Observation</th><th>Source</th></tr></thead><tbody>
+<tr><td>/tf; /odom</td><td>Present</td><td>Native observer / bag</td></tr>
+<tr><td>/tf_static</td><td>Absent; optional in this experiment</td><td>Run ledger</td></tr>
+<tr><td>Observed odometry frames</td><td>vehicle_blue/odom → vehicle_blue/chassis</td><td>Native observer</td></tr>
+<tr><td>Required edge</td><td>odom → base_link not observed</td><td>Native observer</td></tr>
+</tbody></table>
+<p class="provenance">Run 20261001T151956.546871Z-ba4189019e54 · Gazebo · ROS 2 Jazzy · copied-bundle replay verified.</p>
 
 </div>
 
 <!--
-Slide 16. Stage 1. This is a presentation summary of the script, not a newly verified observation.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 16. Stage 1 capture summary. Do not imply navigation failure from this presence result.
 -->
 
 ---
@@ -319,13 +346,18 @@ class: simple-slide
 
 <div class="slide-content">
 
-<dl class="account-rows"><dt>Assumption</dt><dd>The odometry-to-base relationship is available.</dd><dt>Probe</dt><dd>Inspect topics and transform/frame data.</dd><dt>Evidence</dt><dd>TF topics present; required edge not observed.</dd><dt>Claim</dt><dd>The required relationship was not observed in this run.</dd><dt>Still open</dt><dd>Structure, timing and navigation behaviour.</dd></dl>
+<dl class="account-rows">
+<dt>Assumption</dt><dd>The required odom → base_link relationship is available.</dd>
+<dt>Probe</dt><dd>Inspect ROS topic presence and transform/frame data.</dd>
+<dt>Evidence</dt><dd>/tf and /odom were visible; vehicle_blue/odom → vehicle_blue/chassis was observed; odom → base_link was not.</dd>
+<dt>Claim</dt><dd>Transform-related topics were present, but the required frame relationship was not observed in this run.</dd>
+<dt>Still open</dt><dd>Structural compatibility, runtime timing and navigation behaviour.</dd>
+</dl>
 
 </div>
 
 <!--
-Slide 17. Stage 1. What must change to establish the relationship?
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 17. Stage 1 bounded claim.
 -->
 
 ---
@@ -336,13 +368,17 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Requirement</th><th>Declared provider / current account</th></tr></thead><tbody><tr><td>odom → base_link</td><td>Odometry provider · to verify</td></tr><tr><td>Scan source and frame</td><td>Scan provider · to verify</td></tr><tr><td>base_link → scan</td><td>Frame provider · to verify</td></tr></tbody></table><p class="provenance">Prepared source / explain view · exact provider rows and basis pending</p>
+<table><thead><tr><th>Experiment → realisation</th><th>Run</th><th>Structural observation</th></tr></thead><tbody>
+<tr><td>nav2_corridor_gazebo_tf_substrate → warehouse_teleop@gazebo_nav2_tf_substrate</td><td>20261001T152557.040227Z-712ae09c7a39</td><td>odom → base_link present</td></tr>
+<tr><td>nav2_corridor_gazebo_scan_substrate → warehouse_teleop@gazebo_nav2_scan_substrate</td><td>20261001T152817.021494Z-02495cda9391</td><td>/scan present; its frame disconnected</td></tr>
+<tr><td>nav2_corridor_gazebo_scan_tf_substrate → warehouse_teleop@gazebo_nav2_scan_tf_substrate</td><td>20261001T153019.321569Z-f6c639a7d491</td><td>base_link → vehicle_blue/laser_frame/scan present</td></tr>
+</tbody></table>
+<p class="provenance">Three separate Gazebo / ROS 2 Jazzy configurations; Rotifer revision 1d964a6578abdaf89776b7078c80e219008108dd.</p>
 
 </div>
 
 <!--
-Slide 18. 21:00–24:00. Establish one relationship at a time. Do not imply all requirements were repaired at once.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 18. Stage 2 progression. These are distinct runs, not one continuous repair.
 -->
 
 ---
@@ -353,13 +389,15 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div v-click="1"><dl class="account-rows"><dt>Authored change</dt><dd><span class="pending-inline">Odometry provider/change to verify</span></dd></dl></div><div v-click="2"><dl class="account-rows"><dt>Observation</dt><dd>odom → base_link observed</dd></dl></div><div v-click="3"><dl class="account-rows"><dt>Account</dt><dd>Relationship established for the inspected realisation</dd></dl></div><p class="provenance">Prepared sequence · retained structural run and actual change to verify</p>
+<div v-click="1"><dl class="account-rows"><dt>Experiment</dt><dd>nav2_corridor_gazebo_tf_substrate</dd><dt>Realisation</dt><dd>warehouse_teleop@gazebo_nav2_tf_substrate</dd><dt>Ownership</dt><dd>Provider/model supplies odometry and TF; the app observes the edge.</dd></dl></div>
+<div v-click="2"><dl class="account-rows"><dt>Retained evidence</dt><dd>Run 20261001T152557.040227Z-712ae09c7a39 · odom → base_link present · 20/20 checks passed</dd></dl></div>
+<div v-click="3"><dl class="account-rows"><dt>Bounded update</dt><dd>The selected odometry/TF relationship was observed for this configuration.</dd></dl></div>
+<p class="provenance">Counted real-provider capture; stable talk-bundle replay verified.</p>
 
 </div>
 
 <!--
-Slide 19. Stage 2. Declaration → retained observation → updated account. The scan requirements remain open.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 19. Stage 2, first structural relationship. Later requirements remain open.
 -->
 
 ---
@@ -370,13 +408,16 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div v-click="1"><dl class="account-rows"><dt>Authored source</dt><dd>Scan topic and frame · exact declaration to verify</dd></dl></div><div v-click="2"><dl class="account-rows"><dt>Observation</dt><dd>Scan source/frame and base_link → scan</dd></dl></div><div v-click="3"><dl class="account-rows"><dt>Account</dt><dd>Scan relationships established for this realisation</dd></dl></div><p class="provenance">Prepared sequence · retained observations and run identities to verify</p>
+<table><thead><tr><th>Experiment / run</th><th>What changed or appeared</th><th>What the evidence says</th></tr></thead><tbody>
+<tr><td>nav2_corridor_gazebo_scan_substrate<br>20261001T152817.021494Z-02495cda9391</td><td>/scan, sensor_msgs/msg/LaserScan; frame vehicle_blue/laser_frame/scan</td><td>Scan present; base_link → scan frame missing</td></tr>
+<tr><td>nav2_corridor_gazebo_scan_tf_substrate<br>20261001T153019.321569Z-f6c639a7d491</td><td>Realisation-owned static scan-frame transform</td><td>base_link → vehicle_blue/laser_frame/scan present; scan frame connected</td></tr>
+</tbody></table>
+<p class="provenance">Separate configurations · Gazebo / ROS 2 Jazzy · final run passed 19/19 checks. Provider/model owns the scan stream; the realisation owns the integration transform.</p>
 
 </div>
 
 <!--
-Slide 20. Stage 2. Show the actual provider and frame changes once verified.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 20. Stage 2 source and retained observations; do not imply runtime timing.
 -->
 
 ---
@@ -387,13 +428,18 @@ class: simple-slide
 
 <div class="slide-content">
 
-<p><span class="frame-line">odom ─── base_link ─── scan</span></p><dl class="account-rows"><dt>Established</dt><dd>Odometry relationship, scan source/frame, base-to-scan relationship</dd><dt>Still open</dt><dd>Timing, lifecycle, costmap behaviour, navigation success</dd></dl><p class="provenance">Prepared summary of the script’s retained structural observations</p>
+<p><span class="frame-line">odom ─── base_link ─── vehicle_blue/laser_frame/scan</span></p>
+<dl class="account-rows">
+<dt>Established</dt><dd>odom → base_link; /scan source and frame; base_link → scan integration edge in the selected configurations.</dd>
+<dt>Bounded claim</dt><dd>The selected relationships were structurally interpretable in these tested realisations.</dd>
+<dt>Still open</dt><dd>Scan-time TF availability, lifecycle/map conditions, costmap semantics and navigation success.</dd>
+</dl>
+<p class="provenance">Progression spans orders 2–4; not one run. Counted captures; copied-bundle replay verified.</p>
 
 </div>
 
 <!--
-Slide 21. Stage 2. Availability at each required timestamp remains untested here.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 21. Stage 2 structural claim and boundary.
 -->
 
 ---
@@ -404,13 +450,16 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Requirement</th><th>Current account</th></tr></thead><tbody><tr><td>odom → base_link</td><td>Structurally established</td></tr><tr><td>base_link → scan</td><td>Structurally established</td></tr><tr><td>Map / lifecycle / action</td><td>Retained status to verify</td></tr><tr><td>Scan-timestamp lookup</td><td>To investigate</td></tr></tbody></table><p class="provenance">Prepared source / explain view · selected investigation and basis to verify</p>
+<table><thead><tr><th>Runtime experiment</th><th>Run</th><th>Realisation</th></tr></thead><tbody>
+<tr><td>nav2_corridor_gazebo_nav2_map_surface</td><td>20261001T153245.099238Z-107ca497021c</td><td>warehouse_teleop@gazebo_nav2_map_surface</td></tr>
+<tr><td>nav2_corridor_gazebo_nav2_costmap_timing</td><td>20261001T153845.573476Z-8e9c452738e4</td><td>warehouse_teleop@gazebo_nav2_costmap_timing</td></tr>
+</tbody></table>
+<p class="provenance">Both counted at Rotifer revision 1d964a6578abdaf89776b7078c80e219008108dd. The timing run used 10 Hz odometry/TF publication.</p>
 
 </div>
 
 <!--
-Slide 22. 24:00–27:00. Establish what is already supported before runtime observations.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 22. Stage 3 selected source and run identities.
 -->
 
 ---
@@ -422,47 +471,60 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ roti run runtime_compatibility&#10;run: &lt;runtime-surface run ID&gt;&#10;status: observations retained<div v-click><table><thead><tr><th>Interface</th><th>Observed state</th></tr></thead><tbody><tr><td>Map / lifecycle / action</td><td>Exact retained states to verify</td></tr><tr><td>TF relationships</td><td>Available</td></tr></tbody></table></div></pre>
+<pre class="demo-terminal">❯ roti run nav2_corridor_gazebo_nav2_map_surface
+run:        20261001T153245.099238Z-107ca497021c
+realisation: warehouse_teleop@gazebo_nav2_map_surface
+evaluation: 21/21 declared checks passed
+
+Map:                  present, frame map
+Required nodes:       active
+NavigateToPose:       available
+Latest odom → base_link TF: available (153.0 s)
+At scan stamp 153.4 s:       unavailable
+Costmap scan drops:         2,358
+Timing compatibility:       null</pre>
+<p class="provenance">The interface evidence does not establish successful navigation.</p>
 
 </div>
 
 <!--
-Slide 23. Stage 3. Keep the retained runtime surface distinct from successful task behaviour.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 23. Order 5 map-surface capture; stable Stage 3 bundle replay verified.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Lookup at the scan timestamp fails
+# The scan arrived before its transform
 
 <div class="slide-content">
 
-<table><thead><tr><th>Lookup</th><th>Result</th></tr></thead><tbody><tr><td>Latest available transform</td><td>Succeeded</td></tr><tr><td>Transform at scan timestamp</td><td>Failed</td></tr></tbody></table><p class="production-pending">To complete: Scan timestamp, transform-buffer bounds, diagnostic and run identity.</p><p class="provenance">Timing-failure observation described in the script</p>
+<dl class="account-rows">
+<dt>What happened</dt><dd>The scan arrived at 153.4 s, but the latest <code>odom → base_link</code> transform was from 153.0 s.</dd>
+<dt>Effect</dt><dd>The costmap recorded 2,358 scan drops.</dd>
+</dl>
+<p class="provenance">Run 20261001T153245.099238Z-107ca497021c · warehouse_teleop@gazebo_nav2_map_surface.</p>
 
 </div>
 
 <!--
-Slide 24. Stage 3. The script does not supply buffer bounds or the scan timestamp. Add the minimal evidence-based timeline when verified; do not invent whether the scan fell before or after the buffer.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 24. Stage 3 blocker evidence with recorded latest and scan stamps.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Lookup succeeds under changed conditions
+# Increasing the transform update rate fixed the timing issue
 
 <div class="slide-content">
 
-<div class="timing-diagram"><span>Available transform data</span><div class="buffer-line"></div><span>↑<br>Scan timestamp</span></div><table><thead><tr><th>Lookup</th><th>Result</th></tr></thead><tbody><tr><td>Latest available transform</td><td>Succeeded</td></tr><tr><td>Transform at scan timestamp</td><td>Succeeded</td></tr></tbody></table><p class="provenance">Schematic · separate timing-compatible run; not a replay of the failure</p><p class="production-pending">To complete: Run identity and exact changed runtime conditions.</p>
+<div class="plain-columns"><section><h2>Follow-up run</h2><p>Odometry/TF publication increased from 1 Hz to 10 Hz.</p><p>Run 20261001T153845.573476Z-8e9c452738e4</p></section><section><h2>What changed</h2><p>At scan stamp 12.7 s, <code>odom → base_link</code> was available.</p><p>Zero costmap scan drops observed.</p><p>21/21 declared checks passed.</p></section></div>
 
 </div>
 
 <!--
-Slide 25. Stage 3. Diagram shows the qualitative relationship in the script, not measured timestamps. Preserve the separate-run boundary.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 25. Stage 3 timing-compatible result. No goal was attempted.
 -->
 
 ---
@@ -473,14 +535,22 @@ class: simple-slide
 
 <div class="slide-content">
 
-<dl class="account-rows"><dt>Assumption</dt><dd>Transform data is available when the scan needs it.</dd><dt>Probe</dt><dd>Compare latest-time and scan-time lookups.</dd><dt>Evidence</dt><dd>Scan-time lookup failed, then succeeded in a separate run.</dd><dt>Claim</dt><dd>The required lookup succeeded under the tested conditions.</dd><dt>Still open</dt><dd>Localisation, downstream costmaps and task success.</dd></dl><p class="provenance">Prepared explain update · basis: timing-compatible run, reference pending</p>
+<dl class="account-rows">
+<dt>Assumption</dt><dd>Critical transforms are available at sampled scan timestamps.</dd>
+<dt>Probe</dt><dd>Inspect runtime surfaces, scan-time TF evidence and costmap scan-drop results.</dd>
+<dt>Problem</dt><dd>The scan arrived before its transform, causing 2,358 costmap scan drops.</dd>
+<dt>Change</dt><dd>Odometry/TF publication increased from 1 Hz to 10 Hz.</dd>
+<dt>Result</dt><dd>In the follow-up run, the transform was available at the scan timestamp and no scan drops were observed.</dd>
+<dt>Still open</dt><dd>Localisation accuracy, downstream costmap behaviour and navigation task success.</dd>
+</dl>
+<p class="provenance">Selected runs replayed from the stable Stage 3 bundle.</p>
 
 </div>
 
 <!--
-Slide 26. Stage 3. Only claim compatibility under the recorded conditions.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 26. Stage 3 claim uses the order 6 evidence only.
 -->
+
 
 ---
 class: simple-slide
@@ -490,13 +560,17 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="plain-columns"><section><h2>Recorded topics</h2><p>Valid path<br>Free sampled corridor<br>Zero forward command<br>No translation</p><p class="production-pending">To complete: Attach the packaged topic replay.</p></section><section><h2>Native result records</h2><p>Goal accepted<br>Result timed out</p><p class="production-pending">To complete: Attach the native result excerpts.</p></section></div><p class="provenance">Script summary · two separate attempts, 2026-10-02 20:33:41Z and 20:38:41Z · revision 19ee3b7d…</p>
+<div class="plain-columns">
+<section><h2>nav2_corridor_gazebo_nav2_pose_path_trace</h2><p>Recorder 2026-10-02 20:33:41Z</p><p>Accepted 0.5 m goal; valid path; zero forward command; no translational progress; native result timed out.</p></section>
+<section><h2>nav2_corridor_gazebo_nav2_local_feasibility_trace</h2><p>Recorder 2026-10-02 20:38:41Z</p><p>Free sampled corridor and robot cell; footprint present; local motion classified feasible; native result timed out.</p></section>
+</div>
+<p class="provenance">Gazebo / ROS 2 Jazzy · warehouse_teleop@gazebo_nav2_goal_base_footprint · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no native run IDs emitted. Two separate attempts.</p>
+<p class="provenance">Bags show topics, not the submitted goal or final-result reply. Native result files establish goal acceptance and timeout. No GUI video.</p>
 
 </div>
 
 <!--
-Slide 27. 27:00–30:00. No Gazebo GUI video exists. Assets are not present in this deck. These are text summaries from the authoritative script, not replayed or independently verified evidence. Bags omit submitted goal and final-result reply.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 27. Stage 4 packaged one-shot topic captures and native goal results.
 -->
 
 ---
@@ -508,13 +582,18 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ source show&#10;  &lt;selected realisation, task and controller&gt;&#10;&#10;❯ roti explain &lt;behavioural investigation&gt;&#10;  substrate / goal / path / corridor: &lt;retained basis&gt;&#10;  forward progress: not established&#10;&#10;question:&#10;  Does the robot progress towards the goal?</pre>
+<pre class="demo-terminal">❯ source show
+experiments: nav2_corridor_gazebo_nav2_pose_path_trace;
+            nav2_corridor_gazebo_nav2_local_feasibility_trace
+realisation: warehouse_teleop@gazebo_nav2_goal_base_footprint
+task: 0.5 m map-frame goal; MPPI-configured experiment
+captures: two separate Jazzy attempts; no native run IDs</pre>
+<p class="provenance">Prepared presentation projection; it does not independently diagnose the controller.</p>
 
 </div>
 
 <!--
-Slide 28. Stage 4. Existing account does not independently diagnose the controller.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 28. Stage 4 existing account and selected realisation.
 -->
 
 ---
@@ -525,13 +604,20 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Observation</th><th>Result</th><th>Source</th></tr></thead><tbody><tr><td>Goal</td><td>Accepted</td><td>Native result</td></tr><tr><td>Path</td><td>Valid path</td><td>Bag topic</td></tr><tr><td>Local corridor</td><td>Sampled free to 0.6 m</td><td>Bag / native probe</td></tr><tr><td>Forward command</td><td>Zero</td><td>Bag topic</td></tr><tr><td>Translation</td><td>None</td><td>Bag topic</td></tr><tr><td>Action result</td><td>Timeout</td><td>Native result</td></tr></tbody></table><p class="provenance">Two attempts · 20:33:41Z / 20:38:41Z · native run IDs not emitted<br>Bags omit the submitted goal and final-result reply.</p>
+<table><thead><tr><th>Observation</th><th>Result</th><th>Source</th></tr></thead><tbody>
+<tr><td>Goal accepted / timeout</td><td>Recorded</td><td>Native result files, both attempts</td></tr>
+<tr><td>Global path</td><td>Valid path</td><td>Pose/path bag</td></tr>
+<tr><td>Local feasibility</td><td>Free robot cell; sampled corridor 0–0.6 m; footprint present</td><td>Separate local-feasibility probe/bag</td></tr>
+<tr><td>Forward command</td><td>Zero linear.x</td><td>Bag topics</td></tr>
+<tr><td>Translation</td><td>None observed</td><td>Bag odometry</td></tr>
+</tbody></table>
+<p class="provenance">Revision 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · recorder starts 20:33:41Z / 20:38:41Z · no native run IDs. The two evidence sources are separate attempts.</p>
+<p class="provenance">The bags omit the submitted goal and final-result reply; native results support acceptance and timeout.</p>
 
 </div>
 
 <!--
-Slide 29. Stage 4. Source revision 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8. Fresh task 0.5 m; do not conflate with older 3.5 m trial. Observations transcribed from script pending source verification.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 29. Stage 4 observation summary. Do not conflate with the older 3.5 m local-feasibility record.
 -->
 
 ---
@@ -542,13 +628,20 @@ class: simple-slide
 
 <div class="slide-content">
 
-<dl class="account-rows"><dt>Assumption</dt><dd>The robot can progress towards the accepted goal.</dd><dt>Probe</dt><dd>Inspect path, corridor, commands, odometry and action result.</dd><dt>Evidence</dt><dd>Goal accepted; timeout; no forward command or translation.</dd><dt>Claim</dt><dd>Expected forward progress did not occur in these conditions.</dd><dt>Still open</dt><dd>The cause of the failure.</dd></dl><p v-click class="next-question">What do we investigate next?</p>
+<dl class="account-rows">
+<dt>Assumption</dt><dd>The prepared system produces forward progress towards the accepted goal.</dd>
+<dt>Probe</dt><dd>Inspect path, local corridor, command output, odometry and native action result.</dd>
+<dt>Evidence</dt><dd>Accepted goal and timeout; valid path; free sampled corridor; zero forward command and no translation.</dd>
+<dt>Bounded claim</dt><dd>Expected forward progress did not occur under the inspected conditions.</dd>
+<dt>Still open</dt><dd>Why the selected controller did not produce forward motion.</dd>
+</dl>
+<p v-click class="next-question">What do we investigate next?</p>
+<p class="provenance">Evidence establishes the failure, not its cause. No controller defect or general substrate infeasibility is established.</p>
 
 </div>
 
 <!--
-Slide 30. Stage 4. Let the failure register. Reserve candidate explanations for probe selection, following the script checklist.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 30. Stage 4 unresolved question; candidate explanations remain for the probe-selection beat.
 -->
 
 ---
@@ -559,13 +652,14 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="plain-columns"><section><h2>MPPI</h2><p>Earlier observation:<br>no forward progress</p></section><section><h2>RPP</h2><p>Result not yet shown<br><span class="unknown-result">?</span></p></section></div><p>Keep the setup comparable. Change the controller.</p>
+<div class="plain-columns"><section><h2>MPPI observation</h2><p>No forward progress in the Stage 4 one-shot captures</p></section><section><h2>Human-selected probe</h2><p>Try the RPP controller and ask whether bounded progress is possible.</p><p>Result not shown yet · ?</p></section></div>
+<p>Intended comparison: same named realisation and 0.5 m task; select RPP as the changed controller. The outcome may narrow the question, not diagnose MPPI.</p>
+<p class="provenance">Human chooses the next probe. Do not imply Rotifer diagnosed the failure or selected RPP automatically.</p>
 
 </div>
 
 <!--
-Slide 31. 30:00–33:00. Human choice: geometry, feasible commands and MPPI behaviour are possible investigations. Explain what either outcome could distinguish. Do not reveal success here. Comparability must be verified.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 31. Stage 4 to 5 transition. Preserve the result reveal for the next slide.
 -->
 
 ---
@@ -576,13 +670,20 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Observation</th><th>Result</th><th>Source</th></tr></thead><tbody><tr><td>Forward command</td><td>Observed</td><td>Recorded topic</td></tr><tr><td>Translational motion</td><td>Observed</td><td>Odometry</td></tr><tr><td>Goal completion</td><td>Success reported</td><td>Native result</td></tr></tbody></table><p class="provenance">Fresh RPP observation described in the script · source records still to attach</p><p class="production-pending">To complete: RPP revision, recorder start, task identity and run reference.</p>
+<table><thead><tr><th>Observation</th><th>Result</th><th>Evidence source</th></tr></thead><tbody>
+<tr><td>Controller</td><td>Regulated Pure Pursuit</td><td>Lifecycle log</td></tr>
+<tr><td>Forward command</td><td>19 positive linear-x samples; maximum 0.208333 m/s</td><td>Packaged bag / native evidence</td></tr>
+<tr><td>Odometry</td><td>0.288761 m forward displacement</td><td>Packaged bag / native result</td></tr>
+<tr><td>Navigation goal</td><td>Accepted; success within 30 s</td><td>Native nav2_goal_evidence.json</td></tr>
+<tr><td>Goal tolerance</td><td>0.25 m XY; not exact arrival at 0.5 m nominal goal</td><td>Native result</td></tr>
+</tbody></table>
+<p class="provenance">Experiment nav2_corridor_gazebo_nav2_rpp_controller · realisation warehouse_teleop@gazebo_nav2_goal_base_footprint · recorder 2026-10-02 21:07:56Z · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no native run ID.</p>
+<p class="provenance">Bag lacks submitted goal/final-result reply; native result establishes those outcomes. Runtime-parameter mismatch remains unresolved.</p>
 
 </div>
 
 <!--
-Slide 32. 33:00–37:00. Reveal evidence before interpretation. Native record supports acceptance and success; bags omit submitted goal and final-result reply.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 32. Stage 5 evidence first. A single bounded RPP success; no superiority or repeatability claim.
 -->
 
 ---
@@ -593,14 +694,22 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>MPPI</th><th>RPP</th></tr></thead><tbody><tr><td>No forward progress</td><td>Forward command and translation</td></tr><tr><td>Earlier failure</td><td>Goal success reported</td></tr></tbody></table><dl class="account-rows"><dt>Comparison</dt><dd>Controller changed; common conditions and other differences to verify</dd><dt>Supported</dt><dd>This setup completed the task with RPP under the tested conditions.</dd><dt>Still open</dt><dd>Why did MPPI stall here? How repeatable is the RPP result?</dd></dl>
+<table><thead><tr><th>MPPI observation</th><th>RPP attempt</th></tr></thead><tbody><tr><td>No forward progress; goal timed out in the inspected Jazzy captures.</td><td>Forward command, 0.288761 m odometry displacement, native goal success within configured tolerance.</td></tr></tbody></table>
+<dl class="account-rows">
+<dt>Shared context</dt><dd>Jazzy Gazebo; same named goal_base_footprint realisation; 0.5 m map-frame task; same Rotifer source revision.</dd>
+<dt>Comparability limit</dt><dd>RPP runtime-parameter query returned neither the expected FollowPath plugin nor desired_linear_vel. Other runtime differences have not been ruled out.</dd>
+<dt>Supported</dt><dd>This RPP attempt shows bounded progress was possible in the prepared substrate; it does not explain the MPPI result.</dd>
+<dt>Still open</dt><dd>Why MPPI stalled; whether the result repeats; whether the parameter mismatch affected interpretation.</dd>
+</dl>
+<p class="provenance">No claim of general RPP superiority, isolated controller defect, exact arrival, safety or production readiness.</p>
 
 </div>
 
 <!--
-Slide 33. Stage 5. General substrate inability is insufficient as the full explanation, subject to verified comparability. No claim of general RPP superiority, isolated defect or complete diagnosis.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 33. Stage 5 bounded comparison and remaining uncertainties.
 -->
+
+
 
 ---
 class: simple-slide
