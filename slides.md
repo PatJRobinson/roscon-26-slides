@@ -325,10 +325,10 @@ class: simple-slide
 <div class="slide-content">
 
 <table><thead><tr><th>Inspected</th><th>Observation</th><th>Source</th></tr></thead><tbody>
-<tr><td>/tf; /odom</td><td>Present</td><td>Native observer / bag</td></tr>
+<tr><td>/tf; /odom</td><td>Present</td><td>Mocked REPL · recorded run</td></tr>
 <tr><td>/tf_static</td><td>Absent; optional in this experiment</td><td>Run ledger</td></tr>
-<tr><td>Observed odometry frames</td><td>vehicle_blue/odom → vehicle_blue/chassis</td><td>Native observer</td></tr>
-<tr><td>Required edge</td><td>odom → base_link not observed</td><td>Native observer</td></tr>
+<tr><td>Observed odometry frames</td><td>vehicle_blue/odom → vehicle_blue/chassis</td><td>Mocked REPL · recorded run</td></tr>
+<tr><td>Required edge</td><td>odom → base_link not observed</td><td>Mocked REPL · recorded run</td></tr>
 </tbody></table>
 <p class="provenance">Run 20261001T151956.546871Z-ba4189019e54 · Gazebo · ROS 2 Jazzy · copied-bundle replay verified.</p>
 
@@ -561,16 +561,16 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="plain-columns">
-<section><h2>nav2_corridor_gazebo_nav2_pose_path_trace</h2><p>Recorder 2026-10-02 20:33:41Z</p><p>Accepted 0.5 m goal; valid path; zero forward command; no translational progress; native result timed out.</p></section>
-<section><h2>nav2_corridor_gazebo_nav2_local_feasibility_trace</h2><p>Recorder 2026-10-02 20:38:41Z</p><p>Free sampled corridor and robot cell; footprint present; local motion classified feasible; native result timed out.</p></section>
+<section><h2>nav2_corridor_gazebo_nav2_pose_path_trace</h2><p>Recorder 2026-10-02 20:33:41Z</p><p>Accepted 0.5 m goal; valid path; zero forward command; no translational progress; goal record reports timeout.</p></section>
+<section><h2>nav2_corridor_gazebo_nav2_local_feasibility_trace</h2><p>Recorder 2026-10-02 20:38:41Z</p><p>Free sampled corridor and robot cell; footprint present; local motion classified feasible; goal record reports timeout.</p></section>
 </div>
-<p class="provenance">Gazebo / ROS 2 Jazzy · warehouse_teleop@gazebo_nav2_goal_base_footprint · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no native run IDs emitted. Two separate attempts.</p>
-<p class="provenance">Bags show topics, not the submitted goal or final-result reply. Native result files establish goal acceptance and timeout. No GUI video.</p>
+<p class="provenance">Gazebo / ROS 2 Jazzy · warehouse_teleop@gazebo_nav2_goal_base_footprint · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no run IDs were generated. Two separate attempts.</p>
+<p class="provenance">The mocked REPL shows recorded topics, not the submitted goal or final-result reply. The saved run goal record reports acceptance and timeout. No GUI video.</p>
 
 </div>
 
 <!--
-Slide 27. Stage 4 packaged one-shot topic captures and native goal results.
+Slide 27. Stage 4 mocked REPL and saved run goal records.
 -->
 
 ---
@@ -587,7 +587,7 @@ experiments: nav2_corridor_gazebo_nav2_pose_path_trace;
             nav2_corridor_gazebo_nav2_local_feasibility_trace
 realisation: warehouse_teleop@gazebo_nav2_goal_base_footprint
 task: 0.5 m map-frame goal; MPPI-configured experiment
-captures: two separate Jazzy attempts; no native run IDs</pre>
+captures: two separate Jazzy attempts; no run IDs generated</pre>
 <p class="provenance">Prepared presentation projection; it does not independently diagnose the controller.</p>
 
 </div>
@@ -600,19 +600,19 @@ Slide 28. Stage 4 existing account and selected realisation.
 class: simple-slide
 ---
 
-# What the captures show
+# What the mocked REPL shows
 
 <div class="slide-content">
 
 <table><thead><tr><th>Observation</th><th>Result</th><th>Source</th></tr></thead><tbody>
-<tr><td>Goal accepted / timeout</td><td>Recorded</td><td>Native result files, both attempts</td></tr>
-<tr><td>Global path</td><td>Valid path</td><td>Pose/path bag</td></tr>
-<tr><td>Local feasibility</td><td>Free robot cell; sampled corridor 0–0.6 m; footprint present</td><td>Separate local-feasibility probe/bag</td></tr>
-<tr><td>Forward command</td><td>Zero linear.x</td><td>Bag topics</td></tr>
-<tr><td>Translation</td><td>None observed</td><td>Bag odometry</td></tr>
+<tr><td>Goal accepted / timeout</td><td>Recorded</td><td>Saved run goal records</td></tr>
+<tr><td>Global path</td><td>Valid path</td><td>Mocked REPL · recorded path</td></tr>
+<tr><td>Local feasibility</td><td>Free robot cell; sampled corridor 0–0.6 m; footprint present</td><td>Mocked REPL · separate probe</td></tr>
+<tr><td>Forward command</td><td>Zero linear.x</td><td>Mocked REPL · recorded command</td></tr>
+<tr><td>Translation</td><td>None observed</td><td>Mocked REPL · recorded odometry</td></tr>
 </tbody></table>
-<p class="provenance">Revision 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · recorder starts 20:33:41Z / 20:38:41Z · no native run IDs. The two evidence sources are separate attempts.</p>
-<p class="provenance">The bags omit the submitted goal and final-result reply; native results support acceptance and timeout.</p>
+<p class="provenance">Revision 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · recorder starts 20:33:41Z / 20:38:41Z · no run IDs were generated. The two evidence sources are separate attempts.</p>
+<p class="provenance">The mocked REPL does not show the submitted goal or final-result reply; the saved run goal record reports acceptance and timeout.</p>
 
 </div>
 
@@ -630,7 +630,7 @@ class: simple-slide
 
 <dl class="account-rows">
 <dt>Assumption</dt><dd>The prepared system produces forward progress towards the accepted goal.</dd>
-<dt>Probe</dt><dd>Inspect path, local corridor, command output, odometry and native action result.</dd>
+<dt>Probe</dt><dd>Inspect path, local corridor, command output, odometry and the run goal record.</dd>
 <dt>Evidence</dt><dd>Accepted goal and timeout; valid path; free sampled corridor; zero forward command and no translation.</dd>
 <dt>Bounded claim</dt><dd>Expected forward progress did not occur under the inspected conditions.</dd>
 <dt>Still open</dt><dd>Why the selected controller did not produce forward motion.</dd>
@@ -672,13 +672,13 @@ class: simple-slide
 
 <table><thead><tr><th>Observation</th><th>Result</th><th>Evidence source</th></tr></thead><tbody>
 <tr><td>Controller</td><td>Regulated Pure Pursuit</td><td>Lifecycle log</td></tr>
-<tr><td>Forward command</td><td>19 positive linear-x samples; maximum 0.208333 m/s</td><td>Packaged bag / native evidence</td></tr>
-<tr><td>Odometry</td><td>0.288761 m forward displacement</td><td>Packaged bag / native result</td></tr>
-<tr><td>Navigation goal</td><td>Accepted; success within 30 s</td><td>Native nav2_goal_evidence.json</td></tr>
-<tr><td>Goal tolerance</td><td>0.25 m XY; not exact arrival at 0.5 m nominal goal</td><td>Native result</td></tr>
+<tr><td>Forward command</td><td>19 positive linear-x samples; maximum 0.208333 m/s</td><td>Mocked REPL · recorded command</td></tr>
+<tr><td>Odometry</td><td>0.288761 m forward displacement</td><td>Mocked REPL · recorded odometry</td></tr>
+<tr><td>Navigation goal</td><td>Accepted; success within 30 s</td><td>Run goal record</td></tr>
+<tr><td>Goal tolerance</td><td>0.25 m XY; not exact arrival at 0.5 m nominal goal</td><td>Run goal record</td></tr>
 </tbody></table>
-<p class="provenance">Experiment nav2_corridor_gazebo_nav2_rpp_controller · realisation warehouse_teleop@gazebo_nav2_goal_base_footprint · recorder 2026-10-02 21:07:56Z · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no native run ID.</p>
-<p class="provenance">Bag lacks submitted goal/final-result reply; native result establishes those outcomes. Runtime-parameter mismatch remains unresolved.</p>
+<p class="provenance">Experiment nav2_corridor_gazebo_nav2_rpp_controller · realisation warehouse_teleop@gazebo_nav2_goal_base_footprint · recorder 2026-10-02 21:07:56Z · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no run ID was generated.</p>
+<p class="provenance">The mocked REPL shows movement; the run goal record reports acceptance and success. Runtime-parameter mismatch remains unresolved.</p>
 
 </div>
 
@@ -694,7 +694,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>MPPI observation</th><th>RPP attempt</th></tr></thead><tbody><tr><td>No forward progress; goal timed out in the inspected Jazzy captures.</td><td>Forward command, 0.288761 m odometry displacement, native goal success within configured tolerance.</td></tr></tbody></table>
+<table><thead><tr><th>MPPI observation</th><th>RPP attempt</th></tr></thead><tbody><tr><td>No forward progress; goal timed out in the inspected Jazzy captures.</td><td>Forward command, 0.288761 m odometry displacement, goal reported successful within configured tolerance.</td></tr></tbody></table>
 <dl class="account-rows">
 <dt>Shared context</dt><dd>Jazzy Gazebo; same named goal_base_footprint realisation; 0.5 m map-frame task; same Rotifer source revision.</dd>
 <dt>Comparability limit</dt><dd>RPP runtime-parameter query returned neither the expected FollowPath plugin nor desired_linear_vel. Other runtime differences have not been ruled out.</dd>
