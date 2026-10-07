@@ -1232,6 +1232,10 @@ a.button:hover {
   font-size: 1.15rem;
   line-height: 1.55;
 }
+.simple-slide.retention-slide .slide-content { gap: 0.6rem; padding-top: 0.8rem; }
+.simple-slide.retention-slide .retention-card { margin: 0.8rem 0 0.25rem; }
+.simple-slide.retention-slide .retention-notes { display: grid; gap: 0.3rem; }
+.simple-slide.retention-slide .retention-notes .provenance { line-height: 1.3; }
 .simple-slide.quiet-question .slide-content { align-items: center; text-align: center; }
 .simple-slide.quiet-question p { font-size: 2.35rem; line-height: 1.4; }
 .simple-slide.title-slide { justify-content: center; }

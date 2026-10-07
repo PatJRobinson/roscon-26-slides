@@ -676,7 +676,7 @@ Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
 ---
-class: simple-slide
+class: simple-slide retention-slide
 ---
 
 # What Rotifer tries to retain
@@ -694,9 +694,10 @@ Retained evidence
 What can we reasonably say?
              ↓
 What remains open?</pre>
-<p class="provenance">source show → run → explain</p>
+<div class="retention-notes">
 <p class="provenance">Prepared interaction over retained run evidence · Rotifer remains in development.</p>
 <p class="provenance">Open research questions: practitioner value and what this account misses.</p>
+</div>
 
 </div>
 
