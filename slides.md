@@ -296,7 +296,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 15. Keep this slide on screen for the Stage 1 source, explain, run and evidence commands. The script's command blocks are successive states of this panel.
+Slide 15. Keep this slide on screen for the Stage 1 source, explain, run and explain-again sequence. The script's command blocks are successive states of this panel.
 -->
 
 ---
