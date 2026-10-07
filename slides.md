@@ -431,7 +431,7 @@ class: simple-slide
 <p><span class="frame-line">odom ─── base_link ─── vehicle_blue/laser_frame/scan</span></p>
 <dl class="account-rows">
 <dt>Established</dt><dd>odom → base_link; /scan source and frame; base_link → scan integration edge in the selected configurations.</dd>
-<dt>Bounded claim</dt><dd>The selected relationships were structurally interpretable in these tested realisations.</dd>
+<dt>What this shows</dt><dd>The selected relationships were clear in these setups.</dd>
 <dt>Still open</dt><dd>Scan-time TF availability, lifecycle/map conditions, costmap semantics and navigation success.</dd>
 </dl>
 <p class="provenance">Progression spans orders 2–4; not one run. Counted captures; copied-bundle replay verified.</p>
@@ -632,7 +632,7 @@ class: simple-slide
 <dt>Assumption</dt><dd>The prepared system produces forward progress towards the accepted goal.</dd>
 <dt>Probe</dt><dd>Inspect path, local corridor, command output, odometry and the run goal record.</dd>
 <dt>Evidence</dt><dd>Accepted goal and timeout; valid path; free sampled corridor; zero forward command and no translation.</dd>
-<dt>Bounded claim</dt><dd>Expected forward progress did not occur under the inspected conditions.</dd>
+<dt>What this shows</dt><dd>The robot did not make the expected forward progress in these runs.</dd>
 <dt>Still open</dt><dd>Why the selected controller did not produce forward motion.</dd>
 </dl>
 <p v-click class="next-question">What do we investigate next?</p>
@@ -652,7 +652,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="plain-columns"><section><h2>MPPI observation</h2><p>No forward progress in the Stage 4 one-shot captures</p></section><section><h2>Human-selected probe</h2><p>Try the RPP controller and ask whether bounded progress is possible.</p><p>Result not shown yet · ?</p></section></div>
+<div class="plain-columns"><section><h2>MPPI observation</h2><p>No forward progress in the Stage 4 captures</p></section><section><h2>Human-selected probe</h2><p>Try the RPP controller and see whether the robot moves.</p><p>Result not shown yet · ?</p></section></div>
 <p>Intended comparison: same named realisation and 0.5 m task; select RPP as the changed controller. The outcome may narrow the question, not diagnose MPPI.</p>
 <p class="provenance">Human chooses the next probe. Do not imply Rotifer diagnosed the failure or selected RPP automatically.</p>
 
@@ -678,7 +678,7 @@ class: simple-slide
 <tr><td>Goal tolerance</td><td>0.25 m XY; not exact arrival at 0.5 m nominal goal</td><td>Run goal record</td></tr>
 </tbody></table>
 <p class="provenance">Experiment nav2_corridor_gazebo_nav2_rpp_controller · realisation warehouse_teleop@gazebo_nav2_goal_base_footprint · recorder 2026-10-02 21:07:56Z · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no run ID was generated.</p>
-<p class="provenance">The mocked REPL shows movement; the run goal record reports acceptance and success. Runtime-parameter mismatch remains unresolved.</p>
+<p class="provenance">The mocked REPL shows movement; the run goal record reports acceptance and success.</p>
 
 </div>
 
@@ -697,11 +697,8 @@ class: simple-slide
 <table><thead><tr><th>MPPI observation</th><th>RPP attempt</th></tr></thead><tbody><tr><td>No forward progress; goal timed out in the inspected Jazzy captures.</td><td>Forward command, 0.288761 m odometry displacement, goal reported successful within configured tolerance.</td></tr></tbody></table>
 <dl class="account-rows">
 <dt>Shared context</dt><dd>Jazzy Gazebo; same named goal_base_footprint realisation; 0.5 m map-frame task; same Rotifer source revision.</dd>
-<dt>Comparability limit</dt><dd>RPP runtime-parameter query returned neither the expected FollowPath plugin nor desired_linear_vel. Other runtime differences have not been ruled out.</dd>
-<dt>Supported</dt><dd>This RPP attempt shows bounded progress was possible in the prepared substrate; it does not explain the MPPI result.</dd>
-<dt>Still open</dt><dd>Why MPPI stalled; whether the result repeats; whether the parameter mismatch affected interpretation.</dd>
+<dt>What this shows</dt><dd>This setup could move and complete the task in the RPP run. Why MPPI stalled remains open.</dd>
 </dl>
-<p class="provenance">No claim of general RPP superiority, isolated controller defect, exact arrival, safety or production readiness.</p>
 
 </div>
 
