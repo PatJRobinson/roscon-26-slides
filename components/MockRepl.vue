@@ -21,6 +21,18 @@ const runDurationsSeconds = {
   local_corridor_check: 49.085,
   rpp_attempt: 21.572,
 }
+// `checked` totals from each pinned run's results.yaml summary.
+const runCheckCounts = {
+  presence_check: 17,
+  odometry_link: 20,
+  scan_source: 21,
+  scan_integration: 19,
+  runtime_surface: 21,
+  timing_follow_up: 21,
+  goal_and_path: 39,
+  local_corridor_check: 33,
+  rpp_attempt: 39,
+}
 // Keep the on-screen interaction brief while reporting the pinned run's measured duration.
 const mockRunDurationSeconds = 5
 
@@ -224,6 +236,13 @@ function helpOutput() {
   return `Prepared commands for ${stageLabel.value} · ${stage.value.name}\n\n${suggestions.value.map((command) => `  ${command}`).join('\n')}\n  help\n  clear\n\nOnly these scripted responses are available. No ROS or shell command runs.`
 }
 
+function sampleStandardNormal() {
+  let first = 0
+  while (first === 0) first = Math.random()
+  const second = Math.random()
+  return Math.sqrt(-2 * Math.log(first)) * Math.cos(2 * Math.PI * second)
+}
+
 async function submit(raw = input.value) {
   if (isRunning.value) return
 
@@ -257,6 +276,8 @@ async function submit(raw = input.value) {
       running: Boolean(runDuration),
       progress: 0,
       elapsed: 0,
+      completedChecks: 0,
+      totalChecks: wireName ? (runCheckCounts[wireName] || 1) : 0,
     }
     entries.value.push(entry)
     input.value = ''
@@ -267,16 +288,20 @@ async function submit(raw = input.value) {
       if (transcript.value) transcript.value.scrollTop = transcript.value.scrollHeight
       // Mutate the proxy from the reactive entries array so Vue rerenders progress updates.
       const runEntry = entries.value[entries.value.length - 1]
+      const jitterWeights = Array.from({ length: runEntry.totalChecks }, () => {
+        const sample = Math.max(-1, Math.min(1, sampleStandardNormal()))
+        return 1 + sample * 0.65
+      })
+      const totalJitterWeight = jitterWeights.reduce((total, weight) => total + weight, 0)
       const startedAt = performance.now()
-      const progressTimer = window.setInterval(() => {
-        const elapsedSeconds = Math.min((performance.now() - startedAt) / 1000, mockRunDurationSeconds)
-        runEntry.elapsed = elapsedSeconds
-        runEntry.progress = Math.min((elapsedSeconds / mockRunDurationSeconds) * 100, 99)
-      }, 100)
-      await new Promise((resolve) => window.setTimeout(resolve, mockRunDurationSeconds * 1000))
-      window.clearInterval(progressTimer)
+      for (let completedChecks = 1; completedChecks <= runEntry.totalChecks; completedChecks += 1) {
+        const checkDurationMs = (mockRunDurationSeconds * 1000 * jitterWeights[completedChecks - 1]) / totalJitterWeight
+        await new Promise((resolve) => window.setTimeout(resolve, checkDurationMs))
+        runEntry.completedChecks = completedChecks
+        runEntry.elapsed = Math.min((performance.now() - startedAt) / 1000, mockRunDurationSeconds)
+        runEntry.progress = (completedChecks / runEntry.totalChecks) * 100
+      }
       runEntry.elapsed = mockRunDurationSeconds
-      runEntry.progress = 100
       runEntry.running = false
       runEntry.output = `${output}\nexperiment time: ${runDuration.toFixed(1)} s`
       completedRuns.value[wireName] = true
@@ -317,7 +342,7 @@ function reset() {
             <div class="mock-repl-progress-track" role="progressbar" :aria-valuenow="Math.round(entry.progress)" aria-valuemin="0" aria-valuemax="100">
               <div class="mock-repl-progress-fill" :style="{ width: `${entry.progress}%` }"></div>
             </div>
-            <span>{{ entry.elapsed.toFixed(1) }} s elapsed · sped up</span>
+            <span>{{ entry.completedChecks }}/{{ entry.totalChecks }} checks · {{ entry.elapsed.toFixed(1) }} s elapsed · sped up</span>
           </div>
         </div>
       </div>
@@ -471,7 +496,6 @@ function reset() {
   height: 100%;
   border-radius: inherit;
   background: #ff8b61;
-  transition: width 100ms linear;
 }
 
 .mock-repl-form {
