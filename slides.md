@@ -350,7 +350,7 @@ class: simple-slide
 <dt>Assumption</dt><dd>The required odom → base_link relationship is available.</dd>
 <dt>Probe</dt><dd>Inspect ROS topic presence and transform/frame data.</dd>
 <dt>Evidence</dt><dd>/tf and /odom were visible; vehicle_blue/odom → vehicle_blue/chassis was observed; odom → base_link was not.</dd>
-<dt>Claim</dt><dd>Transform-related topics were present, but the required frame relationship was not observed in this run.</dd>
+<dt>What this shows</dt><dd>Transform-related topics were present, but the required frame relationship was not observed in this run.</dd>
 <dt>Still open</dt><dd>Structural compatibility, runtime timing and navigation behaviour.</dd>
 </dl>
 
@@ -430,9 +430,11 @@ class: simple-slide
 
 <p><span class="frame-line">odom ─── base_link ─── vehicle_blue/laser_frame/scan</span></p>
 <dl class="account-rows">
-<dt>Established</dt><dd>odom → base_link; /scan source and frame; base_link → scan integration edge in the selected configurations.</dd>
-<dt>What this shows</dt><dd>The selected relationships were clear in these setups.</dd>
-<dt>Still open</dt><dd>Scan-time TF availability, lifecycle/map conditions, costmap semantics and navigation success.</dd>
+<dt>Assumption</dt><dd>The selected configurations provide the structural relationships needed to interpret the scan relative to the robot.</dd>
+<dt>Probe</dt><dd>Inspect retained observations across the odometry, scan-source and scan-frame configurations.</dd>
+<dt>Evidence</dt><dd>odom → base_link and the /scan source/frame were observed. base_link → scan was missing in the scan-only run and present in the final scan-TF run.</dd>
+<dt>What this shows</dt><dd>The selected configurations establish these structural relationships for this concrete realisation.</dd>
+<dt>Still open</dt><dd>Scan-time TF availability, lifecycle/map conditions, costmap behaviour and navigation success.</dd>
 </dl>
 <p class="provenance">Progression spans orders 2–4; not one run. Counted captures; copied-bundle replay verified.</p>
 
@@ -538,9 +540,8 @@ class: simple-slide
 <dl class="account-rows">
 <dt>Assumption</dt><dd>Critical transforms are available at sampled scan timestamps.</dd>
 <dt>Probe</dt><dd>Inspect runtime surfaces, scan-time TF evidence and costmap scan-drop results.</dd>
-<dt>Problem</dt><dd>The scan arrived before its transform, causing 2,358 costmap scan drops.</dd>
-<dt>Change</dt><dd>Odometry/TF publication increased from 1 Hz to 10 Hz.</dd>
-<dt>Result</dt><dd>In the follow-up run, the transform was available at the scan timestamp and no scan drops were observed.</dd>
+<dt>Evidence</dt><dd>In the first run, the scan arrived before its transform and the costmap recorded 2,358 scan drops. Odometry/TF publication increased from 1 Hz to 10 Hz; in the follow-up run the transform was available at the scan timestamp and no scan drops were observed.</dd>
+<dt>What this shows</dt><dd>Increasing odometry/TF publication to 10 Hz made the transform available when the scan arrived in the follow-up run.</dd>
 <dt>Still open</dt><dd>Localisation accuracy, downstream costmap behaviour and navigation task success.</dd>
 </dl>
 <p class="provenance">Selected runs replayed from the stable Stage 3 bundle.</p>
@@ -694,10 +695,12 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>MPPI observation</th><th>RPP attempt</th></tr></thead><tbody><tr><td>No forward progress; goal timed out in the inspected Jazzy captures.</td><td>Forward command, 0.288761 m odometry displacement, goal reported successful within configured tolerance.</td></tr></tbody></table>
 <dl class="account-rows">
-<dt>Shared context</dt><dd>Jazzy Gazebo; same named goal_base_footprint realisation; 0.5 m map-frame task; same Rotifer source revision.</dd>
-<dt>What this shows</dt><dd>This setup could move and complete the task in the RPP run. Why MPPI stalled remains open.</dd>
+<dt>Assumption</dt><dd>The prepared setup can make forward progress and complete the 0.5 m task with a different controller.</dd>
+<dt>Probe</dt><dd>Controlled contrast under Jazzy Gazebo, the same named goal_base_footprint realisation, 0.5 m map-frame task and Rotifer source revision; change the controller from MPPI to RPP.</dd>
+<dt>Evidence</dt><dd>MPPI: no forward progress and goal timeout in the inspected captures. RPP: forward command, 0.288761 m odometry displacement and goal reported successful within configured tolerance in the recorded attempt.</dd>
+<dt>What this shows</dt><dd>This setup could move and complete the task in the RPP run.</dd>
+<dt>Still open</dt><dd>Why MPPI stalled.</dd>
 </dl>
 
 </div>
