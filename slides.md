@@ -275,12 +275,12 @@ class: simple-slide
 
 <div class="slide-content">
 
-<MockRepl :stage="1" />
+<MockRepl :stage="0" />
 
 </div>
 
 <!--
-Slide 14. Keep this slide on screen while walking through source show, explain, run and explain again. The mock uses recorded run evidence; no live CLI or ROS execution.
+Slide 14. Use the short help commands to introduce source, explain and run. The mock is prepared slideware; no live CLI or ROS execution.
 -->
 
 ---

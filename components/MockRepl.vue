@@ -23,6 +23,15 @@ const runDurationsSeconds = {
 }
 
 const stageData = {
+  0: {
+    name: 'Command help',
+    commands: {
+      'source show -h': 'Show the authored experiment, its realisation, and the question it asks.',
+      'explain -h': 'Show what the evidence supports so far and what remains open.',
+      'run -h': 'Run the selected experiment and retain its observations.',
+    },
+    suggestions: ['source show -h', 'explain -h', 'run -h'],
+  },
   1: {
     name: 'Presence',
     commands: {
@@ -251,13 +260,14 @@ diagnosis of the MPPI failure.`,
 }
 
 const stage = computed(() => stageData[props.stage] || stageData[1])
+const stageLabel = computed(() => props.stage === 0 ? 'REPL introduction' : `Stage ${props.stage}`)
 const input = ref('')
 const isRunning = ref(false)
 const transcript = ref(null)
 const inputId = `mock-repl-stage-${props.stage}`
 
 function buildInitial(data) {
-  return [{ kind: 'notice', text: `Stage ${props.stage} · ${data.name}\nType help to see the commands prepared for this stage.` }]
+  return [{ kind: 'notice', text: `${stageLabel.value} · ${data.name}\nType help to see the commands prepared for this panel.` }]
 }
 
 const entries = ref(buildInitial(stage.value))
@@ -270,7 +280,7 @@ watch(stage, (next) => {
 })
 
 function helpOutput() {
-  return `Prepared commands for Stage ${props.stage} · ${stage.value.name}\n\n${Object.keys(stage.value.commands).map((command) => `  ${command}`).join('\n')}\n  help\n  clear\n\nOnly these scripted responses are available. No ROS or shell command runs.`
+  return `Prepared commands for ${stageLabel.value} · ${stage.value.name}\n\n${Object.keys(stage.value.commands).map((command) => `  ${command}`).join('\n')}\n  help\n  clear\n\nOnly these scripted responses are available. No ROS or shell command runs.`
 }
 
 async function submit(raw = input.value) {
@@ -323,9 +333,9 @@ function reset() {
 </script>
 
 <template>
-  <section class="mock-repl" :aria-label="`Mock REPL, Stage ${props.stage} ${stage.name}`">
+  <section class="mock-repl" :aria-label="`${stageLabel} · ${stage.name}`">
     <header class="mock-repl-header">
-      <div class="mock-repl-title"><span class="mock-repl-dot"></span> ros_ws / prepared investigation</div>
+      <div class="mock-repl-title"><span class="mock-repl-dot"></span> ros_ws / {{ props.stage === 0 ? 'command guide' : 'prepared investigation' }}</div>
       <div class="mock-repl-disclosure">MOCK · NO LIVE ROS OR SHELL</div>
     </header>
 
@@ -362,7 +372,10 @@ function reset() {
       <button class="mock-repl-run" type="button" :disabled="isRunning" @click="submit()">Run</button>
       <button class="mock-repl-reset" type="button" :disabled="isRunning" aria-label="Reset this mock REPL" @click="reset">Reset</button>
     </div>
-    <footer class="mock-repl-footer">Stage {{ props.stage }} of 5 · outputs are scripted; evidence provenance remains attached to the cited runs.</footer>
+    <footer class="mock-repl-footer">
+      <template v-if="props.stage === 0">Command help · short descriptions for this talk</template>
+      <template v-else>Stage {{ props.stage }} of 5 · outputs are scripted; evidence provenance remains attached to the cited runs.</template>
+    </footer>
   </section>
 </template>
 
