@@ -475,14 +475,14 @@ Slide 24. Stage 3 blocker evidence with recorded latest and scan stamps.
 -->
 
 ---
-class: simple-slide
+class: simple-slide compact-body-slide
 ---
 
 # The transform is available when the scan arrives
 
 <div class="slide-content">
 
-<div class="plain-columns"><section><h2>Follow-up run</h2><p>Odometry/TF publication increased from 1 Hz to 10 Hz.</p></section><section><h2>What changed</h2><p>At scan stamp 12.7 s, odom → base_link was available.</p><p>Zero costmap scan drops observed.</p><p>21/21 declared checks passed.</p></section></div>
+<div class="plain-columns"><section><h2>Follow-up run</h2><ul><li>Odometry/TF publication: 1 Hz → 10 Hz</li></ul></section><section><h2>What changed</h2><ul><li>Transform available at scan stamp 12.7 s</li><li>No costmap scan drops observed</li><li>21/21 declared checks passed</li></ul></section></div>
 
 </div>
 
@@ -515,7 +515,7 @@ Slide 26. Stage 3 claim uses the order 6 evidence only.
 
 
 ---
-class: simple-slide
+class: simple-slide compact-body-slide
 ---
 
 # Stage 4 · No forward progress
@@ -523,10 +523,10 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="plain-columns">
-<section><h2>Goal and path</h2><p>Recorder 2026-10-02 20:33:41Z</p><p>Accepted 0.5 m goal; valid path; zero forward command; no translational progress; goal record reports timeout.</p></section>
-<section><h2>Local corridor check</h2><p>Recorder 2026-10-02 20:38:41Z</p><p>Free sampled corridor and robot cell; footprint present; local motion classified feasible; goal record reports timeout.</p></section>
+<section><h2>Goal and path</h2><ul><li>0.5 m goal accepted · timed out</li><li>Valid path</li><li>No forward command or translational progress</li></ul></section>
+<section><h2>Local corridor check</h2><ul><li>Sampled corridor and robot cell clear</li><li>Footprint present · local motion classified feasible</li></ul></section>
 </div>
-<p class="provenance">Gazebo / ROS 2 Jazzy · warehouse_teleop@gazebo_nav2_goal_base_footprint · two separate attempts.</p>
+<p class="provenance">Gazebo · ROS 2 Jazzy · two separate attempts.</p>
 <p class="provenance">The mocked REPL shows recorded topics, not the submitted goal or final-result reply. The saved run goal record reports acceptance and timeout. No GUI video.</p>
 
 </div>
