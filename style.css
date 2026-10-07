@@ -1132,6 +1132,13 @@ a.button:hover {
 .simple-slide h2 { margin: 0 0 0.7rem; font-size: 1.5rem; font-weight: 500; }
 .simple-slide ul { margin: 0; font-size: 1.3rem; line-height: 1.7; }
 .simple-slide .plain-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.simple-slide.workflow-slide .workflow-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
+.simple-slide.workflow-slide .workflow-intro section { display: grid; gap: 0.65rem; }
+.simple-slide.workflow-slide .workflow-intro h2 { margin: 0; font-size: 1.3rem; }
+.simple-slide.workflow-slide .workflow-intro p,
+.simple-slide.workflow-slide .workflow-steps { font-size: 1.05rem; line-height: 1.5; }
+.simple-slide.workflow-slide .workflow-steps { margin: 0; padding-left: 1.35rem; }
+.simple-slide.workflow-slide .workflow-steps li { margin-bottom: 0.45rem; }
 .simple-slide .account-rows {
   display: grid;
   grid-template-columns: 10.5rem 1fr;

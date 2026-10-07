@@ -224,14 +224,18 @@ Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
 ---
-class: simple-slide
+class: simple-slide workflow-slide
 ---
 
 # The Rotifer workflow
 
 <div class="slide-content">
 
-<dl class="account-rows"><dt>source show</dt><dd>Authored investigation</dd><dt>roti explain</dt><dd>Current account</dd><dt>roti run</dt><dd>New observations</dd><dt>roti explain</dt><dd>Updated account</dd></dl><p class="provenance">The demonstration uses prepared interactions over retained evidence.</p>
+<div class="workflow-intro">
+<section><h2>Experimental setup</h2><p>ROS 2 Jazzy + Nav2 · Gazebo</p><p>Nix: pinned environment and run orchestration</p><p>Python probes: rclpy<br>Inspection and operation: ROS 2 CLI</p></section>
+<section><h2>Rotifer workflow</h2><ol class="workflow-steps"><li><strong>source show</strong> · authored investigation</li><li><strong>roti explain</strong> · current account</li><li><strong>roti run</strong> · new observations</li><li><strong>roti explain</strong> · updated account</li></ol></section>
+</div>
+<p class="provenance">The demonstration uses prepared interactions over retained evidence.</p>
 
 </div>
 
