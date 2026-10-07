@@ -1209,6 +1209,12 @@ a.button:hover {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.simple-slide .retention-card {
+  background: #fff !important;
+  color: var(--ubuntu-aubergine) !important;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
 .simple-slide.quiet-question .slide-content { align-items: center; text-align: center; }
 .simple-slide.quiet-question p { font-size: 2.35rem; line-height: 1.4; }
 .simple-slide.title-slide { justify-content: center; }
@@ -1222,6 +1228,21 @@ a.button:hover {
 .simple-slide .understanding-map p { font-size: 1.6rem; }
 .simple-slide .map-connectors { color: var(--surface-border-strong); line-height: 1.3; }
 .simple-slide .frame-line { font-family: ui-monospace, monospace; font-size: 2rem; }
+.simple-slide.structure-slide .slide-content { gap: 0.8rem; }
+.simple-slide.structure-slide .structure-chain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 0.5rem;
+  font-family: ui-monospace, monospace;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--ubuntu-aubergine);
+}
+.simple-slide.structure-slide .structure-facts { display: grid; gap: 0.65rem; }
+.simple-slide.structure-slide .structure-facts p { font-size: 1.15rem; }
+.simple-slide.structure-slide .structure-boundary { font-size: 1.1rem; }
 .simple-slide .timing-diagram { width: 75%; margin: 0 auto; text-align: center; font-size: 1rem; }
 .simple-slide .buffer-line { border-top: 3px solid var(--ubuntu-aubergine-soft); margin: 0.6rem 0 0.15rem; }
 .simple-slide .unknown-result { font-size: 3rem; }

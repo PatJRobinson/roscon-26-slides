@@ -417,22 +417,17 @@ Slide 20. Stage 2 source and retained observations; do not imply runtime timing.
 -->
 
 ---
-class: simple-slide
+class: simple-slide structure-slide
 ---
 
 # The structural account
 
 <div class="slide-content">
 
-<p><span class="frame-line">odom ─── base_link ─── vehicle_blue/laser_frame/scan</span></p>
-<dl class="account-rows">
-<dt>Assumption</dt><dd>The selected configurations provide the structural relationships needed to interpret the scan relative to the robot.</dd>
-<dt>Probe</dt><dd>Inspect retained observations across the odometry, scan-source and scan-frame configurations.</dd>
-<dt>Evidence</dt><dd>odom → base_link and the /scan source/frame were observed. base_link → scan was missing in the scan-only run and present in the final scan-TF run.</dd>
-<dt>What this shows</dt><dd>The selected configurations establish these structural relationships for this concrete realisation.</dd>
-<dt>Still open</dt><dd>Scan-time TF availability, lifecycle/map conditions, costmap behaviour and navigation success.</dd>
-</dl>
-<p class="provenance">Progression spans orders 2–4; not one run. Counted captures; copied-bundle replay verified.</p>
+<div class="structure-chain"><span>odom</span><span>→</span><span>base_link</span><span>→</span><span>scan frame</span></div>
+<div class="structure-facts"><p><strong>Observed:</strong> odom → base_link; the /scan source and frame.</p><p><strong>Scan link:</strong> missing in the scan-only run; present in the final scan-TF run.</p></div>
+<p class="structure-boundary">Structural links established for this setup. Scan timing and navigation remain open.</p>
+<p class="provenance">Three separate configurations · counted captures · copied-bundle replay verified.</p>
 
 </div>
 
@@ -496,7 +491,7 @@ class: simple-slide
 <div class="slide-content">
 
 <dl class="account-rows">
-<dt>What happened</dt><dd>The scan arrived at 153.4 s, but the latest <code>odom → base_link</code> transform was from 153.0 s.</dd>
+<dt>What happened</dt><dd>The scan arrived at 153.4 s, but the latest odom → base_link transform was from 153.0 s.</dd>
 <dt>Effect</dt><dd>The costmap recorded 2,358 scan drops.</dd>
 </dl>
 <p class="provenance">warehouse_teleop@gazebo_nav2_map_surface.</p>
@@ -515,7 +510,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="plain-columns"><section><h2>Follow-up run</h2><p>Odometry/TF publication increased from 1 Hz to 10 Hz.</p></section><section><h2>What changed</h2><p>At scan stamp 12.7 s, <code>odom → base_link</code> was available.</p><p>Zero costmap scan drops observed.</p><p>21/21 declared checks passed.</p></section></div>
+<div class="plain-columns"><section><h2>Follow-up run</h2><p>Odometry/TF publication increased from 1 Hz to 10 Hz.</p></section><section><h2>What changed</h2><p>At scan stamp 12.7 s, odom → base_link was available.</p><p>Zero costmap scan drops observed.</p><p>21/21 declared checks passed.</p></section></div>
 
 </div>
 
@@ -730,7 +725,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<pre>Particular system / conditions
+<pre class="retention-card">Particular system / conditions
              ↓
 What are we trying to establish?
              ↓
