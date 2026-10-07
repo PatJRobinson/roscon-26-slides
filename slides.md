@@ -343,11 +343,11 @@ class: simple-slide
 <div class="slide-content">
 
 <dl class="account-rows">
-<dt>Assumption</dt><dd>The required odom → base_link relationship is available.</dd>
-<dt>Probe</dt><dd>Inspect ROS topic presence and transform/frame data.</dd>
-<dt>Evidence</dt><dd>/tf and /odom were visible; vehicle_blue/odom → vehicle_blue/chassis was observed; odom → base_link was not.</dd>
-<dt>What this shows</dt><dd>Transform-related topics were present, but the required frame relationship was not observed in this run.</dd>
-<dt>Still open</dt><dd>Structural compatibility, runtime timing and navigation behaviour.</dd>
+<dt>Assumption</dt><dd>odom → base_link available</dd>
+<dt>Probe</dt><dd>ROS topics · transform/frame data</dd>
+<dt>Evidence</dt><dd>/tf · /odom present<br>vehicle_blue/odom → vehicle_blue/chassis observed<br>odom → base_link not observed</dd>
+<dt>What this shows</dt><dd>Required frame relationship absent in this run</dd>
+<dt>Still open</dt><dd>Structure · runtime/timing · navigation</dd>
 </dl>
 
 </div>
@@ -527,11 +527,11 @@ class: simple-slide
 <div class="slide-content">
 
 <dl class="account-rows">
-<dt>Assumption</dt><dd>Critical transforms are available at sampled scan timestamps.</dd>
-<dt>Probe</dt><dd>Inspect runtime surfaces, scan-time TF evidence and costmap scan-drop results.</dd>
-<dt>Evidence</dt><dd>In the first run, the scan arrived before its transform and the costmap recorded 2,358 scan drops. Odometry/TF publication increased from 1 Hz to 10 Hz; in the follow-up run the transform was available at the scan timestamp and no scan drops were observed.</dd>
-<dt>What this shows</dt><dd>Increasing odometry/TF publication to 10 Hz made the transform available when the scan arrived in the follow-up run.</dd>
-<dt>Still open</dt><dd>Localisation accuracy, downstream costmap behaviour and navigation task success.</dd>
+<dt>Assumption</dt><dd>Critical transforms available at scan time</dd>
+<dt>Probe</dt><dd>Runtime surface · scan-time TF · costmap drops</dd>
+<dt>Evidence</dt><dd>First run: scan 153.4 s · latest TF 153.0 s · 2,358 drops<br>Follow-up: 10 Hz · scan/TF at 12.7 s · zero drops</dd>
+<dt>What this shows</dt><dd>Follow-up transform available at scan time; no drops observed</dd>
+<dt>Still open</dt><dd>Localisation · downstream costmap · navigation success</dd>
 </dl>
 <p class="provenance">Selected runs replayed from the stable Stage 3 bundle.</p>
 
@@ -619,11 +619,11 @@ class: simple-slide
 <div class="slide-content">
 
 <dl class="account-rows">
-<dt>Assumption</dt><dd>The prepared system produces forward progress towards the accepted goal.</dd>
-<dt>Probe</dt><dd>Inspect path, local corridor, command output, odometry and the run goal record.</dd>
-<dt>Evidence</dt><dd>Accepted goal and timeout; valid path; free sampled corridor; zero forward command and no translation.</dd>
-<dt>What this shows</dt><dd>The robot did not make the expected forward progress in these runs.</dd>
-<dt>Still open</dt><dd>Why the selected controller did not produce forward motion.</dd>
+<dt>Assumption</dt><dd>Forward progress towards the accepted goal</dd>
+<dt>Probe</dt><dd>Path · local corridor · command · odometry · goal record</dd>
+<dt>Evidence</dt><dd>Goal accepted · timeout<br>Valid path · free sampled corridor/cell<br>Forward command 0 · translation 0</dd>
+<dt>What this shows</dt><dd>No expected forward progress in these runs</dd>
+<dt>Still open</dt><dd>Task geometry · command feasibility · controller/configuration</dd>
 </dl>
 <p v-click class="next-question">What do we investigate next?</p>
 <p class="provenance">Evidence establishes the failure, not its cause. No controller defect or general substrate infeasibility is established.</p>
@@ -642,9 +642,8 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="plain-columns"><section><h2>MPPI observation</h2><p>No forward progress in the Stage 4 captures</p></section><section><h2>Human-selected probe</h2><p>Try the RPP controller and see whether the robot moves.</p><p>Result not shown yet · ?</p></section></div>
-<p>Intended comparison: same named realisation and 0.5 m task; select RPP as the changed controller. The outcome may narrow the question, not diagnose MPPI.</p>
-<p class="provenance">Human chooses the next probe. Do not imply Rotifer diagnosed the failure or selected RPP automatically.</p>
+<div class="plain-columns"><section><h2>MPPI</h2><p>No forward progress in Stage 4</p></section><section><h2>Human-selected probe</h2><p>RPP · same named realisation · 0.5 m task</p><p>Result follows</p></section></div>
+<p class="provenance">A controlled contrast to narrow the question, not diagnose MPPI. The human chooses the probe.</p>
 
 </div>
 
@@ -685,11 +684,11 @@ class: simple-slide
 <div class="slide-content">
 
 <dl class="account-rows">
-<dt>Assumption</dt><dd>The prepared setup can make forward progress and complete the 0.5 m task with a different controller.</dd>
-<dt>Probe</dt><dd>Controlled contrast under Jazzy Gazebo, the same named goal_base_footprint realisation, 0.5 m map-frame task and Rotifer source revision; change the controller from MPPI to RPP.</dd>
-<dt>Evidence</dt><dd>MPPI: no forward progress and goal timeout in the inspected captures. RPP: forward command, 0.288761 m odometry displacement and goal reported successful within configured tolerance in the recorded attempt.</dd>
-<dt>What this shows</dt><dd>This setup could move and complete the task in the RPP run.</dd>
-<dt>Still open</dt><dd>Why MPPI stalled.</dd>
+<dt>Assumption</dt><dd>This setup can move and complete the 0.5 m task</dd>
+<dt>Probe</dt><dd>Controlled contrast · MPPI → RPP<br>Same named realisation · 0.5 m map-frame task</dd>
+<dt>Evidence</dt><dd>MPPI: no progress · goal timeout<br>RPP: forward command · 0.289 m · goal success within 0.25 m XY tolerance</dd>
+<dt>What this shows</dt><dd>Setup moved and completed the task in the RPP run</dd>
+<dt>Still open</dt><dd>Why MPPI stalled</dd>
 </dl>
 
 </div>
