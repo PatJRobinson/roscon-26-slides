@@ -9,248 +9,168 @@ const stageData = {
   1: {
     name: 'Presence',
     commands: {
-      'select nav2_corridor_gazebo_substrate/': 'selected: nav2_corridor_gazebo_substrate',
-      'source show': `experiment:   nav2_corridor_gazebo_substrate
-realisation:  <realisation ID>
-provider:     <provider ID and role>
-
+      'source show presence_check': `experiment:   Presence check
+realisation@scenario: warehouse_teleop@gazebo_nav2_substrate
+provider:     gazebo (Nav2 substrate)
 required:     odom → base_link
-question:     Is the required frame relationship available
-              in this realisation?
-conditions:   <selected robot, environment, and runtime conditions>`,
-      'roti explain <exact target from existing transcript>': `source:       nav2_corridor_gazebo_substrate
+question:     Is the required frame relationship available?
+conditions:   ROS 2 Jazzy · headless provider-backed run`,
+      'roti explain presence_check': [
+        `source:       Presence check
 requires:     odom → base_link
-
 assumption:   required odometry-to-base relationship is available
 account:      NOT ESTABLISHED
-basis:        <declaration or earlier retained evidence>
-
-next question:
-              inspect the transform data for this realisation`,
-      'roti run presence_check': `PREPARED WORKFLOW · HARD-CODED MOCK OUTPUT
-
-investigation: presence_check
-run:           <retained presence-check run ID>
-status:        observations retained
-
-Disclosure: this screen represents the operational workflow.
-The retained observation and provenance belong to the actual run.`,
-      'evidence show presence': `CAPTURED REAL-PROVIDER OBSERVATION
-run: <retained presence-check run ID>
-
-ROS topic surface:
+basis:        authored declaration; no retained edge evidence yet
+next question: inspect transform/frame data`,
+        `evidence:    /tf and /odom present
+observed:     vehicle_blue/odom → vehicle_blue/chassis
+required:     odom → base_link NOT OBSERVED
+account:      topic presence established; required edge remains open`,
+      ],
+      'roti run presence_check': `evaluation:   17/17 declared checks passed
+capture:      counted real-provider run
+replay:       copied-bundle replay verified`,
+      'evidence show presence': `ROS topic surface:
   /tf          PRESENT
-  /tf_static   PRESENT
+  /odom        PRESENT
 
 Inspected frame data:
-  observed:    <exact observed frames and edges>
+  observed:    vehicle_blue/odom → vehicle_blue/chassis
   required:    odom → base_link
   result:      NOT OBSERVED`,
       'stage summary': `STAGE 1 · PRESENCE
 
-ASSUMPTION
-  The required odom → base_link relationship is available
-  to the navigation substrate.
-PROBE
-  Inspect ROS topic presence and transform/frame data.
-EVIDENCE
-  /tf and /tf_static are present.
-  The required odom → base_link edge was not observed.
-BOUNDED CLAIM
-  Transform-related topics were visible in this run, but the
-  required frame relationship was not observed.
-REMAINING UNKNOWN
-  Structural compatibility · Runtime/timing · Navigation behaviour`,
+ASSUMPTION   odom → base_link available
+PROBE        ROS topics · transform/frame data
+EVIDENCE     /tf and /odom present; observed odometry frames differ
+             from required odom → base_link
+WHAT THIS SHOWS  Required edge not observed in this run
+STILL OPEN   Structure · runtime/timing · navigation`,
     },
-    suggestions: ['roti explain <exact target from existing transcript>', 'roti run presence_check', 'evidence show presence', 'stage summary'],
+    suggestions: ['source show presence_check', 'roti explain presence_check', 'roti run presence_check', 'evidence show presence', 'stage summary'],
   },
   2: {
     name: 'Structure',
     commands: {
-      'source show': `selected realisation: nav2_corridor_gazebo_substrate / <ID>
-declared providers: <provider rows>
-requirements: odom → base_link; scan source; base_link → scan`,
-      'roti explain <selected structural investigation>': `source:       <selected structural investigation>
-current account: structural relationships not yet established
-basis:        authored declarations and earlier retained evidence
+      'source show odometry_link': `experiment:   Odometry link
+realisation@scenario: warehouse_teleop@gazebo_nav2_tf_substrate
+provider:     provider/model supplies odometry and TF
+question:     is odom → base_link present?`,
+      'evidence show odometry_link': `counted capture · evaluation passed 20/20 checks
+observed: odom → base_link present
+scope: this structural relationship only`,
+      'source show scan_source': `experiment:   Scan source
+realisation@scenario: warehouse_teleop@gazebo_nav2_scan_substrate
+provider:     provider/model supplies the scan stream
+topic:        /scan · sensor_msgs/msg/LaserScan
+frame:        vehicle_blue/laser_frame/scan`,
+      'evidence show scan_source': `counted capture
+/scan source and frame observed
+base_link → scan frame: NOT OBSERVED
+the scan frame was disconnected in this configuration`,
+      'source show scan_integration': `experiment:   Scan integration
+realisation@scenario: warehouse_teleop@gazebo_nav2_scan_tf_substrate
+provider:     realisation supplies the scan-frame transform
+question:     is base_link → scan connected?`,
+      'evidence show scan_integration': `counted capture · evaluation passed 19/19 checks
+observed: base_link → vehicle_blue/laser_frame/scan
+scan frame connected in this configuration`,
+      'roti explain structural_compatibility': `observed across three separate configurations:
+  odom → base_link present
+  /scan source and frame present
+  base_link → scan absent in scan-source run; present in scan-integration run
 
-remaining requirements:
-  odom → base_link
-  scan source and frame
-  base_link → scan`,
-      'source show odometry': `AUTHORED SOURCE · ODOMETRY RELATIONSHIP
-provider: <declared odometry provider>
-relationship: odom → base_link
-realisation: <selected realisation ID>`,
-      'evidence show odometry': `CAPTURED REAL-PROVIDER EVIDENCE
-run: <structural investigation run ID>
-observed: odom → base_link
+open: scan-time availability · navigation behaviour`,
+      'stage summary': `STAGE 2 · STRUCTURE
 
-This establishes the observed relationship only.
-The scan requirements remain open.`,
-      'source show scan': `AUTHORED SOURCE · SCAN
-topic: <retained scan topic>
-frame: <retained scan frame>
-required relationship: base_link → scan`,
-      'evidence show scan': `CAPTURED REAL-PROVIDER EVIDENCE
-run: <same or separately identified run>
-observed: scan source and frame
+ODOMETRY    odom → base_link present
+SCAN        /scan source and frame present
+INTEGRATION base_link → scan present in final scan-TF run
 
-base_link → scan
-observed: <retained relationship evidence>`,
-      'stage summary': `STATE 4 · STRUCTURAL ACCOUNT
-
-odom ─── base_link ─── scan
-          ↑             ↑
-       odometry     measurements
-
-UPDATED ACCOUNT
-  odom → base_link          Established
-  scan source and frame     Established
-  base_link → scan          Established
-
-REMAINING UNKNOWN
-  Timing · Lifecycle · Costmap behaviour · Navigation success
-
-Structural compatibility is shown for this realisation;
-availability at every timestamp is not established.`,
+Three distinct configurations · not one continuous repair
+Still open: scan-time availability · navigation behaviour`,
     },
-    suggestions: ['roti explain <selected structural investigation>', 'source show odometry', 'evidence show odometry', 'source show scan', 'evidence show scan', 'stage summary'],
+    suggestions: ['source show odometry_link', 'evidence show odometry_link', 'source show scan_source', 'evidence show scan_source', 'source show scan_integration', 'evidence show scan_integration', 'roti explain structural_compatibility', 'stage summary'],
   },
   3: {
     name: 'Runtime',
     commands: {
-      'source show': `experiment: <selected runtime investigation>
-realisation: <selected realisation ID>
-requires: odom → base_link; base_link → scan
-runtime condition: scan-timestamp transform availability`,
-      'roti explain runtime_compatibility': `RUNTIME REQUIREMENTS                 EXISTING ACCOUNT
-Map / lifecycle / action surface  <retained status>
-odom → base_link                  Structurally established
-base_link → scan                  Structurally established
-Scan timestamp compatibility      <retained status>
+      'source show runtime_surface': `experiment:   Runtime surface
+realisation@scenario: warehouse_teleop@gazebo_nav2_map_surface
+question:     Are the map, lifecycle and navigation interfaces available?
+probe:        runtime interfaces and scan-time transform lookup`,
+      'roti explain runtime_surface': `map:          present · frame map
+required nodes: active
+NavigateToPose: available
+latest TF:     available at 153.0 s
+scan at 153.4 s: transform unavailable
 
-BASIS
-  <declarations and earlier retained evidence>
+account: runtime surface present; scan-time lookup failed`,
+      'roti run runtime_surface': `evaluation:   21/21 declared checks passed
+capture:      counted real-provider run
+observation:  2,358 scan drops recorded`,
+      'evidence show timing_follow_up': `experiment:   Timing follow-up
+realisation@scenario: warehouse_teleop@gazebo_nav2_costmap_timing
+scan rate:    10 Hz
+at 12.7 s:    scan and transform both available
+scan drops:   none observed
+evaluation:   21/21 declared checks passed
 
-REMAINING QUESTION
-  Is transform data available when the scan needs to use it?`,
-      'roti run runtime_compatibility': `PREPARED WORKFLOW · HARD-CODED MOCK OUTPUT
-
-investigation: runtime_compatibility
-run:           <runtime-surface run ID>
-status:        observations retained
-
-This is a prepared representation of the operational workflow.
-Run identity and provenance refer to the retained real run.`,
-      'evidence show surface': `CAPTURED REAL-PROVIDER EVIDENCE
-run: <runtime-surface run ID>
-
-Map interface            <observed status>
-Lifecycle state          <observed status>
-Navigation action        <observed status>
-TF frame relationships   Available
-
-Interface presence does not establish successful navigation.`,
-      'evidence show timing-failure': `CAPTURED REAL-PROVIDER EVIDENCE
-run: <timing-failure run ID>
-
-Latest-time lookup                 SUCCESS
-Lookup at scan timestamp           FAILED
-
-Scan timestamp: <retained timestamp>
-Failure:        <retained diagnostic>
-
-The frame relationship exists, but its transform data was
-not available at the time of this scan.`,
-      'evidence show timing-compatible': `CAPTURED REAL-PROVIDER EVIDENCE
-run: <timing-compatible run ID>
-
-Latest-time lookup                 SUCCESS
-Lookup at scan timestamp           SUCCESS
-
-Changed conditions:
-  <retained configuration / runtime difference>
-
-Separate run under changed conditions; not a repeat of the
-timing-failure run.`,
+Separate configuration; publication rate was not isolated as the cause.`,
       'stage summary': `STAGE 3 · RUNTIME
 
-ASSUMPTION
-  Required interfaces and transform data are available
-  when navigation needs them.
-PROBE
-  Inspect runtime interfaces and compare transform lookups.
-EVIDENCE
-  Relevant interfaces were observed.
-  Latest-time lookup succeeded; scan-time lookup first failed.
-  A separately identified timing-compatible result succeeded.
-BOUNDED CLAIM
-  The required lookup was compatible under the conditions tested.
-REMAINING UNKNOWN
-  Localisation accuracy · Costmap behaviour · Navigation success`,
+RUNTIME      map · nodes · NavigateToPose available
+SURFACE      153.0 s: latest TF available
+SCAN         153.4 s: transform unavailable · 2,358 drops
+FOLLOW-UP    10 Hz · transform available · no drops observed
+STILL OPEN   Separate configuration; cause not isolated`,
     },
-    suggestions: ['source show', 'roti run runtime_compatibility', 'evidence show timing-failure', 'evidence show timing-compatible', 'stage summary'],
+    suggestions: ['source show runtime_surface', 'roti explain runtime_surface', 'roti run runtime_surface', 'evidence show timing_follow_up', 'stage summary'],
   },
   4: {
     name: 'Behaviour',
     commands: {
-      'source show': `experiment: <selected behavioural investigation>
-realisation: <selected realisation ID>
-task: <prepared navigation task>
-expected behaviour: forward progress towards the goal
-controller: <declared controller and conditions>`,
-      'roti explain <selected behavioural investigation>': `BEHAVIOURAL REQUIREMENTS           EXISTING ACCOUNT
-Navigation substrate              <retained status>
-Goal / path interface              <retained status>
-Local corridor                     <retained status>
-Forward progress                   <retained status>
+      'source show goal_and_path': `experiment:   Goal and path
+realisation@scenario: warehouse_teleop@gazebo_nav2_goal_base_footprint
+task:         0.5 m map-frame navigation goal
+controller:   MPPI`,
+      'source show local_corridor_check': `experiment:   Local corridor check
+realisation@scenario: warehouse_teleop@gazebo_nav2_goal_base_footprint
+probe:        one-shot local-feasibility check
+controller:   MPPI`,
+      'roti explain goal_and_path': `goal:         accepted
+global path:  valid path observed
+local check:  sampled corridor clear to 0.6 m
+command:      no forward command observed
+odometry:     no translational progress
+goal record:  timed out
 
-BASIS
-  <declarations and earlier retained evidence>
+account: expected progress did not occur; cause remains open`,
+      'evidence show goal_and_path': `Goal and path · one-shot attempt at 20:33:41Z
+goal record: accepted, then timed out
+replayed topics: valid path · zero forward command · no motion`,
+      'evidence show local_corridor_check': `Local corridor check · one-shot attempt at 20:38:41Z
+probe: corridor sampled clear to 0.6 m
 
-REMAINING QUESTION
-  Does the robot progress under the prepared task conditions?`,
-      'evidence show behaviour': `FRESH ONE-SHOT REAL-PROVIDER EVIDENCE
-revision: 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8
-recorder starts: 20:33:41Z and 20:38:41Z
-native run IDs: not emitted
-
-Navigation goal       accepted [native result file]
-Global path           valid path [bag topic]
-Local corridor        sampled free to 0.6 m [bag/native probe]
-Command output        zero forward command [bag topic]
-Odometry / progress   no translational progress [bag topic]
-Action result         timeout [native result file]
-
-Boundary: two attempts, not one continuous run. Bags omit the
-submitted goal and final-result reply.`,
+The capture does not contain the submitted goal or final-result reply.`,
       'stage summary': `STAGE 4 · BEHAVIOUR
 
-ASSUMPTION
-  The system can make forward progress to the accepted goal.
-PROBE
-  Inspect path, local corridor, command, odometry, and action state.
-EVIDENCE
-  Goal accepted and timed out (native result files).
-  Valid path; free sampled corridor to 0.6 m.
-  Zero forward command and no translational odometry (bags).
-BOUNDED CLAIM
-  Expected progress did not occur under these conditions.
-REMAINING UNKNOWN
-  Task geometry · Controller feasibility · Cause of failure`,
+GOAL          accepted · timed out
+PATH          valid
+CORRIDOR      sampled clear to 0.6 m
+COMMAND       no forward command
+ODOMETRY      no translational progress
+STILL OPEN    Cause of failure`,
     },
-    suggestions: ['source show', 'roti explain <selected behavioural investigation>', 'evidence show behaviour', 'stage summary'],
+    suggestions: ['source show goal_and_path', 'source show local_corridor_check', 'roti explain goal_and_path', 'evidence show goal_and_path', 'evidence show local_corridor_check', 'stage summary'],
   },
   5: {
     name: 'Controlled contrast',
     commands: {
-      'source show': `QUESTION
-  Could this system support forward progress and complete the task?
-HELD STEADY
-  <conditions genuinely held sufficiently consistent>
-CHANGED
-  Controller: MPPI → RPP`,
+      'source show rpp_attempt': `experiment:   RPP attempt
+realisation@scenario: warehouse_teleop@gazebo_nav2_goal_base_footprint
+task:         0.5 m map-frame navigation goal
+controller:   RPP`,
       'roti explain controller_progress': `QUESTION
   Could this system support the task with a different controller?
 
@@ -264,34 +184,24 @@ WHAT CHANGED IN THE ACCOUNT?
 
 STILL OPEN
   Why did MPPI stall here? How repeatable is the RPP result?`,
-      'evidence show mppi': `EARLIER MPPI OBSERVATION
-run: <MPPI run identity / source record>
+      'evidence show mppi': `earlier MPPI attempts
+forward command:      none observed
+translational motion: none observed
+goal records:         timed out`,
+      'evidence show rpp_attempt': `one RPP attempt · 2026-10-02 21:07:56Z
+forward command:      19 positive linear-x samples
+maximum speed:        0.208333 m/s
+odometry displacement: 0.288761 m
+goal record:           accepted · success within 30 s
+XY tolerance:          0.25 m
 
-Forward command:        none observed
-Translational motion:   none observed
-Goal result:            <native result record>
-
-This is the earlier side of the controlled contrast.`,
-      'evidence show rpp': `FRESH ONE-SHOT REAL-PROVIDER EVIDENCE
-revision:       <RPP source revision>
-recorder start: <RPP recorder start time>
-native run ID:  <run ID if available / not emitted>
-
-Controller             RPP
-Command output         Forward command observed
-Odometry / progress    Translational motion observed
-Navigation action     Goal accepted; goal success reported
-                       [native result file]
-
-Bag topics: command output · odometry / motion · <others>
-Native result file: goal acceptance and final goal result
-Not present in bag: submitted goal or final-result reply`,
+The recorded result does not show exact arrival at the nominal 0.5 m goal.`,
       'stage summary': `STAGE 5 · CONTROLLED CONTRAST
 
 QUESTION
   Could this system support forward progress with another controller?
 HELD STEADY
-  <conditions genuinely held sufficiently consistent>
+  The named realisation and 0.5 m goal task
 CHANGED
   MPPI → RPP
 EVIDENCE
@@ -304,7 +214,7 @@ STILL OPEN
 This does not establish general RPP superiority or a complete
 diagnosis of the MPPI failure.`,
     },
-    suggestions: ['source show', 'roti explain controller_progress', 'evidence show mppi', 'evidence show rpp', 'stage summary'],
+    suggestions: ['source show rpp_attempt', 'roti explain controller_progress', 'evidence show mppi', 'evidence show rpp_attempt', 'stage summary'],
   },
 }
 
@@ -318,9 +228,11 @@ function buildInitial(data) {
 }
 
 const entries = ref(buildInitial(stage.value))
+const responseCursors = ref({})
 
 watch(stage, (next) => {
   entries.value = buildInitial(next)
+  responseCursors.value = {}
   input.value = ''
 })
 
@@ -338,9 +250,14 @@ async function submit(raw = input.value) {
     entries.value = []
     input.value = ''
   } else {
-    const output = key === 'help'
-      ? helpOutput()
-      : stage.value.commands[key] || 'No scripted response for that command. Type help to see the commands prepared for this stage.'
+    const scripted = stage.value.commands[key]
+    let output
+    if (key === 'help') output = helpOutput()
+    else if (Array.isArray(scripted)) {
+      const index = responseCursors.value[key] || 0
+      output = scripted[Math.min(index, scripted.length - 1)]
+      responseCursors.value[key] = index + 1
+    } else output = scripted || 'No scripted response for that command. Type help to see the commands prepared for this stage.'
     entries.value.push({ kind: 'exchange', command, output })
     input.value = ''
   }
@@ -351,6 +268,7 @@ async function submit(raw = input.value) {
 
 function reset() {
   entries.value = buildInitial(stage.value)
+  responseCursors.value = {}
   input.value = ''
   nextTick(() => {
     if (transcript.value) transcript.value.scrollTop = transcript.value.scrollHeight

@@ -275,21 +275,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="prepared-label">Slideware mock · simplified from a recorded ROS 2 / Gazebo run · no live execution</div>
-<pre class="demo-terminal">❯ source show Presence check
-realisation@scenario: warehouse_teleop@gazebo_nav2_substrate
-provider:    gazebo (Nav2 substrate)
-question:    is odom → base_link available?
-❯ roti explain Presence check
-account: NOT ESTABLISHED
-basis:   authored investigation; no retained edge evidence yet
-❯ roti run Presence check
-evaluation: 17/17 declared checks passed
-capture:    counted real-provider run
-❯ roti explain Presence check
-/tf and /odom: present
-odom → base_link: not observed
-account: presence established; required edge remains open</pre>
+<MockRepl :stage="1" />
 
 </div>
 
@@ -305,16 +291,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ select Presence check
-❯ source show
-experiment:   Presence check
-realisation:  warehouse_teleop@gazebo_nav2_substrate
-provider:     gazebo (Nav2 substrate)
-required:     odom → base_link
-conditions:   ROS 2 Jazzy; headless provider-backed substrate run
-question:     Is the required frame relationship available
-              in this realisation?</pre>
+<MockRepl :stage="1" />
 
 </div>
 
@@ -331,14 +308,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ roti explain Presence check
-requires:    odom → base_link
-assumption:  required odometry-to-base relationship is available
-account:     NOT ESTABLISHED
-basis:       authored experiment declaration; no retained edge evidence yet
-next question:
-  Inspect transform/frame data for this realisation.</pre>
+<MockRepl :stage="1" />
 
 </div>
 
@@ -355,13 +325,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ roti run presence_check
-investigation: presence_check
-experiment:   Presence check
-result:       evaluation passed 17/17
-status:       counted real-provider capture
-disclosure:   copied-bundle replay verified; logs retained</pre>
+<MockRepl :stage="1" />
 
 </div>
 
@@ -461,11 +425,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Experiment</th><th>What changed or appeared</th><th>What the evidence says</th></tr></thead><tbody>
-<tr><td>Scan source</td><td>/scan, sensor_msgs/msg/LaserScan; frame vehicle_blue/laser_frame/scan</td><td>Scan present; base_link → scan frame missing</td></tr>
-<tr><td>Scan integration</td><td>Realisation-owned static scan-frame transform</td><td>base_link → vehicle_blue/laser_frame/scan present; scan frame connected</td></tr>
-</tbody></table>
-<p class="provenance">Separate configurations · Gazebo / ROS 2 Jazzy · final run passed 19/19 checks. Provider/model owns the scan stream; the realisation owns the integration transform.</p>
+<MockRepl :stage="2" />
 
 </div>
 
@@ -520,17 +480,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ roti run Runtime surface
-realisation: warehouse_teleop@gazebo_nav2_map_surface
-evaluation: 21/21 declared checks passed
-Map:                  present, frame map
-Required nodes:       active
-NavigateToPose:       available
-Latest odom → base_link TF: available (153.0 s)
-At scan stamp 153.4 s:       unavailable
-Costmap scan drops:         2,358
-Timing compatibility:       null</pre>
+<MockRepl :stage="3" />
 <p class="provenance">The interface evidence does not establish successful navigation.</p>
 
 </div>
@@ -628,13 +578,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ source show
-experiments: Goal and path;
-            Local corridor check
-realisation: warehouse_teleop@gazebo_nav2_goal_base_footprint
-task: 0.5 m map-frame goal; MPPI-configured experiment
-captures: two separate Jazzy attempts</pre>
+<MockRepl :stage="4" />
 <p class="provenance">Prepared presentation projection; it does not independently diagnose the controller.</p>
 
 </div>
@@ -716,14 +660,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Observation</th><th>Result</th><th>Evidence source</th></tr></thead><tbody>
-<tr><td>Controller</td><td>Regulated Pure Pursuit</td><td>Lifecycle log</td></tr>
-<tr><td>Forward command</td><td>19 positive linear-x samples; maximum 0.208333 m/s</td><td>Mocked REPL · recorded command</td></tr>
-<tr><td>Odometry</td><td>0.288761 m forward displacement</td><td>Mocked REPL · recorded odometry</td></tr>
-<tr><td>Navigation goal</td><td>Accepted; success within 30 s</td><td>Run goal record</td></tr>
-<tr><td>Goal tolerance</td><td>0.25 m XY; not exact arrival at 0.5 m nominal goal</td><td>Run goal record</td></tr>
-</tbody></table>
-<p class="provenance">Experiment RPP attempt · realisation warehouse_teleop@gazebo_nav2_goal_base_footprint · recorder 2026-10-02 21:07:56Z</p>
+<MockRepl :stage="5" />
 <p class="provenance">The mocked REPL shows movement; the run goal record reports acceptance and success.</p>
 
 </div>
