@@ -249,14 +249,15 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ select nav2_corridor_gazebo_substrate
+<pre class="demo-terminal">❯ select Presence check
 ❯ source show
-
-experiment:   nav2_corridor_gazebo_substrate
+experiment:   Presence check
 realisation:  warehouse_teleop@gazebo_nav2_substrate
 provider:     gazebo (Nav2 substrate)
 required:     odom → base_link
-conditions:   ROS 2 Jazzy; headless provider-backed substrate run</pre>
+conditions:   ROS 2 Jazzy; headless provider-backed substrate run
+question:     Is the required frame relationship available
+              in this realisation?</pre>
 
 </div>
 
@@ -274,13 +275,11 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ roti explain nav2_corridor_gazebo_substrate
-
+<pre class="demo-terminal">❯ roti explain Presence check
 requires:    odom → base_link
 assumption:  required odometry-to-base relationship is available
 account:     NOT ESTABLISHED
 basis:       authored experiment declaration; no retained edge evidence yet
-
 next question:
   Inspect transform/frame data for this realisation.</pre>
 
@@ -301,10 +300,8 @@ class: simple-slide
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
 <pre class="demo-terminal">❯ roti run presence_check
-
 investigation: presence_check
-experiment:   nav2_corridor_gazebo_substrate
-run:          20261001T151956.546871Z-ba4189019e54
+experiment:   Presence check
 result:       evaluation passed 17/17
 status:       counted real-provider capture
 disclosure:   copied-bundle replay verified; logs retained</pre>
@@ -326,11 +323,10 @@ class: simple-slide
 
 <table><thead><tr><th>Inspected</th><th>Observation</th><th>Source</th></tr></thead><tbody>
 <tr><td>/tf; /odom</td><td>Present</td><td>Mocked REPL · recorded run</td></tr>
-<tr><td>/tf_static</td><td>Absent; optional in this experiment</td><td>Run ledger</td></tr>
 <tr><td>Observed odometry frames</td><td>vehicle_blue/odom → vehicle_blue/chassis</td><td>Mocked REPL · recorded run</td></tr>
 <tr><td>Required edge</td><td>odom → base_link not observed</td><td>Mocked REPL · recorded run</td></tr>
 </tbody></table>
-<p class="provenance">Run 20261001T151956.546871Z-ba4189019e54 · Gazebo · ROS 2 Jazzy · copied-bundle replay verified.</p>
+<p class="provenance">Gazebo · ROS 2 Jazzy · copied-bundle replay verified.</p>
 
 </div>
 
@@ -368,12 +364,12 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Experiment → realisation</th><th>Run</th><th>Structural observation</th></tr></thead><tbody>
-<tr><td>nav2_corridor_gazebo_tf_substrate → warehouse_teleop@gazebo_nav2_tf_substrate</td><td>20261001T152557.040227Z-712ae09c7a39</td><td>odom → base_link present</td></tr>
-<tr><td>nav2_corridor_gazebo_scan_substrate → warehouse_teleop@gazebo_nav2_scan_substrate</td><td>20261001T152817.021494Z-02495cda9391</td><td>/scan present; its frame disconnected</td></tr>
-<tr><td>nav2_corridor_gazebo_scan_tf_substrate → warehouse_teleop@gazebo_nav2_scan_tf_substrate</td><td>20261001T153019.321569Z-f6c639a7d491</td><td>base_link → vehicle_blue/laser_frame/scan present</td></tr>
+<table><thead><tr><th>Experiment → realisation</th><th>Structural observation</th></tr></thead><tbody>
+<tr><td>Odometry link → warehouse_teleop@gazebo_nav2_tf_substrate</td><td>odom → base_link present</td></tr>
+<tr><td>Scan source → warehouse_teleop@gazebo_nav2_scan_substrate</td><td>/scan present; its frame disconnected</td></tr>
+<tr><td>Scan integration → warehouse_teleop@gazebo_nav2_scan_tf_substrate</td><td>base_link → vehicle_blue/laser_frame/scan present</td></tr>
 </tbody></table>
-<p class="provenance">Three separate Gazebo / ROS 2 Jazzy configurations; Rotifer revision 1d964a6578abdaf89776b7078c80e219008108dd.</p>
+<p class="provenance">Three separate Gazebo / ROS 2 Jazzy configurations.</p>
 
 </div>
 
@@ -389,8 +385,8 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div v-click="1"><dl class="account-rows"><dt>Experiment</dt><dd>nav2_corridor_gazebo_tf_substrate</dd><dt>Realisation</dt><dd>warehouse_teleop@gazebo_nav2_tf_substrate</dd><dt>Ownership</dt><dd>Provider/model supplies odometry and TF; the app observes the edge.</dd></dl></div>
-<div v-click="2"><dl class="account-rows"><dt>Retained evidence</dt><dd>Run 20261001T152557.040227Z-712ae09c7a39 · odom → base_link present · 20/20 checks passed</dd></dl></div>
+<div v-click="1"><dl class="account-rows"><dt>Experiment</dt><dd>Odometry link</dd><dt>Realisation</dt><dd>warehouse_teleop@gazebo_nav2_tf_substrate</dd><dt>Ownership</dt><dd>Provider/model supplies odometry and TF; the app observes the edge.</dd></dl></div>
+<div v-click="2"><dl class="account-rows"><dt>Retained evidence</dt><dd>odom → base_link present · 20/20 checks passed</dd></dl></div>
 <div v-click="3"><dl class="account-rows"><dt>Bounded update</dt><dd>The selected odometry/TF relationship was observed for this configuration.</dd></dl></div>
 <p class="provenance">Counted real-provider capture; stable talk-bundle replay verified.</p>
 
@@ -408,9 +404,9 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Experiment / run</th><th>What changed or appeared</th><th>What the evidence says</th></tr></thead><tbody>
-<tr><td>nav2_corridor_gazebo_scan_substrate<br>20261001T152817.021494Z-02495cda9391</td><td>/scan, sensor_msgs/msg/LaserScan; frame vehicle_blue/laser_frame/scan</td><td>Scan present; base_link → scan frame missing</td></tr>
-<tr><td>nav2_corridor_gazebo_scan_tf_substrate<br>20261001T153019.321569Z-f6c639a7d491</td><td>Realisation-owned static scan-frame transform</td><td>base_link → vehicle_blue/laser_frame/scan present; scan frame connected</td></tr>
+<table><thead><tr><th>Experiment</th><th>What changed or appeared</th><th>What the evidence says</th></tr></thead><tbody>
+<tr><td>Scan source</td><td>/scan, sensor_msgs/msg/LaserScan; frame vehicle_blue/laser_frame/scan</td><td>Scan present; base_link → scan frame missing</td></tr>
+<tr><td>Scan integration</td><td>Realisation-owned static scan-frame transform</td><td>base_link → vehicle_blue/laser_frame/scan present; scan frame connected</td></tr>
 </tbody></table>
 <p class="provenance">Separate configurations · Gazebo / ROS 2 Jazzy · final run passed 19/19 checks. Provider/model owns the scan stream; the realisation owns the integration transform.</p>
 
@@ -452,16 +448,16 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>Runtime experiment</th><th>Run</th><th>Realisation</th></tr></thead><tbody>
-<tr><td>nav2_corridor_gazebo_nav2_map_surface</td><td>20261001T153245.099238Z-107ca497021c</td><td>warehouse_teleop@gazebo_nav2_map_surface</td></tr>
-<tr><td>nav2_corridor_gazebo_nav2_costmap_timing</td><td>20261001T153845.573476Z-8e9c452738e4</td><td>warehouse_teleop@gazebo_nav2_costmap_timing</td></tr>
+<table><thead><tr><th>Runtime experiment</th><th>Realisation</th></tr></thead><tbody>
+<tr><td>Runtime surface</td><td>warehouse_teleop@gazebo_nav2_map_surface</td></tr>
+<tr><td>Timing follow-up</td><td>warehouse_teleop@gazebo_nav2_costmap_timing</td></tr>
 </tbody></table>
-<p class="provenance">Both counted at Rotifer revision 1d964a6578abdaf89776b7078c80e219008108dd. The timing run used 10 Hz odometry/TF publication.</p>
+<p class="provenance">Both counted captures. The timing run used 10 Hz odometry/TF publication.</p>
 
 </div>
 
 <!--
-Slide 22. Stage 3 selected source and run identities.
+Slide 22. Stage 3 selected experiments and realisations.
 -->
 
 ---
@@ -473,11 +469,9 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
-<pre class="demo-terminal">❯ roti run nav2_corridor_gazebo_nav2_map_surface
-run:        20261001T153245.099238Z-107ca497021c
+<pre class="demo-terminal">❯ roti run Runtime surface
 realisation: warehouse_teleop@gazebo_nav2_map_surface
 evaluation: 21/21 declared checks passed
-
 Map:                  present, frame map
 Required nodes:       active
 NavigateToPose:       available
@@ -505,7 +499,7 @@ class: simple-slide
 <dt>What happened</dt><dd>The scan arrived at 153.4 s, but the latest <code>odom → base_link</code> transform was from 153.0 s.</dd>
 <dt>Effect</dt><dd>The costmap recorded 2,358 scan drops.</dd>
 </dl>
-<p class="provenance">Run 20261001T153245.099238Z-107ca497021c · warehouse_teleop@gazebo_nav2_map_surface.</p>
+<p class="provenance">warehouse_teleop@gazebo_nav2_map_surface.</p>
 
 </div>
 
@@ -517,11 +511,11 @@ Slide 24. Stage 3 blocker evidence with recorded latest and scan stamps.
 class: simple-slide
 ---
 
-# Increasing the transform update rate fixed the timing issue
+# The transform is available when the scan arrives
 
 <div class="slide-content">
 
-<div class="plain-columns"><section><h2>Follow-up run</h2><p>Odometry/TF publication increased from 1 Hz to 10 Hz.</p><p>Run 20261001T153845.573476Z-8e9c452738e4</p></section><section><h2>What changed</h2><p>At scan stamp 12.7 s, <code>odom → base_link</code> was available.</p><p>Zero costmap scan drops observed.</p><p>21/21 declared checks passed.</p></section></div>
+<div class="plain-columns"><section><h2>Follow-up run</h2><p>Odometry/TF publication increased from 1 Hz to 10 Hz.</p></section><section><h2>What changed</h2><p>At scan stamp 12.7 s, <code>odom → base_link</code> was available.</p><p>Zero costmap scan drops observed.</p><p>21/21 declared checks passed.</p></section></div>
 
 </div>
 
@@ -562,10 +556,10 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="plain-columns">
-<section><h2>nav2_corridor_gazebo_nav2_pose_path_trace</h2><p>Recorder 2026-10-02 20:33:41Z</p><p>Accepted 0.5 m goal; valid path; zero forward command; no translational progress; goal record reports timeout.</p></section>
-<section><h2>nav2_corridor_gazebo_nav2_local_feasibility_trace</h2><p>Recorder 2026-10-02 20:38:41Z</p><p>Free sampled corridor and robot cell; footprint present; local motion classified feasible; goal record reports timeout.</p></section>
+<section><h2>Goal and path</h2><p>Recorder 2026-10-02 20:33:41Z</p><p>Accepted 0.5 m goal; valid path; zero forward command; no translational progress; goal record reports timeout.</p></section>
+<section><h2>Local corridor check</h2><p>Recorder 2026-10-02 20:38:41Z</p><p>Free sampled corridor and robot cell; footprint present; local motion classified feasible; goal record reports timeout.</p></section>
 </div>
-<p class="provenance">Gazebo / ROS 2 Jazzy · warehouse_teleop@gazebo_nav2_goal_base_footprint · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no run IDs were generated. Two separate attempts.</p>
+<p class="provenance">Gazebo / ROS 2 Jazzy · warehouse_teleop@gazebo_nav2_goal_base_footprint · two separate attempts.</p>
 <p class="provenance">The mocked REPL shows recorded topics, not the submitted goal or final-result reply. The saved run goal record reports acceptance and timeout. No GUI video.</p>
 
 </div>
@@ -584,11 +578,11 @@ class: simple-slide
 
 <div class="prepared-label">Prepared interaction · no live ROS or shell execution</div>
 <pre class="demo-terminal">❯ source show
-experiments: nav2_corridor_gazebo_nav2_pose_path_trace;
-            nav2_corridor_gazebo_nav2_local_feasibility_trace
+experiments: Goal and path;
+            Local corridor check
 realisation: warehouse_teleop@gazebo_nav2_goal_base_footprint
 task: 0.5 m map-frame goal; MPPI-configured experiment
-captures: two separate Jazzy attempts; no run IDs generated</pre>
+captures: two separate Jazzy attempts</pre>
 <p class="provenance">Prepared presentation projection; it does not independently diagnose the controller.</p>
 
 </div>
@@ -612,7 +606,7 @@ class: simple-slide
 <tr><td>Forward command</td><td>Zero linear.x</td><td>Mocked REPL · recorded command</td></tr>
 <tr><td>Translation</td><td>None observed</td><td>Mocked REPL · recorded odometry</td></tr>
 </tbody></table>
-<p class="provenance">Revision 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · recorder starts 20:33:41Z / 20:38:41Z · no run IDs were generated. The two evidence sources are separate attempts.</p>
+<p class="provenance">Recorder starts 20:33:41Z / 20:38:41Z · the two evidence sources are separate attempts.</p>
 <p class="provenance">The mocked REPL does not show the submitted goal or final-result reply; the saved run goal record reports acceptance and timeout.</p>
 
 </div>
@@ -678,7 +672,7 @@ class: simple-slide
 <tr><td>Navigation goal</td><td>Accepted; success within 30 s</td><td>Run goal record</td></tr>
 <tr><td>Goal tolerance</td><td>0.25 m XY; not exact arrival at 0.5 m nominal goal</td><td>Run goal record</td></tr>
 </tbody></table>
-<p class="provenance">Experiment nav2_corridor_gazebo_nav2_rpp_controller · realisation warehouse_teleop@gazebo_nav2_goal_base_footprint · recorder 2026-10-02 21:07:56Z · Rotifer 19ee3b7d28c66015fbc5d0fcde1b5b9ed3d2ddf8 · no run ID was generated.</p>
+<p class="provenance">Experiment RPP attempt · realisation warehouse_teleop@gazebo_nav2_goal_base_footprint · recorder 2026-10-02 21:07:56Z</p>
 <p class="provenance">The mocked REPL shows movement; the run goal record reports acceptance and success.</p>
 
 </div>
@@ -719,7 +713,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<p>Earlier realisation → changed laser provider</p><table><thead><tr><th>Part of the account</th><th>After the change</th></tr></thead><tbody><tr><td>Odometry independent of the laser</td><td>May retain its basis</td></tr><tr><td>Scan source and frame relationship</td><td>Needs checking again</td></tr><tr><td>Scan timing</td><td>Needs checking again</td></tr><tr><td>Navigation behaviour</td><td>Needs checking for this realisation</td></tr></tbody></table><p class="provenance">Staged dependency example · implemented reopening behaviour to verify</p>
+<table><thead><tr><th>OLD REALISATION · LASER A</th><th>NEW REALISATION · LASER B</th></tr></thead><tbody><tr><td>Evidence: odom → base_link</td><td>Carry it forward if the odometry source and conditions are unchanged.</td></tr><tr><td>Evidence: scan A source and frame</td><td>Check scan B source and frame.</td></tr><tr><td>Evidence: scan-time transform</td><td>Recheck transform availability when the scan arrives.</td></tr><tr><td>Evidence: navigation result</td><td>Revisit costmap and navigation behaviour.</td></tr></tbody></table><p class="provenance">Earlier evidence remains evidence about Laser A. Illustrative handover view; it does not imply automatic claim reopening.</p>
 
 </div>
 
@@ -736,7 +730,20 @@ class: simple-slide
 
 <div class="slide-content">
 
-<dl class="account-rows"><dt>Context</dt><dd>Particular system and conditions</dd><dt>Question</dt><dd>What are we trying to establish?</dd><dt>Investigation</dt><dd>What did we choose to do?</dd><dt>Evidence</dt><dd>What did we retain?</dd><dt>Account</dt><dd>What can we say now? What is still open?</dd></dl><p class="provenance">source show → roti run → roti explain</p>
+<pre>Particular system / conditions
+             ↓
+What are we trying to establish?
+             ↓
+Selected investigation
+             ↓
+Retained evidence
+             ↓
+What can we reasonably say?
+             ↓
+What remains open?</pre>
+<p class="provenance">source show → roti run → roti explain</p>
+<p class="provenance">Prepared interaction over retained run evidence · Rotifer remains in development.</p>
+<p class="provenance">Open research questions: practitioner value and what this account misses.</p>
 
 </div>
 
@@ -745,39 +752,7 @@ Slide 35. 39:00–43:00. Step back to the research proposition. Avoid repeating 
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
----
-class: simple-slide
----
 
-# The current account after change
-
-<div class="slide-content">
-
-<div class="plain-columns"><section><h2>Still supported</h2><p>Conclusions whose basis remains applicable.</p></section><section><h2>Reopened or unresolved</h2><p>Dependencies affected by the change.<br>Questions the earlier work left open.</p></section></div><div class="frontier-line">Where the investigation has reached</div><p>Evidence and investigations remain available underneath.</p><p class="provenance">Staged account view</p>
-
-</div>
-
-<!--
-Slide 36. Reflection. Brief reprise of the frontier visual. The transferred account gives someone a basis to inspect and continue the work.
-Authoritative content: say-show-script.md (updated 2026-10-03).
--->
-
----
-class: simple-slide
----
-
-# What this demonstration establishes
-
-<div class="slide-content">
-
-<dl class="account-rows"><dt>Proposition</dt><dd>Preserve the question, evidence, conclusion and open work around a particular system.</dd><dt>Demonstration</dt><dd>Prepared interactions over retained observations. Rotifer is still in development.</dd><dt>Research questions</dt><dd>What is useful to practitioners? What does this account miss?</dd></dl>
-
-</div>
-
-<!--
-Slide 37. Reflection. Practitioner fit and completeness remain research questions. Interface is a prepared representation, not a finished end-to-end CLI.
-Authoritative content: say-show-script.md (updated 2026-10-03).
--->
 
 ---
 class: simple-slide
@@ -792,7 +767,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 38. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
+Slide 36. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -809,6 +784,6 @@ class: simple-slide
 </div>
 
 <!--
-Slide 39. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
+Slide 37. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
