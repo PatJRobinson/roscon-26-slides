@@ -233,7 +233,7 @@ class: simple-slide workflow-slide
 
 <div class="workflow-intro">
 <section><h2>Experimental setup</h2><p>ROS 2 Jazzy + Nav2 · Gazebo</p><p>Nix: pinned environment and run orchestration</p><p>Python probes: rclpy<br>Inspection and operation: ROS 2 CLI</p></section>
-<section><h2>Rotifer workflow</h2><ol class="workflow-steps"><li><strong>source show</strong> · authored investigation</li><li><strong>roti explain</strong> · current account</li><li><strong>roti run</strong> · new observations</li><li><strong>roti explain</strong> · updated account</li></ol></section>
+<section><h2>Rotifer workflow</h2><ol class="workflow-steps"><li><strong>source show</strong> · authored investigation</li><li><strong>explain</strong> · current account</li><li><strong>run</strong> · new observations</li><li><strong>explain</strong> · updated account</li></ol></section>
 </div>
 <p class="provenance">The demonstration uses prepared interactions over retained evidence.</p>
 
@@ -271,7 +271,7 @@ Slide 13. Define scenario, provider, realisation, experiment and probe in plain 
 class: simple-slide
 ---
 
-# The mock REPL, in four steps
+# Entering the Rotifer REPL
 
 <div class="slide-content">
 
@@ -694,7 +694,7 @@ Retained evidence
 What can we reasonably say?
              ↓
 What remains open?</pre>
-<p class="provenance">source show → roti run → roti explain</p>
+<p class="provenance">source show → run → explain</p>
 <p class="provenance">Prepared interaction over retained run evidence · Rotifer remains in development.</p>
 <p class="provenance">Open research questions: practitioner value and what this account misses.</p>
 
