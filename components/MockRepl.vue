@@ -41,78 +41,82 @@ const stageData = {
   0: {
     name: 'Command help',
     commands: {
-      'roti -h': 'Show the Rotifer command-line options; run `roti` to enter the investigation workspace.',
-      'roti': 'Rotifer REPL ready. The next commands act on the selected investigation.',
-      'source show -h': 'Show the authored experiment, its realisation, and the question it asks.',
-      'explain -h': 'Show what the evidence supports so far and what remains open.',
-      'run -h': 'Run the selected experiment and retain its observations.',
+      'roti -h': `Usage: roti [OPTIONS] [COMMAND]
+
+Commands:
+  source show   Display experiment configuration
+  explain       Resolve requirements against current evidence
+  run           Execute the selected experiment`,
+      'roti': `workspace: ros_ws
+status: ready
+commands: source, explain, run`,
+      'source show -h': `Usage: source show [EXPERIMENT]
+Display the authored experiment and selected realisation.`,
+      'explain -h': `Usage: explain [EXPERIMENT]
+Resolve declared requirements against available evidence.`,
+      'run -h': `Usage: run [EXPERIMENT]
+Execute probes and record their results.`,
     },
     suggestions: ['roti -h', 'roti'],
   },
   1: {
     name: 'Presence',
     commands: {
-      'roti': 'Rotifer REPL ready. Select an experiment to inspect its source, account and evidence.',
+      'roti': `workspace: ros_ws
+status: ready
+commands: source, explain, run`,
       'select presence_check': 'selected: Presence check',
-      'source show': `EXPERIMENT · Presence check
-system
-  warehouse_navigation@gazebo_nav2_substrate
-assumption
-  A navigation claim needs evidence about the system it's running on.
-what we're investigating
-  odom → base_link
-checks
-  Provider startup · ROS topics · odometry · TF lookup
-evidence to keep
-  Observations · rosbag · run results
-scope
-  Checking the foundations, not navigation success.`,
-      'source show presence_check': `EXPERIMENT · Presence check
-system
-  warehouse_navigation@gazebo_nav2_substrate
-assumption
-  A navigation claim needs evidence about the system it's running on.
-what we're investigating
-  odom → base_link
-checks
-  Provider startup · ROS topics · odometry · TF lookup
-evidence to keep
-  Observations · rosbag · run results
-scope
-  Checking the foundations, not navigation success.`,
-      'run presence_check': `evaluation:      17/17 declared checks passed
-capture:         counted real-provider run
-replay:          copied-bundle replay verified`,
+      'source show': `experiment: presence_check
+system: warehouse_navigation@gazebo_nav2_substrate
+requires:
+  tf: odom -> base_link
+probes:
+  - provider.start
+  - topic /odom
+  - topic /tf
+  - odometry.frames
+  - tf.lookup odom -> base_link
+records:
+  observations, rosbag, results
+scope: substrate`,
+      'source show presence_check': `experiment: presence_check
+system: warehouse_navigation@gazebo_nav2_substrate
+requires:
+  tf: odom -> base_link
+probes:
+  - provider.start
+  - topic /odom
+  - topic /tf
+  - odometry.frames
+  - tf.lookup odom -> base_link
+records:
+  observations, rosbag, results
+scope: substrate`,
+      'run presence_check': `checks: 17 passed, 0 failed
+status: complete
+artifacts: observations, rosbag, results`,
     },
     accounts: {
       presence_check: {
-        before: `BEFORE RUNNING
-
-What the descriptions tell us:
-  Gazebo provides odometry and a TF stream.
-  This setup configures /odom and /tf.
-
-What we're looking for:
-  odom → base_link
-
-What the descriptions establish:
-  ? UNKNOWN
-  Nothing declares that this particular frame relationship is provided.
-
-Runtime evidence: None yet.`,
-        after: `AFTER RUNNING
-
-What the descriptions establish:
-  /odom and /tf configured
-  odom → base_link  ? UNKNOWN
-
-RUN OBSERVATIONS
-  /tf and /odom present
-  vehicle_blue/odom → vehicle_blue/chassis observed
-  odom → base_link not observed
-
-CURRENT ACCOUNT
-  The required relationship was not found during this inspection.`,
+        before: `requirements:
+  /odom: configured
+  /tf: configured
+  tf odom -> base_link:
+    declared: no
+    runtime: not_run
+    status: UNKNOWN`,
+        after: `requirements:
+  /odom: configured
+  /tf: configured
+  tf odom -> base_link:
+    declared: no
+    status: UNKNOWN
+observations:
+  /odom: present
+  /tf: present
+  vehicle_blue/odom -> vehicle_blue/chassis: observed
+  tf odom -> base_link: NOT_OBSERVED
+status: requirement_unmet`,
       },
     },
     suggestions: ['select presence_check', 'source show', 'explain presence_check', 'run presence_check'],
@@ -120,106 +124,112 @@ CURRENT ACCOUNT
   2: {
     name: 'Structure',
     accounts: {
-      odometry_link: { run: 'odometry_link', before: 'SUBSTRATE / DERIVED\nrequires: odom → base_link\n\nRUN OBSERVATIONS\nnone yet\n\nCURRENT ACCOUNT\nnot established', after: 'SUBSTRATE / DERIVED\nrequires: odom → base_link\n\nRUN OBSERVATIONS\nodom → base_link observed\n\nCURRENT ACCOUNT\nrequired odometry relationship observed in this configuration' },
-      scan_source: { run: 'scan_source', before: 'SUBSTRATE / DERIVED\nrequires: /scan with a usable frame connected to base_link\n\nRUN OBSERVATIONS\nnone yet\n\nCURRENT ACCOUNT\nnot established', after: 'SUBSTRATE / DERIVED\nrequires: /scan with a usable frame connected to base_link\n\nRUN OBSERVATIONS\n/scan source and frame observed\nbase_link → scan frame not observed\n\nCURRENT ACCOUNT\nscan is present, but its frame is disconnected in this configuration' },
-      scan_integration: { run: 'scan_integration', before: 'SUBSTRATE / DERIVED\nrequires: odometry, scan source and connected scan frame\n\nRUN OBSERVATIONS\nnone yet\n\nCURRENT ACCOUNT\nnot established', after: 'SUBSTRATE / DERIVED\nrequires: odometry, scan source and connected scan frame\n\nRUN OBSERVATIONS\nodom → base_link observed\n/scan source and frame observed\nbase_link → vehicle_blue/laser_frame/scan observed\n\nCURRENT ACCOUNT\nthese relationships were observed across three separate configurations; they are not one continuous repair' },
-      structural_compatibility: { run: 'scan_integration', before: 'SUBSTRATE / DERIVED\nexpected: odom, scan source and connected scan frame\n\nRUN OBSERVATIONS\nnone yet\n\nCURRENT ACCOUNT\nstructural compatibility not established', after: 'RUN OBSERVATIONS\nodom → base_link present in odometry-link run\n/scan source and frame present in scan-source run\nbase_link → scan absent there; present in scan-integration run\n\nCURRENT ACCOUNT\nstructural pieces are demonstrated across separate configurations\n\nSTILL OPEN\nscan-time availability · navigation behaviour' },
+      odometry_link: { run: 'odometry_link', before: 'tf odom -> base_link\nobservation: not_run\nstatus: UNKNOWN', after: 'tf odom -> base_link: OBSERVED\nsource: odometry_link\nstatus: satisfied' },
+      scan_source: { run: 'scan_source', before: 'topic /scan\nframe connected to base_link: UNKNOWN\nstatus: not_run', after: 'topic /scan: present\nframe: vehicle_blue/laser_frame/scan\nbase_link -> scan frame: NOT_OBSERVED\nstatus: incomplete' },
+      scan_integration: { run: 'scan_integration', before: 'requirements:\n  odom -> base_link\n  /scan source and connected scan frame\nstatus: not_run', after: 'observations:\n  odom -> base_link: OBSERVED\n  /scan: present\n  base_link -> vehicle_blue/laser_frame/scan: OBSERVED\nstatus: requirements_observed\nsource: scan_integration' },
+      structural_compatibility: { run: 'scan_integration', before: 'requirements:\n  odom -> base_link\n  /scan source and connected scan frame\nstatus: UNKNOWN', after: 'evidence:\n  odom -> base_link: OBSERVED (odometry_link)\n  /scan: PRESENT (scan_source)\n  base_link -> scan frame:\n    NOT_OBSERVED (scan_source)\n    OBSERVED (scan_integration)\nscope: 3 separate realisations\nscan-time availability: NOT_CHECKED\nnavigation: NOT_CHECKED' },
     },
     commands: {
-      'source show': `selected experiments:
-  Odometry link
-  Scan source
-  Scan integration
-provider/model-owned: odometry, TF stream, LaserScan stream
-realisation-owned: scan-frame integration transform`,
-      'source show odometry_link': `experiment:   Odometry link
-realisation@scenario: warehouse_navigation@gazebo_nav2_tf_substrate
-provider:     provider/model supplies odometry and TF
-question:     is odom → base_link present?`,
-      'run odometry_link': `evaluation:   20/20 declared checks passed
-capture:      counted real-provider run`,
-      'source show scan_source': `experiment:   Scan source
-realisation@scenario: warehouse_navigation@gazebo_nav2_scan_substrate
-provider:     provider/model supplies the scan stream
-topic:        /scan · sensor_msgs/msg/LaserScan
-frame:        vehicle_blue/laser_frame/scan`,
-      'run scan_source': `evaluation:   21/21 declared checks passed
-capture:      counted real-provider run`,
-      'source show scan_integration': `experiment:   Scan integration
-realisation@scenario: warehouse_navigation@gazebo_nav2_scan_tf_substrate
-provider:     realisation supplies the scan-frame transform
-question:     is base_link → scan connected?`,
-      'run scan_integration': `evaluation:   19/19 declared checks passed
-capture:      counted real-provider run`,
+      'source show': `experiments:
+  odometry_link
+  scan_source
+  scan_integration
+ownership:
+  provider/model: odometry, tf, LaserScan
+  realisation: base_link -> scan frame`,
+      'source show odometry_link': `experiment: odometry_link
+system: warehouse_navigation@gazebo_nav2_tf_substrate
+provides: odometry, tf
+requires: tf odom -> base_link`,
+      'run odometry_link': `checks: 20 passed, 0 failed
+status: complete`,
+      'source show scan_source': `experiment: scan_source
+system: warehouse_navigation@gazebo_nav2_scan_substrate
+topic: /scan · sensor_msgs/msg/LaserScan
+frame: vehicle_blue/laser_frame/scan`,
+      'run scan_source': `checks: 21 passed, 0 failed
+status: complete`,
+      'source show scan_integration': `experiment: scan_integration
+system: warehouse_navigation@gazebo_nav2_scan_tf_substrate
+requires: tf base_link -> vehicle_blue/laser_frame/scan`,
+      'run scan_integration': `checks: 19 passed, 0 failed
+status: complete`,
     },
     suggestions: ['source show', 'source show odometry_link', 'explain odometry_link', 'run odometry_link', 'source show scan_source', 'explain scan_source', 'run scan_source', 'source show scan_integration', 'explain scan_integration', 'run scan_integration', 'explain structural_compatibility'],
   },
   3: {
     name: 'Runtime',
     accounts: {
-      runtime_surface: { run: 'runtime_surface', before: 'SUBSTRATE / DERIVED\nmap, active navigation nodes, action server and scan-time transform required\n\nRUN OBSERVATIONS\nnone yet\n\nCURRENT ACCOUNT\nnot established', after: 'RUN OBSERVATIONS\nmap present · required nodes active · NavigateToPose available\nlatest TF available at 153.0 s\nscan at 153.4 s: transform unavailable\n2,358 scan drops recorded\n\nCURRENT ACCOUNT\nruntime surface present; scan-time lookup failed', },
-      timing_follow_up: { run: 'timing_follow_up', before: 'SUBSTRATE / DERIVED\nscan-time transform availability is required\nscan rate configured at 10 Hz\n\nRUN OBSERVATIONS\nnone yet\n\nCURRENT ACCOUNT\nnot established', after: 'RUN OBSERVATIONS\nat 12.7 s: scan and transform both available\nno scan drops observed · 21/21 checks passed\n\nCURRENT ACCOUNT\nscan-time compatible under this run’s conditions\nseparate configuration; publication rate was not isolated as the cause', },
+      runtime_surface: { run: 'runtime_surface', before: 'requirements:\n  map: not_checked\n  navigation lifecycle: not_checked\n  NavigateToPose: not_checked\n  odom -> base_link: observed (stage 2)\n  base_link -> scan: observed (stage 2)\n  transform at scan stamp: not_checked', after: 'observations:\n  map: present\n  navigation nodes: active\n  NavigateToPose: available\n  latest tf stamp: 153.0 s\n  scan stamp: 153.4 s\n  transform at scan stamp: UNAVAILABLE\n  costmap scan drops: 2358\n  timing check: null\nstatus: scan_time_lookup_failed' },
+      timing_follow_up: { run: 'timing_follow_up', before: 'requirements:\n  transform at scan stamp: available\nconfiguration:\n  odom/tf rate: 10 Hz\nstatus: not_run', after: 'observations:\n  scan stamp: 12.7 s\n  transform at scan stamp: AVAILABLE\n  costmap scan drops: 0\n  checks: 21 passed, 0 failed\nstatus: observed_compatible' },
     },
     commands: {
-      'source show': `selected experiments:
-  Runtime surface · warehouse_navigation@gazebo_nav2_map_surface
-  Timing follow-up · warehouse_navigation@gazebo_nav2_costmap_timing
-comparison: separate realisations and Gazebo world files`,
-      'source show timing_follow_up': `experiment:   Timing follow-up
-realisation@scenario: warehouse_navigation@gazebo_nav2_costmap_timing
-scan rate:    10 Hz
-question:     is scan-time transform availability reliable under this configuration?`,
-      'source show runtime_surface': `experiment:   Runtime surface
-realisation@scenario: warehouse_navigation@gazebo_nav2_map_surface
-question:     Are the map, lifecycle and navigation interfaces available?
-probe:        runtime interfaces and scan-time transform lookup`,
-      'run runtime_surface': `evaluation:   21/21 declared checks passed
-capture:      counted real-provider run
-observation:  2,358 scan drops recorded`,
-      'run timing_follow_up': `evaluation:   21/21 declared checks passed
-capture:      counted real-provider run
-observation:  no scan drops observed`,
+      'source show': `experiments:
+  runtime_surface
+  timing_follow_up
+systems:
+  warehouse_navigation@gazebo_nav2_map_surface
+  warehouse_navigation@gazebo_nav2_costmap_timing
+comparison: separate realisations and world files`,
+      'source show timing_follow_up': `experiment: timing_follow_up
+system: warehouse_navigation@gazebo_nav2_costmap_timing
+odom_tf_rate: 10 Hz
+requires: transform available at scan stamp`,
+      'source show runtime_surface': `experiment: runtime_surface
+system: warehouse_navigation@gazebo_nav2_map_surface
+probes:
+  map, lifecycle, NavigateToPose
+  scan-time transform lookup`,
+      'run runtime_surface': `checks: 21 passed, 0 failed
+status: complete
+costmap scan drops: 2358`,
+      'run timing_follow_up': `checks: 21 passed, 0 failed
+status: complete
+costmap scan drops: 0`,
     },
     suggestions: ['source show', 'source show runtime_surface', 'explain runtime_surface', 'run runtime_surface', 'source show timing_follow_up', 'explain timing_follow_up', 'run timing_follow_up'],
   },
   4: {
     name: 'Behaviour',
     accounts: {
-      goal_and_path: { run: 'goal_and_path', before: 'SUBSTRATE / DERIVED\ntask: accepted 0.5 m map-frame goal; expected forward progress\n\nRUN OBSERVATIONS\nnone yet\n\nCURRENT ACCOUNT\nbehaviour not established', after: 'SUBSTRATE / DERIVED\ntask: accepted 0.5 m map-frame goal; expected forward progress\n\nRUN OBSERVATIONS\ngoal accepted, then timed out\nvalid path observed · zero forward command · no translational motion\n\nCURRENT ACCOUNT\nexpected progress was not observed; the goal outcome conflicts with the expected behaviour, and the cause remains open', },
-      local_corridor_check: { run: 'local_corridor_check', before: 'SUBSTRATE / DERIVED\nprobe: one-shot local-feasibility check\n\nRUN OBSERVATIONS\nnone yet\n\nCURRENT ACCOUNT\nlocal corridor not assessed', after: 'RUN OBSERVATIONS\ncorridor sampled clear to 0.6 m\n\nCURRENT ACCOUNT\nthis separate one-shot probe found a clear local corridor; it does not change the recorded goal timeout', },
+      goal_and_path: { run: 'goal_and_path', before: 'task: NavigateToPose\ngoal: map frame, 0.5 m\nexpected: forward progress\nobservations: none\nstatus: not_run', after: 'topic_observations.global_path: VALID\ntopic_observations.cmd_vel.positive_x_samples: 0\ntopic_observations.odom.translational_progress_m: 0\nstatus: expected_progress_not_observed' },
+      local_corridor_check: { run: 'local_corridor_check', before: 'probe: local corridor feasibility\nobservations: none\nstatus: not_run', after: 'corridor.sampled_clear_to_m: 0.6\nstatus: clear' },
     },
     commands: {
-      'source show': `selected experiments: Goal and path · Local corridor check
-realisation: warehouse_navigation@gazebo_nav2_goal_base_footprint
-task: 0.5 m map-frame goal · MPPI-configured captures
-scope: two separate one-shot attempts`,
-      'source show goal_and_path': `experiment:   Goal and path
-realisation@scenario: warehouse_navigation@gazebo_nav2_goal_base_footprint
-task:         0.5 m map-frame navigation goal
-controller:   MPPI`,
-      'source show local_corridor_check': `experiment:   Local corridor check
-realisation@scenario: warehouse_navigation@gazebo_nav2_goal_base_footprint
-probe:        one-shot local-feasibility check
-controller:   MPPI`,
-      'run goal_and_path': `evaluation:   39/39 declared checks passed
-capture:      one-shot real-provider attempt`,
-      'run local_corridor_check': `evaluation:   33/33 declared checks passed
-capture:      one-shot real-provider attempt`,
+      'source show': `experiments:
+  goal_and_path
+  local_corridor_check
+system: warehouse_navigation@gazebo_nav2_goal_base_footprint
+task: NavigateToPose · map frame · 0.5 m
+controller: MPPI
+attempts: 2 separate runs`,
+      'source show goal_and_path': `experiment: goal_and_path
+system: warehouse_navigation@gazebo_nav2_goal_base_footprint
+task: NavigateToPose · map frame · 0.5 m
+controller: MPPI`,
+      'source show local_corridor_check': `experiment: local_corridor_check
+system: warehouse_navigation@gazebo_nav2_goal_base_footprint
+probe: local corridor feasibility
+controller: MPPI`,
+      'run goal_and_path': `checks: 39 passed, 0 failed
+status: complete`,
+      'run local_corridor_check': `checks: 33 passed, 0 failed
+status: complete`,
     },
     suggestions: ['source show', 'source show goal_and_path', 'explain goal_and_path', 'run goal_and_path', 'source show local_corridor_check', 'explain local_corridor_check', 'run local_corridor_check'],
   },
   5: {
     name: 'Controlled contrast',
     accounts: {
-      controller_progress: { run: 'rpp_attempt', before: 'SUBSTRATE / DERIVED\nquestion: could the prepared system support the task with another controller?\n\nRUN OBSERVATIONS\nMPPI: no forward progress under inspected conditions\nRPP: not yet run\n\nCURRENT ACCOUNT\ngeneral substrate inability remains one possible explanation\n\nSTILL OPEN\nwhy MPPI stalled', after: 'RUN OBSERVATIONS\nMPPI: no forward progress under inspected conditions\nRPP: 19 positive command samples · 0.288761 m displacement\ngoal accepted and succeeded within 30 s at 0.25 m tolerance\n\nCURRENT ACCOUNT\nthe prepared substrate can support progress under the RPP setup; general substrate inability is not enough to explain the MPPI result\n\nSTILL OPEN\nwhy MPPI stalled · how repeatable the RPP result is', },
+      controller_progress: { run: 'rpp_attempt', before: 'comparison: controller_progress\nMPPI (goal_and_path): no forward command or translational progress\nRPP (rpp_attempt): no run recorded\nstatus: pending', after: 'comparison: controller_progress\nMPPI (goal_and_path): no forward command or translational progress\nRPP.topic_observations.cmd_vel.positive_samples: 19\nRPP.topic_observations.odom.displacement_m: 0.288761\nstatus: results_available' },
     },
     commands: {
-      'source show rpp_attempt': `experiment:   RPP attempt
-realisation@scenario: warehouse_navigation@gazebo_nav2_goal_base_footprint
-task:         0.5 m map-frame navigation goal
-controller:   RPP`,
-      'run rpp_attempt': `evaluation:   39/39 declared checks passed
-capture:      one-shot real-provider attempt`,
+      'source show rpp_attempt': `experiment: rpp_attempt
+system: warehouse_navigation@gazebo_nav2_goal_base_footprint
+task: NavigateToPose · map frame · 0.5 m
+controller: RPP`,
+      'run rpp_attempt': `checks: 39 passed, 0 failed
+status: complete`,
     },
     suggestions: ['source show rpp_attempt', 'explain controller_progress', 'run rpp_attempt', 'explain controller_progress'],
   },
@@ -268,7 +278,12 @@ watch(stage, (next) => {
 })
 
 function helpOutput() {
-  return `Prepared commands for ${stageLabel.value} · ${stage.value.name}\n\n${suggestions.value.map((command) => `  ${command}`).join('\n')}\n  help\n  clear\n\nOnly these scripted responses are available. No ROS or shell command runs.`
+  return `Commands:
+  source show [EXPERIMENT]
+  explain [EXPERIMENT]
+  run [EXPERIMENT]
+  help
+  clear`
 }
 
 function sampleStandardNormal() {
@@ -300,7 +315,7 @@ async function submit(raw = input.value) {
       const index = responseCursors.value[key] || 0
       output = scripted[Math.min(index, scripted.length - 1)]
       responseCursors.value[key] = index + 1
-    } else output = scripted || 'No scripted response for that command. Type help to see the commands prepared for this stage.'
+    } else output = scripted || `error: unknown command: ${command}\nTry 'help'.`
     const wireName = key.startsWith('run ') ? key.slice('run '.length) : null
     const runDuration = wireName ? runDurationsSeconds[wireName] : 0
     const entry = {
@@ -339,9 +354,6 @@ async function submit(raw = input.value) {
       runEntry.elapsed = mockRunDurationSeconds
       runEntry.running = false
       runEntry.output = `${output}\nexperiment time: ${runDuration.toFixed(1)} s`
-      if (props.stage === 1 && wireName === 'presence_check') {
-        runEntry.output += '\nrun:             20261001T151956.546871Z-ba4189019e54'
-      }
       completedRuns.value[wireName] = true
       isRunning.value = false
     }
