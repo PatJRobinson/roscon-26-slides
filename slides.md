@@ -193,101 +193,73 @@ Authoritative content: say-show-script.md (updated 2026-10-03).
 class: simple-slide
 ---
 
-# Six months later
+# Our warehouse robot
 
 <div class="slide-content">
 
-<div class="spaced-lines"><p>Where did we get to?</p><p>What had we ruled out?</p><p>What was the next question?</p></div>
+<div class="system-diagram">
+<section class="system-diagram-block remaining-card"><h2>GAZEBO</h2><p>Warehouse world</p><p>Mobile robot</p></section>
+<div class="system-diagram-arrow"><span>ROS bridge</span><strong>↓</strong></div>
+<section class="system-diagram-block remaining-card"><h2>ROS 2 JAZZY</h2><p><span>/odom</span> · <span>/tf</span> · <span>/cmd_vel</span></p><p>Our inspection tools</p></section>
+</div>
+<p class="system-diagram-question">First question: what does this setup actually make available?</p>
 
 </div>
 
 <!--
-Slide 10. 5:00–8:00. The artefacts may remain while the connections between them are lost.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 10. 12:00–14:00. Introduce the Gazebo warehouse robot and ROS 2 Jazzy topics before defining Rotifer's model.
+Authoritative content: say-show-script.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Where does the understanding live?
+# ROTIFER · REALISATION
 
 <div class="slide-content">
 
-<div class="understanding-map"><div>Code <span>Configuration</span> Tests</div><div class="map-connectors" aria-hidden="true">╲　　　　 │　　　　 ╱</div><p>What has been established?</p><div class="map-connectors" aria-hidden="true">╱　　　　 │　　　　 ╲</div><div>Tools <span>Records</span> People</div></div>
+<div class="realisation-id">warehouse_navigation@gazebo_nav2_substrate</div>
+<div class="realisation-diagram">
+<section class="realisation-diagram-block remaining-card"><h2>HOW TO RUN THIS SYSTEM</h2><ul><li>Robot and world</li><li>Processes and launch configuration</li><li>Parameters and ROS bridge mappings</li><li>Deployment</li></ul></section>
+<div class="realisation-diagram-arrow"><span>uses</span><strong>▼</strong></div>
+<section class="realisation-diagram-block remaining-card"><h2>EXISTING SOFTWARE</h2><p>Gazebo · ROS bridge · robot model</p></section>
+</div>
+<p class="realisation-caption">One particular arrangement we can reproduce, inspect and investigate.</p>
 
 </div>
 
 <!--
-Slide 11. 8:00–11:00. Connect what we were trying to establish, evidence, conclusion and unresolved questions.
-Authoritative content: say-show-script.md (updated 2026-10-03).
--->
-
----
-class: simple-slide workflow-slide
----
-
-# The Rotifer workflow
-
-<div class="slide-content">
-
-<div class="workflow-intro">
-<section><h2>Experimental setup</h2><p>ROS 2 Jazzy + Nav2 · Gazebo</p><p>Nix: pinned environment and run orchestration</p><p>Python probes: rclpy<br>Inspection and operation: ROS 2 CLI</p></section>
-<section><h2>Rotifer workflow</h2><ol class="workflow-steps"><li><strong>source show</strong> · authored investigation</li><li><strong>explain</strong> · current account</li><li><strong>run</strong> · new observations</li><li><strong>explain</strong> · updated account</li></ol></section>
-</div>
-<p class="provenance">The demonstration uses prepared interactions over retained evidence.</p>
-
-</div>
-
-<!--
-Slide 12. 11:00–18:00. Define realisation as these providers, configuration, conditions and task. The engineer chooses the question and interprets the result. Distinguish authored, observed and concluded.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 11. Define realisation as a reusable recipe and providers as descriptions of existing software, not replacements for it.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Five parts of an investigation
+# EXPERIMENT · Presence check
 
 <div class="slide-content">
 
-<dl class="account-rows">
-<dt>Scenario</dt><dd>Task and context · warehouse navigation</dd>
-<dt>Provider</dt><dd>System component or capability · Gazebo simulation</dd>
-<dt>Realisation</dt><dd>Selected providers and configuration for that scenario</dd>
-<dt>Experiment</dt><dd>A question for one realisation · Presence check</dd>
-<dt>Probe</dt><dd>A bounded check · topic presence and transform lookup</dd>
-</dl>
-<p class="provenance">warehouse_teleop@gazebo_nav2_substrate = realisation @ scenario</p>
+<div class="experiment-diagram">
+<section class="experiment-diagram-part remaining-card"><h2>OUR SYSTEM</h2><p>warehouse_navigation@gazebo_nav2_substrate</p></section>
+<div class="experiment-diagram-arrow"><strong>↓</strong></div>
+<section class="experiment-diagram-part remaining-card"><h2>WHAT WE WANT TO KNOW</h2><p>Does this setup provide the frame relationship navigation needs?</p></section>
+<div class="experiment-diagram-arrow"><strong>↓</strong></div>
+<section class="experiment-diagram-part remaining-card"><h2>WHAT WE'LL LOOK AT</h2><ul><li>Does the provider start?</li><li>Are /odom and /tf available?</li><li>Which frames appear in odometry?</li><li>Can we find odom → base_link?</li></ul></section>
+</div>
 
 </div>
 
 <!--
-Slide 13. Define scenario, provider, realisation, experiment and probe in plain language; explain the realisation@scenario identifier.
+Slide 12. Introduce the authored experiment and its selected probes before opening the prepared workspace.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Entering the Rotifer REPL
-
-<div class="slide-content">
-
-<MockRepl :stage="0" />
-
-</div>
-
-<!--
-Slide 14. Use the short help commands to introduce source, explain and run. The mock is prepared slideware; no live CLI or ROS execution.
--->
-
----
-class: simple-slide
----
-
-# Stage 1 · The authored investigation
+# Presence check · Rotifer workspace
 
 <div class="slide-content">
 
@@ -296,50 +268,94 @@ class: simple-slide
 </div>
 
 <!--
-Slide 15. Keep this slide on screen for the Stage 1 source, explain, run and explain-again sequence. The script's command blocks are successive states of this panel.
+Slide 13. Keep this slide on screen for the entire Presence check REPL session: launch, select, source show, explain, run and explain again. The prepared terminal is not a live CLI or ROS session.
 -->
 
 ---
 class: simple-slide
 ---
 
-# What was observed?
+# Presence check · What we observed
 
 <div class="slide-content">
 
 <table><thead><tr><th>Inspected</th><th>Observation</th><th>Source</th></tr></thead><tbody>
-<tr><td>/tf; /odom</td><td>Present</td><td>Mocked REPL · recorded run</td></tr>
-<tr><td>Observed odometry frames</td><td>vehicle_blue/odom → vehicle_blue/chassis</td><td>Mocked REPL · recorded run</td></tr>
-<tr><td>Required edge</td><td>odom → base_link not observed</td><td>Mocked REPL · recorded run</td></tr>
+<tr><td><code>/odom</code> · <code>/tf</code></td><td>Present</td><td>Mocked REPL · recorded run</td></tr>
+<tr><td>Odometry frames</td><td><code>vehicle_blue/odom → vehicle_blue/chassis</code></td><td>Mocked REPL · recorded run</td></tr>
+<tr><td>Required edge</td><td><code>odom → base_link</code> not observed</td><td>Mocked REPL · recorded run</td></tr>
 </tbody></table>
 <p class="provenance">Gazebo · ROS 2 Jazzy · copied-bundle replay verified.</p>
 
 </div>
 
 <!--
-Slide 16. Stage 1 capture summary. Do not imply navigation failure from this presence result.
+Slide 14. Stage 1 recorded observations. Do not imply navigation failure from this presence result.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Stage 1 · What we have established
+# Same question · more evidence
+
+<div class="slide-content">
+
+<div class="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
+<section class="remaining-card"><div class="card-kicker">BEFORE THE RUN</div><p>Descriptions establish:</p><ul><li><code>/odom</code> and <code>/tf</code> configured</li><li><code>odom → base_link</code> · unknown</li><li>No runtime evidence</li></ul></section>
+<section class="remaining-card"><div class="card-kicker">AFTER THE RUN</div><p>Observed:</p><ul><li><code>/odom</code> and <code>/tf</code> present</li><li><code>odom → base_link</code> not observed</li></ul></section>
+</div>
+<p class="mt-8 text-center text-2xl">The descriptions and the run tell us different things. Keep both.</p>
+
+</div>
+
+<!--
+Slide 15. Contrast the authored account with the new runtime observations.
+-->
+
+---
+class: simple-slide
+---
+
+# The current account
 
 <div class="slide-content">
 
 <dl class="account-rows">
-<dt>Assumption</dt><dd>odom → base_link available</dd>
-<dt>Probe</dt><dd>ROS topics · transform/frame data</dd>
-<dt>Evidence</dt><dd>/tf · /odom present<br>vehicle_blue/odom → vehicle_blue/chassis observed<br>odom → base_link not observed</dd>
-<dt>What this shows</dt><dd>Required frame relationship absent in this run</dd>
-<dt>Still open</dt><dd>Structure · runtime/timing · navigation</dd>
+<dt>System</dt><dd>warehouse_navigation@gazebo_nav2_substrate</dd>
+<dt>Question</dt><dd>Is <code>odom → base_link</code> available?</dd>
+<dt>Before running</dt><dd>Not established by the software descriptions</dd>
+<dt>Observed</dt><dd><code>/odom</code> and <code>/tf</code> present; required relationship not observed</dd>
+<dt>What we can say</dt><dd>The required relationship was not found during this inspection</dd>
+<dt>Still open</dt><dd>Why it was unavailable · whether navigation would work</dd>
+</dl>
+<p class="provenance">Prepared account view assembled from the experiment, resolved description and recorded evidence.</p>
+
+</div>
+
+<!--
+Slide 16. The current CLI does not produce this combined account automatically; it is a prepared view over retained material.
+-->
+
+---
+class: simple-slide
+---
+
+# Stage 1 · Presence
+
+<div class="slide-content">
+
+<dl class="account-rows">
+<dt>Assumption</dt><dd><code>odom → base_link</code> available</dd>
+<dt>Probe</dt><dd>ROS topics · odometry · TF lookup</dd>
+<dt>Evidence</dt><dd><code>/odom</code> and <code>/tf</code> present<br><code>odom → base_link</code> not observed</dd>
+<dt>What this shows</dt><dd>Required relationship not found in this run</dd>
+<dt>Still open</dt><dd>Frame structure · timing · navigation behaviour</dd>
 </dl>
 
 </div>
 
 <!--
-Slide 17. Stage 1 bounded claim.
+Slide 17. Stage 1 bounded claim; transition to the next question about how the frames are constructed.
 -->
 
 ---

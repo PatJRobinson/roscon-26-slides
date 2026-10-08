@@ -301,10 +301,16 @@ body,
 
 /* code */
 code {
-  background: var(--code-bg) !important;
+  background: rgba(44, 0, 30, 0.08) !important;
+  color: var(--ubuntu-aubergine) !important;
+  border-radius: 3px;
+  padding: 0.04rem 0.18rem;
+  box-decoration-break: clone;
+}
+
+.slidev-layout .terminal-card code {
+  background: transparent !important;
   color: var(--text-main) !important;
-  border-radius: 6px;
-  padding: 0.12rem 0.35rem;
 }
 
 pre {
@@ -1149,6 +1155,101 @@ a.button:hover {
 .simple-slide.workflow-slide .workflow-steps { font-size: 1.05rem; line-height: 1.5; }
 .simple-slide.workflow-slide .workflow-steps { margin: 0; padding-left: 1.35rem; }
 .simple-slide.workflow-slide .workflow-steps li { margin-bottom: 0.45rem; }
+.system-diagram {
+  display: grid;
+  justify-items: stretch;
+  width: min(100%, 760px);
+  margin: 0 auto;
+  gap: 0.4rem;
+}
+.system-diagram-block,
+.realisation-diagram-block,
+.experiment-diagram-part {
+  padding: 0.8rem 1.25rem;
+  text-align: center;
+}
+.system-diagram-block { text-align: left; }
+.system-diagram-block h2,
+.realisation-diagram-block h2,
+.experiment-diagram-part h2,
+.experiment-diagram-scope h2 {
+  margin: 0 0 0.35rem;
+  color: var(--ubuntu-aubergine);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.system-diagram-block p { margin: 0.16rem 0; font-size: 1.08rem; }
+.system-diagram-arrow,
+.realisation-diagram-arrow,
+.experiment-diagram-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--ubuntu-aubergine);
+  line-height: 1.05;
+}
+.system-diagram-arrow span,
+.realisation-diagram-arrow span { font-size: 0.95rem; }
+.system-diagram-arrow strong,
+.realisation-diagram-arrow strong,
+.experiment-diagram-arrow strong { font-size: 1.35rem; font-weight: 500; }
+.system-diagram-arrow strong::before,
+.realisation-diagram-arrow strong::before,
+.experiment-diagram-arrow strong::before {
+  content: '';
+  display: block;
+  width: 2px;
+  height: 0.8rem;
+  margin: 0.08rem auto -0.02rem;
+  background: var(--ubuntu-aubergine);
+}
+.system-diagram-question { text-align: left; font-size: 1.15rem !important; }
+.realisation-caption { text-align: center; font-size: 1.15rem !important; }
+.realisation-id {
+  width: min(100%, 860px);
+  margin: 0 auto 0.45rem;
+  color: var(--ubuntu-aubergine);
+  font: 500 1.02rem/1.3 ui-monospace, SFMono-Regular, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+.realisation-diagram {
+  display: grid;
+  width: min(100%, 860px);
+  margin: 0 auto;
+  gap: 0.25rem;
+}
+.realisation-diagram-block { padding: 0.65rem 1.2rem; text-align: left; }
+.realisation-diagram-block h2 { margin-bottom: 0.25rem; }
+.realisation-diagram-block ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 1.03rem;
+  line-height: 1.4;
+}
+.realisation-diagram-block p { margin: 0; font-size: 1.05rem; }
+.realisation-diagram-arrow { min-height: 2rem; }
+.realisation-caption { margin-top: 0.45rem !important; }
+.experiment-diagram {
+  display: grid;
+  width: min(100%, 860px);
+  margin: 0 auto;
+  gap: 0.2rem;
+}
+.experiment-diagram-part { padding: 0.45rem 1rem; text-align: left; }
+.experiment-diagram-part p { margin: 0; font-size: 1.02rem; }
+.experiment-diagram-part ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+.experiment-diagram-part h2,
+.experiment-diagram-scope h2 { margin-bottom: 0.2rem; }
+.experiment-diagram-arrow { min-height: 1.5rem; }
+.experiment-diagram-scope { padding: 0.2rem 0.05rem 0; }
+.experiment-diagram-scope p { margin: 0; font-size: 1rem; }
 .simple-slide .account-rows {
   display: grid;
   grid-template-columns: 10.5rem 1fr;

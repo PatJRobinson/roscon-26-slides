@@ -51,44 +51,67 @@ const stageData = {
   1: {
     name: 'Presence',
     commands: {
+      'roti': 'Rotifer REPL ready. Select an experiment to inspect its source, account and evidence.',
       'select presence_check': 'selected: Presence check',
-      'source show': `experiment:   Presence check
-realisation@scenario: warehouse_teleop@gazebo_nav2_substrate
-provider:     gazebo (Nav2 substrate)
-required:     odom → base_link
-question:     Is the required frame relationship available?
-conditions:   ROS 2 Jazzy · headless provider-backed run`,
-      'source show presence_check': `experiment:   Presence check
-realisation@scenario: warehouse_teleop@gazebo_nav2_substrate
-provider:     gazebo (Nav2 substrate)
-required:     odom → base_link
-question:     Is the required frame relationship available?
-conditions:   ROS 2 Jazzy · headless provider-backed run`,
-      'run presence_check': `evaluation:   17/17 declared checks passed
-capture:      counted real-provider run
-replay:       copied-bundle replay verified`,
+      'source show': `EXPERIMENT · Presence check
+system
+  warehouse_navigation@gazebo_nav2_substrate
+assumption
+  A navigation claim needs evidence about the system it's running on.
+what we're investigating
+  odom → base_link
+checks
+  Provider startup · ROS topics · odometry · TF lookup
+evidence to keep
+  Observations · rosbag · run results
+scope
+  Checking the foundations, not navigation success.`,
+      'source show presence_check': `EXPERIMENT · Presence check
+system
+  warehouse_navigation@gazebo_nav2_substrate
+assumption
+  A navigation claim needs evidence about the system it's running on.
+what we're investigating
+  odom → base_link
+checks
+  Provider startup · ROS topics · odometry · TF lookup
+evidence to keep
+  Observations · rosbag · run results
+scope
+  Checking the foundations, not navigation success.`,
+      'run presence_check': `evaluation:      17/17 declared checks passed
+capture:         counted real-provider run
+replay:          copied-bundle replay verified`,
     },
     accounts: {
       presence_check: {
-        before: `SUBSTRATE / DERIVED
-requires:     odom → base_link
-assumption:   the required relationship is available
+        before: `BEFORE RUNNING
+
+What the descriptions tell us:
+  Gazebo provides odometry and a TF stream.
+  This setup configures /odom and /tf.
+
+What we're looking for:
+  odom → base_link
+
+What the descriptions establish:
+  ? UNKNOWN
+  Nothing declares that this particular frame relationship is provided.
+
+Runtime evidence: None yet.`,
+        after: `AFTER RUNNING
+
+What the descriptions establish:
+  /odom and /tf configured
+  odom → base_link  ? UNKNOWN
 
 RUN OBSERVATIONS
-none yet
+  /tf and /odom present
+  vehicle_blue/odom → vehicle_blue/chassis observed
+  odom → base_link not observed
 
 CURRENT ACCOUNT
-not established`,
-        after: `SUBSTRATE / DERIVED
-requires:     odom → base_link
-
-RUN OBSERVATIONS
-/tf and /odom present
-vehicle_blue/odom → vehicle_blue/chassis observed
-odom → base_link not observed
-
-CURRENT ACCOUNT
-topics are present; the required relationship remains open`,
+  The required relationship was not found during this inspection.`,
       },
     },
     suggestions: ['select presence_check', 'source show', 'explain presence_check', 'run presence_check'],
@@ -203,11 +226,13 @@ capture:      one-shot real-provider attempt`,
 
 const stage = computed(() => stageData[props.stage] || stageData[1])
 const stageLabel = computed(() => props.stage === 0 ? 'REPL introduction' : `Stage ${props.stage}`)
-const insideRepl = ref(props.stage !== 0)
+const insideRepl = ref(props.stage !== 0 && props.stage !== 1)
 const promptPrefix = computed(() => insideRepl.value ? 'roti>' : '❯')
-const suggestions = computed(() => props.stage === 0 && insideRepl.value
-  ? ['source show -h', 'explain -h', 'run -h']
-  : stage.value.suggestions)
+const suggestions = computed(() => {
+  if (props.stage === 0 && insideRepl.value) return ['source show -h', 'explain -h', 'run -h']
+  if (props.stage === 1 && !insideRepl.value) return ['roti']
+  return stage.value.suggestions
+})
 const input = ref('')
 const isRunning = ref(false)
 const transcript = ref(null)
@@ -216,6 +241,9 @@ const inputId = `mock-repl-stage-${props.stage}`
 function buildInitial(data) {
   if (props.stage === 0) {
     return [{ kind: 'notice', text: 'Shell prompt · use roti -h for options, then roti to enter the REPL.' }]
+  }
+  if (props.stage === 1) {
+    return [{ kind: 'notice', text: 'Presentation mock · prepared interactions over a recorded Rotifer experiment.' }]
   }
   return [{ kind: 'notice', text: `${stageLabel.value} · ${data.name}\nType help to see the commands prepared for this panel.` }]
 }
@@ -226,7 +254,7 @@ const completedRuns = ref({})
 
 watch(stage, (next) => {
   entries.value = buildInitial(next)
-  insideRepl.value = props.stage !== 0
+  insideRepl.value = props.stage !== 0 && props.stage !== 1
   responseCursors.value = {}
   completedRuns.value = {}
   input.value = ''
@@ -281,7 +309,7 @@ async function submit(raw = input.value) {
     }
     entries.value.push(entry)
     input.value = ''
-    if (props.stage === 0 && key === 'roti') insideRepl.value = true
+    if ((props.stage === 0 || props.stage === 1) && key === 'roti') insideRepl.value = true
     if (runDuration) {
       isRunning.value = true
       await nextTick()
@@ -304,6 +332,9 @@ async function submit(raw = input.value) {
       runEntry.elapsed = mockRunDurationSeconds
       runEntry.running = false
       runEntry.output = `${output}\nexperiment time: ${runDuration.toFixed(1)} s`
+      if (props.stage === 1 && wireName === 'presence_check') {
+        runEntry.output += '\nrun:             20261001T151956.546871Z-ba4189019e54'
+      }
       completedRuns.value[wireName] = true
       isRunning.value = false
     }
@@ -314,7 +345,7 @@ async function submit(raw = input.value) {
 }
 
 function reset() {
-  insideRepl.value = props.stage !== 0
+  insideRepl.value = props.stage !== 0 && props.stage !== 1
   entries.value = buildInitial(stage.value)
   responseCursors.value = {}
   completedRuns.value = {}
