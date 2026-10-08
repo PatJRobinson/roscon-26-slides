@@ -217,36 +217,33 @@ class: simple-slide
 
 # ROTIFER · REALISATION
 
-<div class="slide-content code-artifact-slide">
+<div class="slide-content code-artifact-slide compact-code-artifact">
 
 <div class="terminal-card code-artifact">
 <div class="terminal-title">realisation.yaml · warehouse_navigation@gazebo_nav2_substrate</div>
-<pre class="terminal-code"><code># Selected excerpt from realisation.yaml
-# Comments added for the presentation
 
+````yaml
 spec:
   providers:
     - ref: gazebo                  # WHICH SOFTWARE?
       as: embodiment
-
   runtime:
     implementation:
       type: docker_compose         # HOW IS IT STARTED?
       services:
         - gazebo
         - bridge
-
   native:
     world:
       type: sdf
       name: warehouse_teleop       # WHICH WORLD?
     robot:
       name: vehicle_blue           # WHICH ROBOT?
-
     topicAdaptation:
       observations:                # HOW DOES IT CONNECT TO ROS?
         /odom: /model/vehicle_blue/odometry
-        /tf: /model/vehicle_blue/tf</code></pre>
+        /tf: /model/vehicle_blue/tf
+````
 </div>
 
 </div>
@@ -265,7 +262,9 @@ class: simple-slide
 
 <div class="terminal-card code-artifact">
 <div class="terminal-title">provider.yaml · gazebo</div>
-<pre class="terminal-code"><code># Illustrative YAML structure, not a literal source excerpt
+
+````yaml
+# Illustrative YAML structure, not a literal source excerpt
 
 software: gazebo
 
@@ -279,10 +278,9 @@ interfaces:                 # HOW CAN WE USE IT?
   - ROS bridge support
 
 requirements:               # WHAT DOES IT NEED?
-  - ...</code></pre>
+  - ...
+````
 </div>
-
-<p class="code-artifact-caption">The provider describes the software.<br>The realisation describes our particular use of it.</p>
 
 </div>
 
