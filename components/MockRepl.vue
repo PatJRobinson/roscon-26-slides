@@ -132,20 +132,20 @@ CURRENT ACCOUNT
 provider/model-owned: odometry, TF stream, LaserScan stream
 realisation-owned: scan-frame integration transform`,
       'source show odometry_link': `experiment:   Odometry link
-realisation@scenario: warehouse_teleop@gazebo_nav2_tf_substrate
+realisation@scenario: warehouse_navigation@gazebo_nav2_tf_substrate
 provider:     provider/model supplies odometry and TF
 question:     is odom → base_link present?`,
       'run odometry_link': `evaluation:   20/20 declared checks passed
 capture:      counted real-provider run`,
       'source show scan_source': `experiment:   Scan source
-realisation@scenario: warehouse_teleop@gazebo_nav2_scan_substrate
+realisation@scenario: warehouse_navigation@gazebo_nav2_scan_substrate
 provider:     provider/model supplies the scan stream
 topic:        /scan · sensor_msgs/msg/LaserScan
 frame:        vehicle_blue/laser_frame/scan`,
       'run scan_source': `evaluation:   21/21 declared checks passed
 capture:      counted real-provider run`,
       'source show scan_integration': `experiment:   Scan integration
-realisation@scenario: warehouse_teleop@gazebo_nav2_scan_tf_substrate
+realisation@scenario: warehouse_navigation@gazebo_nav2_scan_tf_substrate
 provider:     realisation supplies the scan-frame transform
 question:     is base_link → scan connected?`,
       'run scan_integration': `evaluation:   19/19 declared checks passed
@@ -161,15 +161,15 @@ capture:      counted real-provider run`,
     },
     commands: {
       'source show': `selected experiments:
-  Runtime surface · warehouse_teleop@gazebo_nav2_map_surface
-  Timing follow-up · warehouse_teleop@gazebo_nav2_costmap_timing
+  Runtime surface · warehouse_navigation@gazebo_nav2_map_surface
+  Timing follow-up · warehouse_navigation@gazebo_nav2_costmap_timing
 comparison: separate realisations and Gazebo world files`,
       'source show timing_follow_up': `experiment:   Timing follow-up
-realisation@scenario: warehouse_teleop@gazebo_nav2_costmap_timing
+realisation@scenario: warehouse_navigation@gazebo_nav2_costmap_timing
 scan rate:    10 Hz
 question:     is scan-time transform availability reliable under this configuration?`,
       'source show runtime_surface': `experiment:   Runtime surface
-realisation@scenario: warehouse_teleop@gazebo_nav2_map_surface
+realisation@scenario: warehouse_navigation@gazebo_nav2_map_surface
 question:     Are the map, lifecycle and navigation interfaces available?
 probe:        runtime interfaces and scan-time transform lookup`,
       'run runtime_surface': `evaluation:   21/21 declared checks passed
@@ -189,15 +189,15 @@ observation:  no scan drops observed`,
     },
     commands: {
       'source show': `selected experiments: Goal and path · Local corridor check
-realisation: warehouse_teleop@gazebo_nav2_goal_base_footprint
+realisation: warehouse_navigation@gazebo_nav2_goal_base_footprint
 task: 0.5 m map-frame goal · MPPI-configured captures
 scope: two separate one-shot attempts`,
       'source show goal_and_path': `experiment:   Goal and path
-realisation@scenario: warehouse_teleop@gazebo_nav2_goal_base_footprint
+realisation@scenario: warehouse_navigation@gazebo_nav2_goal_base_footprint
 task:         0.5 m map-frame navigation goal
 controller:   MPPI`,
       'source show local_corridor_check': `experiment:   Local corridor check
-realisation@scenario: warehouse_teleop@gazebo_nav2_goal_base_footprint
+realisation@scenario: warehouse_navigation@gazebo_nav2_goal_base_footprint
 probe:        one-shot local-feasibility check
 controller:   MPPI`,
       'run goal_and_path': `evaluation:   39/39 declared checks passed
@@ -214,7 +214,7 @@ capture:      one-shot real-provider attempt`,
     },
     commands: {
       'source show rpp_attempt': `experiment:   RPP attempt
-realisation@scenario: warehouse_teleop@gazebo_nav2_goal_base_footprint
+realisation@scenario: warehouse_navigation@gazebo_nav2_goal_base_footprint
 task:         0.5 m map-frame navigation goal
 controller:   RPP`,
       'run rpp_attempt': `evaluation:   39/39 declared checks passed

@@ -367,9 +367,9 @@ class: simple-slide
 <div class="slide-content">
 
 <table><thead><tr><th>Experiment → realisation</th><th>Structural observation</th></tr></thead><tbody>
-<tr><td>Odometry link → warehouse_teleop@gazebo_nav2_tf_substrate</td><td>odom → base_link present</td></tr>
-<tr><td>Scan source → warehouse_teleop@gazebo_nav2_scan_substrate</td><td>/scan present; its frame disconnected</td></tr>
-<tr><td>Scan integration → warehouse_teleop@gazebo_nav2_scan_tf_substrate</td><td>base_link → vehicle_blue/laser_frame/scan present</td></tr>
+<tr><td>Odometry link → warehouse_navigation@gazebo_nav2_tf_substrate</td><td>odom → base_link present</td></tr>
+<tr><td>Scan source → warehouse_navigation@gazebo_nav2_scan_substrate</td><td>/scan present; its frame disconnected</td></tr>
+<tr><td>Scan integration → warehouse_navigation@gazebo_nav2_scan_tf_substrate</td><td>base_link → vehicle_blue/laser_frame/scan present</td></tr>
 </tbody></table>
 <p class="provenance">Three separate Gazebo / ROS 2 Jazzy configurations.</p>
 
@@ -387,7 +387,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div v-click="1"><dl class="account-rows"><dt>Experiment</dt><dd>Odometry link</dd><dt>Realisation</dt><dd>warehouse_teleop@gazebo_nav2_tf_substrate</dd><dt>Ownership</dt><dd>Provider/model supplies odometry and TF; the app observes the edge.</dd></dl></div>
+<div v-click="1"><dl class="account-rows"><dt>Experiment</dt><dd>Odometry link</dd><dt>Realisation</dt><dd>warehouse_navigation@gazebo_nav2_tf_substrate</dd><dt>Ownership</dt><dd>Provider/model supplies odometry and TF; the app observes the edge.</dd></dl></div>
 <div v-click="2"><dl class="account-rows"><dt>Retained evidence</dt><dd>odom → base_link present · 20/20 checks passed</dd></dl></div>
 <div v-click="3"><dl class="account-rows"><dt>Bounded update</dt><dd>The selected odometry/TF relationship was observed for this configuration.</dd></dl></div>
 <p class="provenance">Counted real-provider capture; stable talk-bundle replay verified.</p>
@@ -442,8 +442,8 @@ class: simple-slide
 <div class="slide-content">
 
 <table><thead><tr><th>Runtime experiment</th><th>Realisation</th></tr></thead><tbody>
-<tr><td>Runtime surface</td><td>warehouse_teleop@gazebo_nav2_map_surface</td></tr>
-<tr><td>Timing follow-up</td><td>warehouse_teleop@gazebo_nav2_costmap_timing</td></tr>
+<tr><td>Runtime surface</td><td>warehouse_navigation@gazebo_nav2_map_surface</td></tr>
+<tr><td>Timing follow-up</td><td>warehouse_navigation@gazebo_nav2_costmap_timing</td></tr>
 </tbody></table>
 <p class="provenance">Both counted captures. The timing run used 10 Hz odometry/TF publication.</p>
 
@@ -482,7 +482,7 @@ class: simple-slide
 <dt>What happened</dt><dd>The scan arrived at 153.4 s, but the latest odom → base_link transform was from 153.0 s.</dd>
 <dt>Effect</dt><dd>The costmap recorded 2,358 scan drops.</dd>
 </dl>
-<p class="provenance">warehouse_teleop@gazebo_nav2_map_surface.</p>
+<p class="provenance">warehouse_navigation@gazebo_nav2_map_surface.</p>
 
 </div>
 
