@@ -3,6 +3,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 
 const props = defineProps({
   stage: { type: Number, default: 1 },
+  startInside: { type: Boolean, default: false },
 })
 
 // `totalElapsedSeconds` from the pinned runs' runtime_timing.json evidence.
@@ -226,7 +227,7 @@ capture:      one-shot real-provider attempt`,
 
 const stage = computed(() => stageData[props.stage] || stageData[1])
 const stageLabel = computed(() => props.stage === 0 ? 'REPL introduction' : `Stage ${props.stage}`)
-const insideRepl = ref(props.stage !== 0 && props.stage !== 1)
+const insideRepl = ref(props.startInside || (props.stage !== 0 && props.stage !== 1))
 const promptPrefix = computed(() => insideRepl.value ? 'roti>' : '❯')
 const suggestions = computed(() => {
   if (props.stage === 0 && insideRepl.value) return ['source show -h', 'explain -h', 'run -h']
@@ -236,13 +237,19 @@ const suggestions = computed(() => {
 const input = ref('')
 const isRunning = ref(false)
 const transcript = ref(null)
-const inputId = `mock-repl-stage-${props.stage}`
+const inputId = `mock-repl-stage-${props.stage}${props.startInside ? '-continued' : ''}`
 
 function buildInitial(data) {
   if (props.stage === 0) {
     return [{ kind: 'notice', text: 'Shell prompt · use roti -h for options, then roti to enter the REPL.' }]
   }
   if (props.stage === 1) {
+    if (props.startInside) {
+      return [
+        { kind: 'exchange', prompt: '❯', command: 'roti', output: 'Rotifer REPL ready. Select an experiment to inspect its source, account and evidence.' },
+        { kind: 'exchange', prompt: 'roti>', command: 'select presence_check', output: 'selected: Presence check' },
+      ]
+    }
     return [{ kind: 'notice', text: 'Presentation mock · prepared interactions over a recorded Rotifer experiment.' }]
   }
   return [{ kind: 'notice', text: `${stageLabel.value} · ${data.name}\nType help to see the commands prepared for this panel.` }]
@@ -254,7 +261,7 @@ const completedRuns = ref({})
 
 watch(stage, (next) => {
   entries.value = buildInitial(next)
-  insideRepl.value = props.stage !== 0 && props.stage !== 1
+  insideRepl.value = props.startInside || (props.stage !== 0 && props.stage !== 1)
   responseCursors.value = {}
   completedRuns.value = {}
   input.value = ''
@@ -345,7 +352,7 @@ async function submit(raw = input.value) {
 }
 
 function reset() {
-  insideRepl.value = props.stage !== 0 && props.stage !== 1
+  insideRepl.value = props.startInside || (props.stage !== 0 && props.stage !== 1)
   entries.value = buildInitial(stage.value)
   responseCursors.value = {}
   completedRuns.value = {}

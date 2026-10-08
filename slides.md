@@ -268,7 +268,44 @@ class: simple-slide
 </div>
 
 <!--
-Slide 13. Keep this slide on screen for the entire Presence check REPL session: launch, select, source show, explain, run and explain again. The prepared terminal is not a live CLI or ROS session.
+Slide 13. Launch Rotifer and select Presence check. The prepared terminal is not a live CLI or ROS session.
+-->
+
+---
+class: simple-slide
+---
+
+# What can we tell from the descriptions?
+
+<div class="slide-content">
+
+<div class="grid grid-cols-3 gap-5">
+<section class="remaining-card description-result"><div class="description-result-mark">✓</div><h2>THEY AGREE</h2><p>I need <code>/scan</code> as a <code>LaserScan</code>.</p><p>The driver says it provides exactly that.</p></section>
+<section class="remaining-card description-result"><div class="description-result-mark">✕</div><h2>THEY DISAGREE</h2><p>I expect an <code>Image</code> on <code>/camera</code>.</p><p>The driver declares a <code>PointCloud2</code> instead.</p></section>
+<section class="remaining-card description-result"><div class="description-result-mark">?</div><h2>WE DON'T KNOW</h2><p>I need <code>odom → base_link</code>.</p><p>Nothing declares that it's provided.</p></section>
+</div>
+<p class="unknown-takeaway">UNKNOWN ≠ FALSE</p>
+
+</div>
+
+<!--
+Slide 14. Distinguish agreement, disagreement and missing information in the software descriptions.
+-->
+
+---
+class: simple-slide
+---
+
+# Presence check · Rotifer workspace
+
+<div class="slide-content">
+
+<MockRepl :stage="1" :start-inside="true" />
+
+</div>
+
+<!--
+Slide 15. Return to the same prepared REPL session, already entered and with Presence check selected. Continue with source show, explain, run and explain again.
 -->
 
 ---
@@ -289,7 +326,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 14. Stage 1 recorded observations. Do not imply navigation failure from this presence result.
+Slide 16. Stage 1 recorded observations. Do not imply navigation failure from this presence result.
 -->
 
 ---
@@ -309,7 +346,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 15. Contrast the authored account with the new runtime observations.
+Slide 17. Contrast the authored account with the new runtime observations.
 -->
 
 ---
@@ -333,7 +370,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 16. The current CLI does not produce this combined account automatically; it is a prepared view over retained material.
+Slide 18. The current CLI does not produce this combined account automatically; it is a prepared view over retained material.
 -->
 
 ---
@@ -355,7 +392,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 17. Stage 1 bounded claim; transition to the next question about how the frames are constructed.
+Slide 19. Stage 1 bounded claim; transition to the next question about how the frames are constructed.
 -->
 
 ---
@@ -376,7 +413,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 18. Stage 2 progression. These are distinct runs, not one continuous repair.
+Slide 20. Stage 2 progression. These are distinct runs, not one continuous repair.
 -->
 
 ---
@@ -395,7 +432,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 19. Stage 2, first structural relationship. Later requirements remain open.
+Slide 21. Stage 2, first structural relationship. Later requirements remain open.
 -->
 
 ---
@@ -411,7 +448,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 20. Stage 2 source and retained observations; do not imply runtime timing.
+Slide 22. Stage 2 source and retained observations; do not imply runtime timing.
 -->
 
 ---
@@ -430,7 +467,7 @@ class: simple-slide structure-slide
 </div>
 
 <!--
-Slide 21. Stage 2 structural claim and boundary.
+Slide 23. Stage 2 structural claim and boundary.
 -->
 
 ---
@@ -450,7 +487,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 22. Stage 3 selected experiments and realisations.
+Slide 24. Stage 3 selected experiments and realisations.
 -->
 
 ---
@@ -467,7 +504,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 23. Order 5 map-surface capture; stable Stage 3 bundle replay verified.
+Slide 25. Order 5 map-surface capture; stable Stage 3 bundle replay verified.
 -->
 
 ---
@@ -487,7 +524,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 24. Stage 3 blocker evidence with recorded latest and scan stamps.
+Slide 26. Stage 3 blocker evidence with recorded latest and scan stamps.
 -->
 
 ---
@@ -503,7 +540,7 @@ class: simple-slide compact-body-slide
 </div>
 
 <!--
-Slide 25. Stage 3 timing-compatible result. No goal was attempted.
+Slide 27. Stage 3 timing-compatible result. No goal was attempted.
 -->
 
 ---
@@ -526,7 +563,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 26. Stage 3 claim uses the order 6 evidence only.
+Slide 28. Stage 3 claim uses the order 6 evidence only.
 -->
 
 
@@ -548,7 +585,7 @@ class: simple-slide compact-body-slide
 </div>
 
 <!--
-Slide 27. Stage 4 mocked REPL and saved run goal records.
+Slide 29. Stage 4 mocked REPL and saved run goal records.
 -->
 
 ---
@@ -565,7 +602,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 28. Stage 4 existing account and selected realisation.
+Slide 30. Stage 4 existing account and selected realisation.
 -->
 
 ---
@@ -589,7 +626,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 29. Stage 4 observation summary. Do not conflate with the older 3.5 m local-feasibility record.
+Slide 31. Stage 4 observation summary. Do not conflate with the older 3.5 m local-feasibility record.
 -->
 
 ---
@@ -613,7 +650,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 30. Stage 4 unresolved question; candidate explanations remain for the probe-selection beat.
+Slide 32. Stage 4 unresolved question; candidate explanations remain for the probe-selection beat.
 -->
 
 ---
@@ -630,7 +667,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 31. Stage 4 to 5 transition. Preserve the result reveal for the next slide.
+Slide 33. Stage 4 to 5 transition. Preserve the result reveal for the next slide.
 -->
 
 ---
@@ -647,7 +684,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 32. Stage 5 evidence first. A single bounded RPP success; no superiority or repeatability claim.
+Slide 34. Stage 5 evidence first. A single bounded RPP success; no superiority or repeatability claim.
 -->
 
 ---
@@ -669,7 +706,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 33. Stage 5 bounded comparison and remaining uncertainties.
+Slide 35. Stage 5 bounded comparison and remaining uncertainties.
 -->
 
 
@@ -687,7 +724,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 34. 37:00–39:00. The earlier evidence remains about the earlier system. Support only survives where the relevant dependencies and conditions remain unchanged.
+Slide 36. 37:00–39:00. The earlier evidence remains about the earlier system. Support only survives where the relevant dependencies and conditions remain unchanged.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -718,7 +755,7 @@ What remains open?</pre>
 </div>
 
 <!--
-Slide 35. 39:00–43:00. Step back to the research proposition. Avoid repeating the RPP result and the full handover argument.
+Slide 37. 39:00–43:00. Step back to the research proposition. Avoid repeating the RPP result and the full handover argument.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -737,7 +774,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 36. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
+Slide 38. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -754,6 +791,6 @@ class: simple-slide
 </div>
 
 <!--
-Slide 37. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
+Slide 39. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
