@@ -44,28 +44,31 @@ const stageData = {
       'roti -h': `Usage: roti [OPTIONS] [COMMAND]
 
 Commands:
+  select ITEM
+               Select an experiment or evidence view
   source show   Display experiment configuration
   explain       Resolve requirements against current evidence
   run           Execute the selected experiment`,
       'roti': `workspace: ros_ws
 status: ready
-commands: source, explain, run`,
-      'source show -h': `Usage: source show [EXPERIMENT]
-Display the authored experiment and selected realisation.`,
-      'explain -h': `Usage: explain [EXPERIMENT]
-Resolve declared requirements against available evidence.`,
-      'run -h': `Usage: run [EXPERIMENT]
-Execute probes and record their results.`,
+commands: select, source, explain, run`,
+      'source show -h': `Usage: source show
+Display the selected experiment and realisation.`,
+      'explain -h': `Usage: explain
+Resolve the selected experiment against available evidence.`,
+      'run -h': `Usage: run
+Execute the selected experiment and record its results.`,
     },
     suggestions: ['roti -h', 'roti'],
   },
   1: {
     name: 'Presence',
+    selectable: ['presence_check'],
     commands: {
       'roti': `workspace: ros_ws
 status: ready
-commands: source, explain, run`,
-      'select presence_check': 'selected: Presence check',
+commands: select, source, explain, run`,
+      'select presence_check': 'selected: presence_check',
       'source show': `experiment: presence_check
 system: warehouse_navigation@gazebo_nav2_substrate
 requires:
@@ -119,15 +122,16 @@ observations:
 status: requirement_unmet`,
       },
     },
-    suggestions: ['select presence_check', 'source show', 'explain presence_check', 'run presence_check'],
+    suggestions: ['select presence_check', 'source show', 'explain', 'run'],
   },
   2: {
     name: 'Structure',
+    selectable: ['structural_summary', 'odometry_link', 'scan_source', 'scan_integration'],
     accounts: {
       odometry_link: { run: 'odometry_link', before: 'tf odom -> base_link\nobservation: not_run\nstatus: UNKNOWN', after: 'tf odom -> base_link: OBSERVED\nsource: odometry_link\nstatus: satisfied' },
       scan_source: { run: 'scan_source', before: 'topic /scan\nframe connected to base_link: UNKNOWN\nstatus: not_run', after: 'topic /scan: present\nframe: vehicle_blue/laser_frame/scan\nbase_link -> scan frame: NOT_OBSERVED\nstatus: incomplete' },
       scan_integration: { run: 'scan_integration', before: 'requirements:\n  odom -> base_link\n  /scan source and connected scan frame\nstatus: not_run', after: 'observations:\n  odom -> base_link: OBSERVED\n  /scan: present\n  base_link -> vehicle_blue/laser_frame/scan: OBSERVED\nstatus: requirements_observed\nsource: scan_integration' },
-      structural_compatibility: { run: 'scan_integration', before: 'requirements:\n  odom -> base_link\n  /scan source and connected scan frame\nstatus: UNKNOWN', after: 'evidence:\n  odom -> base_link: OBSERVED (odometry_link)\n  /scan: PRESENT (scan_source)\n  base_link -> scan frame:\n    NOT_OBSERVED (scan_source)\n    OBSERVED (scan_integration)\nscope: 3 separate realisations\nscan-time availability: NOT_CHECKED\nnavigation: NOT_CHECKED' },
+      structural_summary: { evidenceReady: true, after: 'evidence:\n  odom -> base_link: OBSERVED [odometry_link]\n  /scan: PRESENT [scan_source]\n  scan frame: vehicle_blue/laser_frame/scan [scan_source]\n  base_link -> scan frame: NOT_OBSERVED [scan_source]\n  base_link -> scan frame: OBSERVED [scan_integration]\nscope: 3 separate configurations\nnot_checked: scan-time availability, navigation' },
     },
     commands: {
       'source show': `experiments:
@@ -154,14 +158,21 @@ system: warehouse_navigation@gazebo_nav2_scan_tf_substrate
 requires: tf base_link -> vehicle_blue/laser_frame/scan`,
       'run scan_integration': `checks: 19 passed, 0 failed
 status: complete`,
+      'source show structural_summary': `investigation: structural_summary
+evidence:
+  odometry_link -> warehouse_navigation@gazebo_nav2_tf_substrate
+  scan_source -> warehouse_navigation@gazebo_nav2_scan_substrate
+  scan_integration -> warehouse_navigation@gazebo_nav2_scan_tf_substrate
+scope: retained results from 3 separate configurations`,
     },
-    suggestions: ['source show', 'source show odometry_link', 'explain odometry_link', 'run odometry_link', 'source show scan_source', 'explain scan_source', 'run scan_source', 'source show scan_integration', 'explain scan_integration', 'run scan_integration', 'explain structural_compatibility'],
+    suggestions: ['select structural_summary', 'source show', 'explain'],
   },
   3: {
     name: 'Runtime',
+    selectable: ['runtime_surface', 'timing_follow_up'],
     accounts: {
       runtime_surface: { run: 'runtime_surface', before: 'requirements:\n  map: not_checked\n  navigation lifecycle: not_checked\n  NavigateToPose: not_checked\n  odom -> base_link: observed (stage 2)\n  base_link -> scan: observed (stage 2)\n  transform at scan stamp: not_checked', after: 'observations:\n  map: present\n  navigation nodes: active\n  NavigateToPose: available\n  latest tf stamp: 153.0 s\n  scan stamp: 153.4 s\n  transform at scan stamp: UNAVAILABLE\n  costmap scan drops: 2358\n  timing check: null\nstatus: scan_time_lookup_failed' },
-      timing_follow_up: { run: 'timing_follow_up', before: 'requirements:\n  transform at scan stamp: available\nconfiguration:\n  odom/tf rate: 10 Hz\nstatus: not_run', after: 'observations:\n  scan stamp: 12.7 s\n  transform at scan stamp: AVAILABLE\n  costmap scan drops: 0\n  checks: 21 passed, 0 failed\nstatus: observed_compatible' },
+      timing_follow_up: { run: 'timing_follow_up', evidenceReady: true, before: 'requirements:\n  transform at scan stamp: available\nconfiguration:\n  odom/tf rate: 10 Hz\nstatus: not_run', after: 'observations:\n  scan stamp: 12.7 s\n  transform at scan stamp: AVAILABLE\n  costmap scan drops: 0\n  checks: 21 passed, 0 failed\nstatus: observed_compatible' },
     },
     commands: {
       'source show': `experiments:
@@ -187,10 +198,11 @@ costmap scan drops: 2358`,
 status: complete
 costmap scan drops: 0`,
     },
-    suggestions: ['source show', 'source show runtime_surface', 'explain runtime_surface', 'run runtime_surface', 'source show timing_follow_up', 'explain timing_follow_up', 'run timing_follow_up'],
+    suggestions: ['select runtime_surface', 'source show', 'explain', 'run', 'select timing_follow_up'],
   },
   4: {
     name: 'Behaviour',
+    selectable: ['goal_and_path', 'local_corridor_check'],
     accounts: {
       goal_and_path: { run: 'goal_and_path', before: 'task: NavigateToPose\ngoal: map frame, 0.5 m\nexpected: forward progress\nobservations: none\nstatus: not_run', after: 'topic_observations.global_path: VALID\ntopic_observations.cmd_vel.positive_x_samples: 0\ntopic_observations.odom.translational_progress_m: 0\nstatus: expected_progress_not_observed' },
       local_corridor_check: { run: 'local_corridor_check', before: 'probe: local corridor feasibility\nobservations: none\nstatus: not_run', after: 'corridor.sampled_clear_to_m: 0.6\nstatus: clear' },
@@ -216,10 +228,12 @@ status: complete`,
       'run local_corridor_check': `checks: 33 passed, 0 failed
 status: complete`,
     },
-    suggestions: ['source show', 'source show goal_and_path', 'explain goal_and_path', 'run goal_and_path', 'source show local_corridor_check', 'explain local_corridor_check', 'run local_corridor_check'],
+    suggestions: ['select goal_and_path', 'source show', 'explain', 'run', 'select local_corridor_check'],
   },
   5: {
     name: 'Controlled contrast',
+    selectable: ['rpp_attempt'],
+    accountBySelection: { rpp_attempt: 'controller_progress' },
     accounts: {
       controller_progress: { run: 'rpp_attempt', before: 'comparison: controller_progress\nMPPI (goal_and_path): no forward command or translational progress\nRPP (rpp_attempt): no run recorded\nstatus: pending', after: 'comparison: controller_progress\nMPPI (goal_and_path): no forward command or translational progress\nRPP.topic_observations.cmd_vel.positive_samples: 19\nRPP.topic_observations.odom.displacement_m: 0.288761\nstatus: results_available' },
     },
@@ -231,14 +245,15 @@ controller: RPP`,
       'run rpp_attempt': `checks: 39 passed, 0 failed
 status: complete`,
     },
-    suggestions: ['source show rpp_attempt', 'explain controller_progress', 'run rpp_attempt', 'explain controller_progress'],
+    suggestions: ['select rpp_attempt', 'source show', 'explain', 'run', 'explain'],
   },
 }
 
 const stage = computed(() => stageData[props.stage] || stageData[1])
 const stageLabel = computed(() => props.stage === 0 ? 'REPL introduction' : `Stage ${props.stage}`)
 const insideRepl = ref(props.startInside || (props.stage !== 0 && props.stage !== 1))
-const promptPrefix = computed(() => insideRepl.value ? 'roti>' : '❯')
+const selectedExperiment = ref(props.stage === 1 && props.startInside ? 'presence_check' : '')
+const promptPrefix = computed(() => insideRepl.value ? `roti${selectedExperiment.value ? `[${selectedExperiment.value}]` : ''}>` : '❯')
 const suggestions = computed(() => {
   if (props.stage === 0 && insideRepl.value) return ['source show -h', 'explain -h', 'run -h']
   if (props.stage === 1 && !insideRepl.value) return ['roti']
@@ -257,10 +272,13 @@ function buildInitial(data) {
     if (props.startInside) {
       return [
         { kind: 'exchange', prompt: '❯', command: 'roti', output: 'Rotifer REPL ready. Select an experiment to inspect its source, account and evidence.' },
-        { kind: 'exchange', prompt: 'roti>', command: 'select presence_check', output: 'selected: Presence check' },
+        { kind: 'exchange', prompt: 'roti>', command: 'select presence_check', output: 'selected: presence_check' },
       ]
     }
     return [{ kind: 'notice', text: 'Presentation mock · prepared interactions over a recorded Rotifer experiment.' }]
+  }
+  if (props.stage === 2) {
+    return [{ kind: 'notice', text: 'Stage 2 · structural evidence from three retained configurations.' }]
   }
   return [{ kind: 'notice', text: `${stageLabel.value} · ${data.name}\nType help to see the commands prepared for this panel.` }]
 }
@@ -272,6 +290,7 @@ const completedRuns = ref({})
 watch(stage, (next) => {
   entries.value = buildInitial(next)
   insideRepl.value = props.startInside || (props.stage !== 0 && props.stage !== 1)
+  selectedExperiment.value = props.stage === 1 && props.startInside ? 'presence_check' : ''
   responseCursors.value = {}
   completedRuns.value = {}
   input.value = ''
@@ -279,9 +298,10 @@ watch(stage, (next) => {
 
 function helpOutput() {
   return `Commands:
-  source show [EXPERIMENT]
-  explain [EXPERIMENT]
-  run [EXPERIMENT]
+  select ITEM
+  source show
+  explain
+  run
   help
   clear`
 }
@@ -300,28 +320,58 @@ async function submit(raw = input.value) {
   if (!command) return
 
   const key = command.toLowerCase()
+  const entryPrompt = promptPrefix.value
 
   if (key === 'clear') {
     entries.value = []
     input.value = ''
   } else {
-    const scripted = stage.value.commands[key]
-    const explainTarget = key.startsWith('explain ') ? key.slice('explain '.length) : null
-    const account = explainTarget ? stage.value.accounts?.[explainTarget] : null
     let output
+    const selectMatch = key.match(/^select\s+(\S+)$/)
+    let wireName = null
     if (key === 'help') output = helpOutput()
-    else if (account) output = completedRuns.value[account.run || explainTarget] ? account.after : account.before
-    else if (Array.isArray(scripted)) {
-      const index = responseCursors.value[key] || 0
-      output = scripted[Math.min(index, scripted.length - 1)]
-      responseCursors.value[key] = index + 1
-    } else output = scripted || `error: unknown command: ${command}\nTry 'help'.`
-    const wireName = key.startsWith('run ') ? key.slice('run '.length) : null
+    else if (selectMatch) {
+      const candidate = selectMatch[1]
+      if (stage.value.selectable?.includes(candidate)) {
+        selectedExperiment.value = candidate
+        output = `selected: ${candidate}`
+      } else output = `error: unknown item: ${candidate}`
+    } else {
+      const selected = selectedExperiment.value
+      const baseCommand = key.match(/^(source show|explain|run)(?:\s+\S+)?$/)?.[1]
+      const commandKey = baseCommand && selected ? `${baseCommand} ${selected}` : key
+      const scripted = stage.value.commands[commandKey] ?? stage.value.commands[key]
+      const accountName = key === 'explain'
+        ? (stage.value.accountBySelection?.[selected] || selected)
+        : key.startsWith('explain ')
+          ? key.slice('explain '.length)
+          : null
+      const account = accountName ? stage.value.accounts?.[accountName] : null
+      wireName = key === 'run'
+        ? selected
+        : key.startsWith('run ')
+          ? key.slice('run '.length)
+          : null
+
+      if (['source show', 'explain', 'run'].includes(key) && !selected) {
+        output = 'error: no item selected; use select ITEM'
+      } else if (key === 'run' && selected === 'structural_summary') {
+        output = 'error: structural_summary combines retained runs; select a source experiment to run'
+      } else if (account) {
+        output = account.evidenceReady || completedRuns.value[account.run || selected || accountName]
+          ? account.after
+          : account.before
+      } else if (Array.isArray(scripted)) {
+        const index = responseCursors.value[commandKey] || 0
+        output = scripted[Math.min(index, scripted.length - 1)]
+        responseCursors.value[commandKey] = index + 1
+      } else output = scripted || `error: unknown command: ${command}\nTry 'help'.`
+    }
     const runDuration = wireName ? runDurationsSeconds[wireName] : 0
     const entry = {
       kind: 'exchange',
       command,
-      prompt: promptPrefix.value,
+      prompt: entryPrompt,
       output: runDuration ? 'experiment running...' : output,
       running: Boolean(runDuration),
       progress: 0,
@@ -365,6 +415,7 @@ async function submit(raw = input.value) {
 
 function reset() {
   insideRepl.value = props.startInside || (props.stage !== 0 && props.stage !== 1)
+  selectedExperiment.value = props.stage === 1 && props.startInside ? 'presence_check' : ''
   entries.value = buildInitial(stage.value)
   responseCursors.value = {}
   completedRuns.value = {}
