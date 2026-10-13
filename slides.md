@@ -468,33 +468,14 @@ class: simple-slide
 </div>
 
 <!--
-Slide 21. Stage 2 progression. These are distinct runs, not one continuous repair.
+Slide 21. Three structural findings from distinct configurations, shown together as one investigation.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Establishing odometry
-
-<div class="slide-content">
-
-<div v-click="1"><dl class="account-rows"><dt>Experiment</dt><dd>Odometry link</dd><dt>Realisation</dt><dd>warehouse_navigation@gazebo_nav2_tf_substrate</dd><dt>Ownership</dt><dd>Provider/model supplies odometry and TF; the app observes the edge.</dd></dl></div>
-<div v-click="2"><dl class="account-rows"><dt>Retained evidence</dt><dd>odom → base_link present - 20/20 checks passed</dd></dl></div>
-<div v-click="3"><dl class="account-rows"><dt>Bounded update</dt><dd>The selected odometry/TF relationship was observed for this configuration.</dd></dl></div>
-<p class="provenance">Counted real-provider capture; stable talk-bundle replay verified.</p>
-
-</div>
-
-<!--
-Slide 22. Stage 2, first structural relationship. Later requirements remain open.
--->
-
----
-class: simple-slide
----
-
-# Establishing the scan relationships
+ Structural evidence across three configurations
 
 <div class="slide-content">
 
@@ -503,7 +484,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 23. Stage 2 source and retained observations; do not imply runtime timing.
+Slide 22. Stage 2 summary command resolves three distinct retained experiments; do not imply runtime timing.
 -->
 
 ---
@@ -522,7 +503,7 @@ class: simple-slide structure-slide
 </div>
 
 <!--
-Slide 24. Stage 2 structural claim and boundary.
+Slide 23. Stage 2 structural claim and boundary.
 -->
 
 ---
@@ -542,7 +523,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 25. Stage 3 selected experiments and realisations.
+Slide 24. Stage 3 selected experiments and realisations.
 -->
 
 ---
@@ -559,7 +540,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 26. Order 5 map-surface capture; stable Stage 3 bundle replay verified.
+Slide 25. Order 5 map-surface capture; stable Stage 3 bundle replay verified.
 -->
 
 ---
@@ -579,7 +560,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 27. Stage 3 blocker evidence with recorded latest and scan stamps.
+Slide 26. Stage 3 blocker evidence with recorded latest and scan stamps.
 -->
 
 ---
@@ -595,7 +576,7 @@ class: simple-slide compact-body-slide
 </div>
 
 <!--
-Slide 28. Stage 3 timing-compatible result. No goal was attempted.
+Slide 27. Stage 3 timing-compatible result. No goal was attempted.
 -->
 
 ---
@@ -618,7 +599,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 29. Stage 3 claim uses the order 6 evidence only.
+Slide 28. Stage 3 claim uses the order 6 evidence only.
 -->
 
 
@@ -640,7 +621,7 @@ class: simple-slide compact-body-slide
 </div>
 
 <!--
-Slide 30. Stage 4 mocked REPL and saved run goal records.
+Slide 29. Stage 4 mocked REPL and saved run goal records.
 -->
 
 ---
@@ -657,7 +638,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 31. Stage 4 existing account and selected realisation.
+Slide 30. Stage 4 existing account and selected realisation.
 -->
 
 ---
@@ -681,7 +662,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 32. Stage 4 observation summary. Do not conflate with the older 3.5 m local-feasibility record.
+Slide 31. Stage 4 observation summary. Do not conflate with the older 3.5 m local-feasibility record.
 -->
 
 ---
@@ -705,7 +686,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 33. Stage 4 unresolved question; candidate explanations remain for the probe-selection beat.
+Slide 32. Stage 4 unresolved question; candidate explanations remain for the probe-selection beat.
 -->
 
 ---
@@ -722,7 +703,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 34. Stage 4 to 5 transition. Preserve the result reveal for the next slide.
+Slide 33. Stage 4 to 5 transition. Preserve the result reveal for the next slide.
 -->
 
 ---
@@ -739,7 +720,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 35. Stage 5 evidence first. A single bounded RPP success; no superiority or repeatability claim.
+Slide 34. Stage 5 evidence first. A single bounded RPP success; no superiority or repeatability claim.
 -->
 
 ---
@@ -761,7 +742,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 36. Stage 5 bounded comparison and remaining uncertainties.
+Slide 35. Stage 5 bounded comparison and remaining uncertainties.
 -->
 
 
@@ -779,7 +760,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 37. 37:00–39:00. The earlier evidence remains about the earlier system. Support only survives where the relevant dependencies and conditions remain unchanged.
+Slide 36. 37:00–39:00. The earlier evidence remains about the earlier system. Support only survives where the relevant dependencies and conditions remain unchanged.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -810,7 +791,7 @@ What remains open?</pre>
 </div>
 
 <!--
-Slide 38. 39:00–43:00. Step back to the research proposition. Avoid repeating the RPP result and the full handover argument.
+Slide 37. 39:00–43:00. Step back to the research proposition. Avoid repeating the RPP result and the full handover argument.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -829,7 +810,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 39. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
+Slide 38. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -846,6 +827,6 @@ class: simple-slide
 </div>
 
 <!--
-Slide 40. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
+Slide 39. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
