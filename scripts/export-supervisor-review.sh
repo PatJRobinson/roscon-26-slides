@@ -26,6 +26,12 @@ cp \
   "$project_dir"/vercel.json \
   "$export_dir"/
 
+cp -R \
+  "$project_dir"/components \
+  "$project_dir"/data \
+  "$project_dir"/setup \
+  "$export_dir"/
+
 docker run --rm --init --ipc=host -e CI=true \
   -v "$export_dir:/work" \
   -w /work \

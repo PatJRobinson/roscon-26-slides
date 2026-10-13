@@ -1,0 +1,117 @@
+{
+  "checks": [
+    {
+      "check": "world_file",
+      "evidence": "Selected SDF world file exists.",
+      "status": "passed",
+      "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf"
+    },
+    {
+      "check": "model",
+      "evidence": "Model vehicle_blue found in selected SDF world.",
+      "model": "vehicle_blue",
+      "status": "passed"
+    },
+    {
+      "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+      "contract": "sim_clock",
+      "evidence": "Provider bridge recipe resolved sim_clock.",
+      "gzTopic": "/world/warehouse_teleop/clock",
+      "rosTopic": "/clock",
+      "status": "passed"
+    },
+    {
+      "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+      "contract": "differential_drive_cmd_vel",
+      "evidence": "DiffDrive plugin found and command bridge recipe resolved.",
+      "gzTopic": "/model/vehicle_blue/cmd_vel",
+      "rosTopic": "/cmd_vel",
+      "sdfTopic": "/model/vehicle_blue/cmd_vel",
+      "status": "passed"
+    },
+    {
+      "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+      "contract": "odometry",
+      "evidence": "DiffDrive plugin found and odometry bridge recipe resolved, but SDF does not explicitly declare an odometry topic.",
+      "expectedChildFrameId": "vehicle_blue/chassis",
+      "expectedHeaderFrameId": "vehicle_blue/odom",
+      "gzTopic": "/model/vehicle_blue/odometry",
+      "rosTopic": "/odom",
+      "sdfTopic": "/model/vehicle_blue/odometry",
+      "status": "weak"
+    },
+    {
+      "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+      "contract": "tf_tree",
+      "evidence": "TF topic publication requires frame-edge evidence beyond topic presence.",
+      "requiredEdges": [
+        {
+          "child": "base_link",
+          "evidence": "Gazebo DiffDrive TF appears model-scoped as vehicle_blue/odom -> vehicle_blue/chassis.",
+          "parent": "odom",
+          "source": "sdf_plugin",
+          "status": "mismatched"
+        }
+      ],
+      "sdfTopic": "/model/vehicle_blue/tf",
+      "status": "weak"
+    },
+    {
+      "bridgeRecipe": null,
+      "contract": "lidar2d",
+      "evidence": "No lidar sensor/source found in selected SDF model.",
+      "gzTopic": null,
+      "rosTopic": null,
+      "status": "missing"
+    }
+  ],
+  "conformance": {
+    "issues": [],
+    "status": "passed"
+  },
+  "model": "vehicle_blue",
+  "provider": "gazebo",
+  "realisation": "warehouse_teleop@gazebo_nav2_substrate",
+  "sdf": {
+    "model": {
+      "links": [
+        "chassis",
+        "left_wheel",
+        "right_wheel",
+        "caster"
+      ],
+      "name": "vehicle_blue",
+      "plugins": [
+        {
+          "childFrameId": null,
+          "filename": "gz-sim-diff-drive-system",
+          "frameId": null,
+          "inferredChildFrameId": "vehicle_blue/chassis",
+          "inferredFrameId": "vehicle_blue/odom",
+          "inferredTfTopic": "/model/vehicle_blue/tf",
+          "leftJoint": "left_wheel_joint",
+          "name": "gz::sim::systems::DiffDrive",
+          "odomTopic": null,
+          "rightJoint": "right_wheel_joint",
+          "tfTopic": null,
+          "topic": null
+        }
+      ],
+      "sensors": [],
+      "status": "present"
+    },
+    "world": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf",
+    "worldFileExists": true,
+    "worldName": "warehouse_teleop"
+  },
+  "summary": {
+    "differential_drive_cmd_vel": "passed",
+    "lidar2d": "missing",
+    "model": "passed",
+    "odometry": "weak",
+    "sim_clock": "passed",
+    "tf_tree": "weak",
+    "world_file": "passed"
+  },
+  "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf"
+}

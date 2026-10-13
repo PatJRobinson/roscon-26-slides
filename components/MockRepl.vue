@@ -1,5 +1,6 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
+import { accountBasis, preRunView, sourceView } from './replAccountViews'
 
 const props = defineProps({
   stage: { type: Number, default: 1 },
@@ -47,7 +48,7 @@ Commands:
   select ITEM
                Select an experiment or evidence view
   source show   Display experiment configuration
-  explain       Resolve requirements against current evidence
+  explain       Show the selected source, resolved plan and prepared evidence view
   run           Execute the selected experiment`,
       'roti': `workspace: ros_ws
 status: ready
@@ -55,7 +56,7 @@ commands: select, source, explain, run`,
       'source show -h': `Usage: source show
 Display the selected experiment and realisation.`,
       'explain -h': `Usage: explain
-Resolve the selected experiment against available evidence.`,
+Show a focused projection of the selected declarations and available evidence.`,
       'run -h': `Usage: run
 Execute the selected experiment and record its results.`,
     },
@@ -69,57 +70,24 @@ Execute the selected experiment and record its results.`,
 status: ready
 commands: select, source, explain, run`,
       'select presence_check': 'selected: presence_check',
-      'source show': `experiment: presence_check
-system: warehouse_navigation@gazebo_nav2_substrate
-requires:
-  tf: odom -> base_link
-probes:
-  - provider.start
-  - topic /odom
-  - topic /tf
-  - odometry.frames
-  - tf.lookup odom -> base_link
-records:
-  observations, rosbag, results
-scope: substrate`,
-      'source show presence_check': `experiment: presence_check
-system: warehouse_navigation@gazebo_nav2_substrate
-requires:
-  tf: odom -> base_link
-probes:
-  - provider.start
-  - topic /odom
-  - topic /tf
-  - odometry.frames
-  - tf.lookup odom -> base_link
-records:
-  observations, rosbag, results
-scope: substrate`,
+      'source show': sourceView('presence_check'),
+      'source show presence_check': sourceView('presence_check'),
       'run presence_check': `checks: 17 passed, 0 failed
 status: complete
 artifacts: observations, rosbag, results`,
     },
     accounts: {
       presence_check: {
-        before: `requirements:
-  /odom: configured
-  /tf: configured
-  tf odom -> base_link:
-    declared: no
-    runtime: not_run
-    status: UNKNOWN`,
-        after: `requirements:
-  /odom: configured
-  /tf: configured
-  tf odom -> base_link:
-    declared: no
-    status: UNKNOWN
-observations:
-  /odom: present
-  /tf: present
-  vehicle_blue/odom -> vehicle_blue/chassis: observed
-  tf odom -> base_link: NOT_OBSERVED
-status: requirement_unmet`,
+        before: preRunView('presence_check'),
+        after: `declared [realisation]:
+  tf_tree: /tf, /tf_static (experimental)
+preflight [selected model]:
+  required edge: mismatched
+observed [presence_check run]:
+  /tf publisher: present
+  odometry: vehicle_blue/odom -> vehicle_blue/chassis
+  lookup odom -> base_link: missing
+interpretation: required edge not found in this inspection`,
       },
     },
     suggestions: ['select presence_check', 'source show', 'explain', 'run'],
@@ -128,9 +96,9 @@ status: requirement_unmet`,
     name: 'Structure',
     selectable: ['structural_summary', 'odometry_link', 'scan_source', 'scan_integration'],
     accounts: {
-      odometry_link: { run: 'odometry_link', before: 'tf odom -> base_link\nobservation: not_run\nstatus: UNKNOWN', after: 'tf odom -> base_link: OBSERVED\nsource: odometry_link\nstatus: satisfied' },
-      scan_source: { run: 'scan_source', before: 'topic /scan\nframe connected to base_link: UNKNOWN\nstatus: not_run', after: 'topic /scan: present\nframe: vehicle_blue/laser_frame/scan\nbase_link -> scan frame: NOT_OBSERVED\nstatus: incomplete' },
-      scan_integration: { run: 'scan_integration', before: 'requirements:\n  odom -> base_link\n  /scan source and connected scan frame\nstatus: not_run', after: 'observations:\n  odom -> base_link: OBSERVED\n  /scan: present\n  base_link -> vehicle_blue/laser_frame/scan: OBSERVED\nstatus: requirements_observed\nsource: scan_integration' },
+      odometry_link: { run: 'odometry_link', before: preRunView('odometry_link'), after: 'tf odom -> base_link: OBSERVED\nsource: odometry_link\nstatus: satisfied' },
+      scan_source: { run: 'scan_source', before: preRunView('scan_source'), after: 'topic /scan: present\nframe: vehicle_blue/laser_frame/scan\nbase_link -> scan frame: NOT_OBSERVED\nstatus: incomplete' },
+      scan_integration: { run: 'scan_integration', before: preRunView('scan_integration'), after: 'observations:\n  odom -> base_link: OBSERVED\n  /scan: present\n  base_link -> vehicle_blue/laser_frame/scan: OBSERVED\nstatus: requirements_observed\nsource: scan_integration' },
       structural_summary: { evidenceReady: true, after: 'evidence:\n  odom -> base_link: OBSERVED [odometry_link]\n  /scan: PRESENT [scan_source]\n  scan frame: vehicle_blue/laser_frame/scan [scan_source]\n  base_link -> scan frame: NOT_OBSERVED [scan_source]\n  base_link -> scan frame: OBSERVED [scan_integration]\nscope: 3 separate configurations\nnot_checked: scan-time availability, navigation' },
     },
     commands: {
@@ -141,21 +109,13 @@ status: requirement_unmet`,
 ownership:
   provider/model: odometry, tf, LaserScan
   realisation: base_link -> scan frame`,
-      'source show odometry_link': `experiment: odometry_link
-system: warehouse_navigation@gazebo_nav2_tf_substrate
-provides: odometry, tf
-requires: tf odom -> base_link`,
+      'source show odometry_link': sourceView('odometry_link'),
       'run odometry_link': `checks: 20 passed, 0 failed
 status: complete`,
-      'source show scan_source': `experiment: scan_source
-system: warehouse_navigation@gazebo_nav2_scan_substrate
-topic: /scan · sensor_msgs/msg/LaserScan
-frame: vehicle_blue/laser_frame/scan`,
+      'source show scan_source': sourceView('scan_source'),
       'run scan_source': `checks: 21 passed, 0 failed
 status: complete`,
-      'source show scan_integration': `experiment: scan_integration
-system: warehouse_navigation@gazebo_nav2_scan_tf_substrate
-requires: tf base_link -> vehicle_blue/laser_frame/scan`,
+      'source show scan_integration': sourceView('scan_integration'),
       'run scan_integration': `checks: 19 passed, 0 failed
 status: complete`,
       'source show structural_summary': `investigation: structural_summary
@@ -170,9 +130,14 @@ scope: retained results from 3 separate configurations`,
   3: {
     name: 'Runtime',
     selectable: ['runtime_surface', 'timing_follow_up'],
+    selectionAliases: { timing_compatibility: 'timing_follow_up' },
+    accountBySelection: {
+      runtime_surface: 'runtime_surface',
+      timing_follow_up: 'timing_follow_up',
+    },
     accounts: {
-      runtime_surface: { run: 'runtime_surface', before: 'requirements:\n  map: not_checked\n  navigation lifecycle: not_checked\n  NavigateToPose: not_checked\n  odom -> base_link: observed (stage 2)\n  base_link -> scan: observed (stage 2)\n  transform at scan stamp: not_checked', after: 'observations:\n  map: present\n  navigation nodes: active\n  NavigateToPose: available\n  latest tf stamp: 153.0 s\n  scan stamp: 153.4 s\n  transform at scan stamp: UNAVAILABLE\n  costmap scan drops: 2358\n  timing check: null\nstatus: scan_time_lookup_failed' },
-      timing_follow_up: { run: 'timing_follow_up', evidenceReady: true, before: 'requirements:\n  transform at scan stamp: available\nconfiguration:\n  odom/tf rate: 10 Hz\nstatus: not_run', after: 'observations:\n  scan stamp: 12.7 s\n  transform at scan stamp: AVAILABLE\n  costmap scan drops: 0\n  checks: 21 passed, 0 failed\nstatus: observed_compatible' },
+      runtime_surface: { run: 'runtime_surface', before: preRunView('runtime_surface'), after: 'experiment: runtime_surface\nobservations:\n  map: present\n  navigation nodes: active\n  NavigateToPose: available\n  latest tf stamp: 153.0 s\n  scan stamp: 153.4 s\n  transform at scan stamp: UNAVAILABLE\n  costmap scan drops: 2358\n  timing check: null\nstatus: scan_time_lookup_failed' },
+      timing_follow_up: { run: 'timing_follow_up', evidenceReady: false, before: preRunView('timing_follow_up'), after: 'experiment: timing_follow_up\nobservations:\n  scan stamp: 12.7 s\n  transform at scan stamp: AVAILABLE\n  costmap scan drops: 0\n  checks: 21 passed, 0 failed\nstatus: observed_compatible' },
     },
     commands: {
       'select runtime_surface': 'selected: Runtime surface',
@@ -184,15 +149,8 @@ systems:
   warehouse_navigation@gazebo_nav2_map_surface
   warehouse_navigation@gazebo_nav2_costmap_timing
 comparison: separate realisations and world files`,
-      'source show timing_follow_up': `experiment: timing_follow_up
-system: warehouse_navigation@gazebo_nav2_costmap_timing
-odom_tf_rate: 10 Hz
-requires: transform available at scan stamp`,
-      'source show runtime_surface': `experiment: runtime_surface
-system: warehouse_navigation@gazebo_nav2_map_surface
-probes:
-  map, lifecycle, NavigateToPose
-  scan-time transform lookup`,
+      'source show timing_follow_up': sourceView('timing_follow_up'),
+      'source show runtime_surface': sourceView('runtime_surface'),
       'run runtime_surface': `checks: 21 passed, 0 failed
 status: complete
 costmap scan drops: 2358`,
@@ -200,18 +158,14 @@ costmap scan drops: 2358`,
 status: complete
 costmap scan drops: 0`,
     },
-<<<<<<< Updated upstream
     suggestions: ['select runtime_surface', 'source show', 'explain', 'run', 'select timing_follow_up'],
-=======
-    suggestions: ['select runtime_surface', 'source show runtime_surface', 'explain', 'run runtime_surface', 'select timing_follow_up', 'source show timing_follow_up', 'explain timing_follow_up', 'run timing_follow_up'],
->>>>>>> Stashed changes
   },
   4: {
     name: 'Behaviour',
     selectable: ['goal_and_path', 'local_corridor_check'],
     accounts: {
-      goal_and_path: { run: 'goal_and_path', before: 'task: NavigateToPose\ngoal: map frame, 0.5 m\nexpected: forward progress\nobservations: none\nstatus: not_run', after: 'topic_observations.global_path: VALID\ntopic_observations.cmd_vel.positive_x_samples: 0\ntopic_observations.odom.translational_progress_m: 0\nstatus: expected_progress_not_observed' },
-      local_corridor_check: { run: 'local_corridor_check', before: 'probe: local corridor feasibility\nobservations: none\nstatus: not_run', after: 'corridor.sampled_clear_to_m: 0.6\nstatus: clear' },
+      goal_and_path: { run: 'goal_and_path', before: preRunView('goal_and_path'), after: 'topic_observations.global_path: VALID\ntopic_observations.cmd_vel.positive_x_samples: 0\ntopic_observations.odom.translational_progress_m: 0\nstatus: expected_progress_not_observed' },
+      local_corridor_check: { run: 'local_corridor_check', before: preRunView('local_corridor_check'), after: 'corridor.sampled_clear_to_m: 0.6\nstatus: clear' },
     },
     commands: {
       'source show': `experiments:
@@ -221,14 +175,8 @@ system: warehouse_navigation@gazebo_nav2_goal_base_footprint
 task: NavigateToPose · map frame · 0.5 m
 controller: MPPI
 attempts: 2 separate runs`,
-      'source show goal_and_path': `experiment: goal_and_path
-system: warehouse_navigation@gazebo_nav2_goal_base_footprint
-task: NavigateToPose · map frame · 0.5 m
-controller: MPPI`,
-      'source show local_corridor_check': `experiment: local_corridor_check
-system: warehouse_navigation@gazebo_nav2_goal_base_footprint
-probe: local corridor feasibility
-controller: MPPI`,
+      'source show goal_and_path': sourceView('goal_and_path'),
+      'source show local_corridor_check': sourceView('local_corridor_check'),
       'run goal_and_path': `checks: 39 passed, 0 failed
 status: complete`,
       'run local_corridor_check': `checks: 33 passed, 0 failed
@@ -241,13 +189,10 @@ status: complete`,
     selectable: ['rpp_attempt'],
     accountBySelection: { rpp_attempt: 'controller_progress' },
     accounts: {
-      controller_progress: { run: 'rpp_attempt', before: 'comparison: controller_progress\nMPPI (goal_and_path): no forward command or translational progress\nRPP (rpp_attempt): no run recorded\nstatus: pending', after: 'comparison: controller_progress\nMPPI (goal_and_path): no forward command or translational progress\nRPP.topic_observations.cmd_vel.positive_samples: 19\nRPP.topic_observations.odom.displacement_m: 0.288761\nstatus: results_available' },
+      controller_progress: { run: 'rpp_attempt', before: preRunView('rpp_attempt'), after: 'comparison: controller_progress\nMPPI (goal_and_path): no forward command or translational progress\nRPP.topic_observations.cmd_vel.positive_samples: 19\nRPP.topic_observations.odom.displacement_m: 0.288761\nstatus: results_available' },
     },
     commands: {
-      'source show rpp_attempt': `experiment: rpp_attempt
-system: warehouse_navigation@gazebo_nav2_goal_base_footprint
-task: NavigateToPose · map frame · 0.5 m
-controller: RPP`,
+      'source show rpp_attempt': sourceView('rpp_attempt'),
       'run rpp_attempt': `checks: 39 passed, 0 failed
 status: complete`,
     },
@@ -268,7 +213,6 @@ const suggestions = computed(() => {
 const input = ref('')
 const isRunning = ref(false)
 const transcript = ref(null)
-const selectedExperiment = ref('')
 const inputId = `mock-repl-stage-${props.stage}${props.startInside ? '-continued' : ''}`
 
 function buildInitial(data) {
@@ -300,22 +244,15 @@ watch(stage, (next) => {
   selectedExperiment.value = props.stage === 1 && props.startInside ? 'presence_check' : ''
   responseCursors.value = {}
   completedRuns.value = {}
-  selectedExperiment.value = ''
   input.value = ''
 })
 
 function helpOutput() {
   return `Commands:
-<<<<<<< Updated upstream
   select ITEM
   source show
   explain
   run
-=======
-${props.stage === 3 ? '  select EXPERIMENT\n' : ''}  source show [EXPERIMENT]
-  explain [EXPERIMENT]
-  run [EXPERIMENT]
->>>>>>> Stashed changes
   help
   clear`
 }
@@ -340,52 +277,46 @@ async function submit(raw = input.value) {
     entries.value = []
     input.value = ''
   } else {
-<<<<<<< Updated upstream
-=======
-    const scripted = stage.value.commands[key]
-    const selectTarget = key.startsWith('select ') ? key.slice('select '.length) : null
-    if (props.stage === 3 && ['runtime_surface', 'timing_follow_up'].includes(selectTarget)) {
-      selectedExperiment.value = selectTarget
-    }
-    const explainTarget = key.startsWith('explain ')
-      ? key.slice('explain '.length)
-      : key === 'explain' ? selectedExperiment.value : null
-    const account = explainTarget ? stage.value.accounts?.[explainTarget] : null
->>>>>>> Stashed changes
     let output
+    let basisItem = null
+    let evidenceAvailable = false
     const selectMatch = key.match(/^select\s+(\S+)$/)
     let wireName = null
     if (key === 'help') output = helpOutput()
-<<<<<<< Updated upstream
     else if (selectMatch) {
       const candidate = selectMatch[1]
-      if (stage.value.selectable?.includes(candidate)) {
-        selectedExperiment.value = candidate
-        output = `selected: ${candidate}`
-      } else output = `error: unknown item: ${candidate}`
+      const resolvedCandidate = stage.value.selectionAliases?.[candidate] || candidate
+      if (stage.value.selectable?.includes(resolvedCandidate)) {
+        selectedExperiment.value = resolvedCandidate
+        output = `selected: ${resolvedCandidate}`
+      } else {
+        selectedExperiment.value = ''
+        output = `error: unknown item: ${candidate}`
+      }
     } else {
       const selected = selectedExperiment.value
-      const baseCommand = key.match(/^(source show|explain|run)(?:\s+\S+)?$/)?.[1]
-      const commandKey = baseCommand && selected ? `${baseCommand} ${selected}` : key
+      const commandMatch = key.match(/^(source show|explain|run)(?:\s+(\S+))?$/)
+      const baseCommand = commandMatch?.[1]
+      const explicitTarget = commandMatch?.[2]
+      const resolvedTarget = explicitTarget
+        ? stage.value.selectionAliases?.[explicitTarget] || explicitTarget
+        : selected
+      const commandKey = baseCommand && resolvedTarget ? `${baseCommand} ${resolvedTarget}` : key
       const scripted = stage.value.commands[commandKey] ?? stage.value.commands[key]
-      const accountName = key === 'explain'
-        ? (stage.value.accountBySelection?.[selected] || selected)
-        : key.startsWith('explain ')
-          ? key.slice('explain '.length)
-          : null
+      const accountName = baseCommand === 'explain' && resolvedTarget
+        ? (stage.value.accountBySelection?.[resolvedTarget] || resolvedTarget)
+        : null
       const account = accountName ? stage.value.accounts?.[accountName] : null
-      wireName = key === 'run'
-        ? selected
-        : key.startsWith('run ')
-          ? key.slice('run '.length)
-          : null
+      if (baseCommand === 'explain' || baseCommand === 'source show') basisItem = resolvedTarget
+      wireName = baseCommand === 'run' ? resolvedTarget : null
 
       if (['source show', 'explain', 'run'].includes(key) && !selected) {
         output = 'error: no item selected; use select ITEM'
       } else if (key === 'run' && selected === 'structural_summary') {
         output = 'error: structural_summary combines retained runs; select a source experiment to run'
       } else if (account) {
-        output = account.evidenceReady || completedRuns.value[account.run || selected || accountName]
+        evidenceAvailable = Boolean(account.evidenceReady || completedRuns.value[account.run || resolvedTarget || accountName])
+        output = evidenceAvailable
           ? account.after
           : account.before
       } else if (Array.isArray(scripted)) {
@@ -394,22 +325,13 @@ async function submit(raw = input.value) {
         responseCursors.value[commandKey] = index + 1
       } else output = scripted || `error: unknown command: ${command}\nTry 'help'.`
     }
-=======
-    else if (account) output = completedRuns.value[account.run || explainTarget] ? account.after : account.before
-    else if (props.stage === 3 && key === 'explain' && !selectedExperiment.value) output = 'error: select an experiment before explaining it.'
-    else if (Array.isArray(scripted)) {
-      const index = responseCursors.value[key] || 0
-      output = scripted[Math.min(index, scripted.length - 1)]
-      responseCursors.value[key] = index + 1
-    } else output = scripted || `error: unknown command: ${command}\nTry 'help'.`
-    const wireName = key.startsWith('run ') ? key.slice('run '.length) : null
->>>>>>> Stashed changes
     const runDuration = wireName ? runDurationsSeconds[wireName] : 0
     const entry = {
       kind: 'exchange',
       command,
       prompt: entryPrompt,
       output: runDuration ? 'experiment running...' : output,
+      basis: basisItem ? accountBasis(basisItem, evidenceAvailable) : '',
       running: Boolean(runDuration),
       progress: 0,
       elapsed: 0,
@@ -456,7 +378,6 @@ function reset() {
   entries.value = buildInitial(stage.value)
   responseCursors.value = {}
   completedRuns.value = {}
-  selectedExperiment.value = ''
   input.value = ''
   nextTick(() => {
     if (transcript.value) transcript.value.scrollTop = transcript.value.scrollHeight
@@ -477,6 +398,7 @@ function reset() {
         <div v-else class="mock-repl-exchange">
           <div class="mock-repl-command"><span>{{ entry.prompt || promptPrefix }}</span>{{ entry.command }}</div>
           <div class="mock-repl-output">{{ entry.output }}</div>
+          <div v-if="entry.basis" class="mock-repl-basis">{{ entry.basis }}</div>
           <div v-if="entry.running" class="mock-repl-progress" aria-live="polite">
             <div class="mock-repl-progress-track" role="progressbar" :aria-valuenow="Math.round(entry.progress)" aria-valuemin="0" aria-valuemax="100">
               <div class="mock-repl-progress-fill" :style="{ width: `${entry.progress}%` }"></div>
@@ -512,12 +434,19 @@ function reset() {
     </div>
     <footer class="mock-repl-footer">
       <template v-if="props.stage === 0">Command help · short descriptions for this talk</template>
-      <template v-else>Stage {{ props.stage }} of 5 · outputs are scripted; evidence provenance remains attached to the cited runs.</template>
+      <template v-else>Stage {{ props.stage }} of 5 · source / resolved-plan projections before running; retained observation summaries afterwards.</template>
     </footer>
   </section>
 </template>
 
 <style scoped>
+.mock-repl-basis {
+  margin-top: 0.35rem;
+  color: #d6c7cf;
+  font-size: 0.64rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
 .mock-repl {
   width: 100%;
   max-width: 1000px;

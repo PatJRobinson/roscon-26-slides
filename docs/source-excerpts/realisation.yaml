@@ -1,0 +1,139 @@
+apiVersion: rotifer/v0.6
+kind: Realisation
+
+metadata:
+  name: warehouse_teleop@gazebo_nav2_substrate
+  contractVersion: v0.2
+  description: >
+    Gazebo realisation slice for exposing host-visible ROS substrate evidence
+    needed before a Nav2 bringup can be meaningfully attempted.
+
+spec:
+  providers:
+    - ref: gazebo
+      as: embodiment
+
+  scenarioRef: warehouse_teleop
+
+  scenarioMapping:
+    actors:
+      ego_robot:
+        realisedAs: gazebo_turtlebot_like
+        provider: providers.embodiment.gazebo
+        assumptions:
+          - id: mobile_robot_actor_equivalence
+            statement: >
+              The Gazebo TurtleBot-like robot is treated as an adequate
+              concrete mobile robot for inspecting navigation substrate
+              evidence, not as a full Nav2 platform claim.
+
+  provides:
+    platforms:
+      - contract: differential_drive_robot
+
+    commands:
+      - contract: differential_drive_cmd_vel
+        binding:
+          type: ros_topic
+          defaultName: /cmd_vel
+          configurable:
+            - name
+        status: available
+
+    observations:
+      - contract: sim_clock
+        binding:
+          type: ros_topic
+          defaultName: /clock
+          configurable: []
+        required: false
+        status: available
+
+      - contract: odometry
+        binding:
+          type: ros_topic
+          defaultName: /odom
+          configurable:
+            - name
+        required: false
+        status: available
+
+      - contract: tf_tree
+        binding:
+          type: ros_topic
+          defaultTopics:
+            dynamic: /tf
+            static: /tf_static
+          configurable:
+            - dynamicTopic
+            - staticTopic
+            - requiredEdges
+            - requiredChain
+            - rootFrame
+            - baseFrame
+        required: false
+        status: experimental
+        notes:
+          - >
+            This declares host-visible TF topic publication only. Required
+            frame relationships are checked by observer evidence.
+
+  runtime:
+    readiness:
+      type: ros_topic
+      topic: /clock
+      timeoutSeconds: 30
+
+    rendering:
+      mode: offscreen
+
+    implementation:
+      mode: headless_streaming
+      type: docker_compose
+      composeFile: providers/gazebo/docker-compose.yml
+      command: providers/gazebo/run.sh
+      services:
+        - gazebo
+        - bridge
+
+    infrastructure:
+      containerized: true
+      networking: docker_bridge
+
+    prerequisites:
+      - Existing Gazebo provider images are available locally.
+      - ROS-GZ bridge exposes declared contracts to the host ROS graph.
+
+  native:
+    world:
+      type: sdf
+      name: warehouse_teleop
+      path: scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf
+
+    robot:
+      name: vehicle_blue
+      source: adapted_from_gazebo_diff_drive_example
+
+    topicAdaptation:
+      observations:
+        /clock: /world/warehouse_teleop/clock
+        /odom: /model/vehicle_blue/odometry
+        /tf: /model/vehicle_blue/tf
+      commands:
+        /cmd_vel: /model/vehicle_blue/cmd_vel
+
+  constraints:
+    limitations:
+      - >
+        This realisation does not launch Nav2 lifecycle nodes, action servers,
+        map server, localization, or costmaps.
+      - >
+        The current world/model exposes a model-scoped Gazebo TF topic, but it
+        does not substantiate the Nav2-style odom -> base_link edge without
+        additional frame ownership decisions.
+
+  tags:
+    - nav2
+    - gazebo
+    - substrate
+    - warehouse

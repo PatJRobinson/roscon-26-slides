@@ -1,0 +1,124 @@
+apiVersion: rotifer/v0.6
+kind: Provider
+
+metadata:
+  name: gazebo
+  description: >
+    Dockerised Gazebo simulator provider for Rotifer experiments.
+
+spec:
+  type: simulator
+
+  tags:
+    - embodiment
+    - simulation
+    - docker
+    - docker_compose
+    - gazebo
+    - ros2
+
+  runtime:
+    type: docker_compose
+    composeFile: providers/gazebo/docker-compose.yml
+    defaultService: gazebo
+    bridgeRecipes:
+      observations:
+        sim_clock:
+          direction: gz_to_ros
+          rosType: rosgraph_msgs/msg/Clock
+          gzType: gz.msgs.Clock
+          defaultRosTopic: /clock
+          defaultGzTopicTemplate: /world/{world}/clock
+        odometry:
+          direction: gz_to_ros
+          rosType: nav_msgs/msg/Odometry
+          gzType: gz.msgs.Odometry
+          defaultRosTopic: /odom
+          defaultGzTopicTemplate: /model/{model}/odometry
+        tf_tree:
+          direction: gz_to_ros
+          rosType: tf2_msgs/msg/TFMessage
+          gzType: gz.msgs.Pose_V
+          defaultRosTopic: /tf
+          defaultGzTopicTemplate: /model/{model}/tf
+        lidar2d:
+          direction: gz_to_ros
+          rosType: sensor_msgs/msg/LaserScan
+          gzType: gz.msgs.LaserScan
+          defaultRosTopic: /scan
+          defaultGzTopicTemplate: /model/{model}/scan
+      commands:
+        differential_drive_cmd_vel:
+          direction: ros_to_gz
+          rosType: geometry_msgs/msg/Twist
+          gzType: gz.msgs.Twist
+          defaultRosTopic: /cmd_vel
+          defaultGzTopicTemplate: /model/{model}/cmd_vel
+    note: >
+      Gazebo is intentionally run through Docker rather than as a Nix-native
+      dependency. The host Nix environment owns Rotifer and the surrounding ROS
+      workflow; Docker owns the Gazebo simulator runtime.
+
+  capabilityCatalogue:
+    scope: rotifer_known_non_exhaustive
+    provides:
+      domains:
+        - amr
+        - perception
+
+      contracts:
+        platforms:
+          - differential_drive_robot
+
+        commands:
+          - differential_drive_cmd_vel
+
+        observations:
+          - sim_clock
+          - odometry
+          - tf_tree
+          - lidar2d
+
+      features:
+        - sim_clock
+        - ros_gz_bridge
+        - headless_simulation
+
+  requires:
+    infrastructure:
+      - docker
+      - docker_bridge_networking
+      - host_bridge_attachment
+      - multicast_routing
+
+    environment:
+      - ROS_DISTRO=jazzy
+
+  realisationModel:
+    worldFormat: sdf
+    robotBinding: sdf_model_or_urdf_import
+    observationRealisation: ros_gz_bridge
+
+  constraints:
+    notes:
+      - >
+        Gazebo is run through Docker rather than the host Nix environment.
+        Reproducibility depends on the container image, compose configuration,
+        mounted worlds/models, and Docker networking.
+      - >
+        ROS 2 DDS and Gazebo Transport discovery may require host networking,
+        multicast support, explicit topic bridges, or additional host network
+        configuration.
+      - >
+        The ROS-Gazebo bridge is an adaptation layer. Its timing, QoS, message
+        conversion, and topic naming semantics are part of the realisation and
+        should not be treated as equivalent to Isaac's native integration.
+      - >
+        Native GUI attachment is provider-specific and may require a GUI-capable
+        container, local Gazebo client, X11/Wayland forwarding, or another
+        provider-native viewing path.
+      - >
+        Gazebo Transport and ROS 2 DDS discovery do not reliably work for this
+        provider through Docker host networking. The provider uses an explicit
+        Docker bridge network and attaches the host to that bridge with multicast
+        enabled.

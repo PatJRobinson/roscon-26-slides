@@ -115,7 +115,7 @@ Authoritative content: say-show-script.md (updated 2026-10-03).
 class: simple-slide compact-slide warrant-slide
 ---
 
-# Presence is not the relationship
+# What these observations establish
 
 <div class="slide-content">
 
@@ -215,391 +215,485 @@ Authoritative content: say-show-script.md.
 class: simple-slide
 ---
 
-# Rotifer - Realisation
+# The selected realisation declares its bindings
 
-<div class="slide-content code-artifact-slide compact-code-artifact">
+<div class="slide-content source-slide">
 
-<div class="terminal-card code-artifact">
-<div class="terminal-title">realisation.yaml - warehouse_navigation@gazebo_nav2_substrate</div>
+<div class="source-columns">
+<section><h2>Concrete observation provision</h2>
 
-````yaml
+<div class="terminal-card source-code">
+
+~~~yaml
 spec:
   providers:
-    - ref: gazebo                  # WHICH SOFTWARE?
+    - ref: gazebo
       as: embodiment
-  runtime:
-    implementation:
-      type: docker_compose         # HOW IS IT STARTED?
-      services:
-        - gazebo
-        - bridge
+  provides:
+    observations:
+      - contract: tf_tree
+        binding:
+          type: ros_topic
+          defaultTopics:
+            dynamic: /tf
+            static: /tf_static
+        required: false
+        status: experimental
+~~~
+
+</div>
+
+</section>
+<section><h2>Selected model and adaptation</h2>
+
+<div class="terminal-card source-code">
+
+~~~yaml
+spec:
   native:
-    world:
-      type: sdf
-      name: warehouse_teleop       # WHICH WORLD?
     robot:
-      name: vehicle_blue           # WHICH ROBOT?
+      name: vehicle_blue
     topicAdaptation:
-      observations:                # HOW DOES IT CONNECT TO ROS?
-        /odom: /model/vehicle_blue/odometry
+      observations:
         /tf: /model/vehicle_blue/tf
-````
+~~~
+
 </div>
+
+<p>The declaration identifies the TF interface and its use in this configuration.</p>
+</section>
+</div>
+<p class="provenance">Selected clauses from scenarios/warehouse_teleop/gazebo_nav2_substrate/realisation.yaml. Source identifier retained; audience alias: warehouse_navigation.</p>
 
 </div>
 
 <!--
-Slide 11. Show a simplified excerpt from the selected realisation while inside the Rotifer system.
+Slide 11. 12:00–14:00. Actual selected source clauses; explain concrete provision, experimental status, and topic adaptation. Launch/world details are in the supporting source excerpt.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Rotifer - Provider
+# The provider supplies the bridge recipe
 
-<div class="slide-content code-artifact-slide">
+<div class="slide-content source-slide">
 
-<div class="terminal-card code-artifact">
-<div class="terminal-title">provider.yaml - gazebo</div>
+<div class="source-columns">
+<section><h2>Gazebo provider</h2>
 
-````yaml
-# Illustrative YAML structure, not a literal source excerpt
+<div class="terminal-card source-code">
 
-software: gazebo
+~~~yaml
+spec:
+  runtime:
+    bridgeRecipes:
+      observations:
+        tf_tree:
+          direction: gz_to_ros
+          rosType: tf2_msgs/msg/TFMessage
+          gzType: gz.msgs.Pose_V
+          defaultRosTopic: /tf
+~~~
 
-capabilities:               # WHAT CAN IT DO?
-  - simulation
-  - odometry
-  - transform data
-
-interfaces:                 # HOW CAN WE USE IT?
-  - simulation interface
-  - ROS bridge support
-
-requirements:               # WHAT DOES IT NEED?
-  - ...
-````
 </div>
+
+</section>
+<section><h2>Shared observation contract</h2>
+
+<div class="terminal-card source-code">
+
+~~~yaml
+metadata:
+  name: tf_tree
+spec:
+  representation:
+    class: ros_topic
+    messageType: tf2_msgs/msg/TFMessage
+~~~
+
+</div>
+
+<p>The contract describes transform publication. A particular frame edge needs its own support.</p>
+</section>
+</div>
+<p class="provenance">Selected clauses: providers/gazebo/provider.yaml and contracts/observation/tf_tree.yaml. The provider catalogue describes known capabilities; the realisation declares the concrete provision.</p>
 
 </div>
 
 <!--
-Slide 12. Show the provider as a reusable description of existing software, inside the system terminal view.
+Slide 12. 12:00–14:00. Replace illustrative YAML with actual provider recipe and contract representation. Provider catalogue membership alone does not establish a concrete edge.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Rotifer - Experiment - Presence Check
+# The experiment specifies the question and checks
 
-<div class="slide-content">
+<div class="slide-content source-slide">
 
-<div class="experiment-diagram">
-<section class="experiment-diagram-part remaining-card"><h2>OUR SYSTEM</h2><p>warehouse_navigation@gazebo_nav2_substrate</p></section>
-<div class="experiment-diagram-arrow"><strong>↓</strong></div>
-<section class="experiment-diagram-part remaining-card"><h2>WHAT WE WANT TO KNOW</h2><p>Does this setup provide the frame relationship navigation needs?</p></section>
-<div class="experiment-diagram-arrow"><strong>↓</strong></div>
-<section class="experiment-diagram-part remaining-card"><h2>WHAT WE'LL LOOK AT</h2><ul><li>Does the provider start?</li><li>Are /odom and /tf available?</li><li>Which frames appear in odometry?</li><li>Can we find odom → base_link?</li></ul></section>
+<div class="source-columns">
+<section><h2>Selected source</h2>
+
+<div class="terminal-card source-code">
+
+~~~yaml
+spec:
+  appRef: nav2_corridor_probe
+  realisationRef:
+    warehouse_teleop@gazebo_nav2_substrate
+~~~
+
 </div>
+
+<p>Observer configuration:</p>
+<p><code>NAV2_REQUIRED_TF_EDGES</code></p>
+
+<div class="terminal-card source-code">
+
+~~~json
+[{"parent":"odom","child":"base_link"}]
+~~~
+
+</div>
+
+</section>
+<section><h2>Authored expectations</h2>
+<dl class="source-facts"><dt>TF publisher</dt><dd>Expect <code>true</code></dd><dt>Lookup odom → base_link</dt><dd>Expect <code>missing</code></dd><dt>Scope</dt><dd>Navigation substrate</dd></dl>
+<p>The engineer selects the question, observer and expected check outcomes.</p>
+</section>
+</div>
+<p class="provenance">Presence check: nav2_corridor_gazebo_substrate. Experiment selection and observer request from source/recorded metadata; expected check values from the selected run's results.yaml.</p>
 
 </div>
 
 <!--
-Slide 13. Introduce the authored experiment and its selected probes before opening the prepared workspace.
+Slide 13. 14:00–15:00. TF edge is an optional observer request configured by the experiment, not a mandatory app contract. A passed check can report an expected missing edge.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Presence check - Rotifer workspace
+# Inspect the selected experiment
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <MockRepl :stage="1" />
+<p class="provenance">Select presence_check, then source show. This projection keeps the selected experiment, realisation, observer request and authored check expectations together.</p>
 
 </div>
 
 <!--
-Slide 14. Launch Rotifer and select Presence check. The prepared terminal is not a live CLI or ROS session.
+Slide 14. 15:00–17:00. Enter the mock REPL, select presence_check and show source. Pause before explain; use the next slide to follow the real derivation.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# What can we tell from the descriptions?
+# How the selected sources resolve
 
-<div class="slide-content">
+<div class="slide-content source-slide">
 
-<div class="grid grid-cols-3 gap-5">
-<section class="remaining-card description-result"><h2>THEY AGREE</h2><p>I need <code>/scan</code> as a <code>LaserScan</code>.</p><p>The driver says it provides exactly that.</p></section>
-<section class="remaining-card description-result"><h2>THEY DISAGREE</h2><p>I expect an <code>Image</code> on <code>/camera</code>.</p><p>The driver declares a <code>PointCloud2</code> instead.</p></section>
-<section class="remaining-card description-result"><h2>WE DON'T KNOW</h2><p>I need <code>odom → base_link</code>.</p><p>Nothing declares that it's provided.</p></section>
-</div>
-<p class="unknown-takeaway">UNKNOWN ≠ FALSE</p>
+<dl class="trace-rows">
+<dt>Realisation binding</dt><dd><code>tf_tree</code> on <code>/tf</code>; Gazebo source <code>/model/vehicle_blue/tf</code></dd>
+<dt>Provider recipe</dt><dd><code>gz.msgs.Pose_V</code> → <code>tf2_msgs/msg/TFMessage</code></dd>
+<dt>Resolved bridge</dt><dd><code>/model/vehicle_blue/tf</code> → <code>/tf</code></dd>
+<dt>Model preflight</dt><dd>Requested: <code>odom → base_link</code><br>Inferred from selected model: <code>vehicle_blue/odom → vehicle_blue/chassis</code><br>Result: <code>mismatched</code></dd>
+</dl>
+<p>The bridge is configured. Next, test the requested edge with a runtime lookup.</p>
+<p class="provenance">Bridge-plan and preflight fields from the selected presence-check capture. Model inference is static inspection. The app's optional TF request produces no mandatory contract satisfaction trace in this run.</p>
 
 </div>
 
 <!--
-Slide 15. Distinguish agreement, disagreement and missing information in the software descriptions.
+Slide 15. 15:00–17:00. One complete source-backed derivation. Read realisation binding + provider recipe into the resolved bridge; distinguish model preflight inference from runtime evidence. The generic UNKNOWN account is an interpretation, not literal resolver output.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Presence check - Rotifer workspace
+# Explain the setup, then collect observations
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <MockRepl :stage="1" :start-inside="true" />
+<p class="provenance">explain before running: selected declarations, resolved bridge and model preflight. run: prepared execution. explain afterwards: prepared summary of retained observations.</p>
 
 </div>
 
 <!--
-Slide 16. Return to the same prepared REPL session, already entered and with Presence check selected. Continue with source show, explain, run and explain again.
+Slide 16. 15:00–19:00. Repeated explain keeps declaration/preflight and runtime evidence separate. The current CLI explains resolved structure; the combined observation account is a presentation projection.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Presence check - What we observed
+# Compare each observation with its authored check
 
-<div class="slide-content">
+<div class="slide-content ">
 
-<table><thead><tr><th>Inspected</th><th>Observation</th><th>Source</th></tr></thead><tbody>
-<tr><td><code>/odom</code> - <code>/tf</code></td><td>Present</td><td>Mocked REPL - recorded run</td></tr>
-<tr><td>Odometry frames</td><td><code>vehicle_blue/odom → vehicle_blue/chassis</code></td><td>Mocked REPL - recorded run</td></tr>
-<tr><td>Required edge</td><td><code>odom → base_link</code> not observed</td><td>Mocked REPL - recorded run</td></tr>
+<table><thead><tr><th>Recorded field</th><th>Expected</th><th>Observed</th></tr></thead><tbody>
+<tr><td><code>observations.tfPublisherPresent</code></td><td>true</td><td>true</td></tr>
+<tr><td><code>tf.edges.odom__base_link.status</code></td><td>missing</td><td>missing</td></tr>
+<tr><td>Odometry frame IDs</td><td>vehicle_blue/odom → vehicle_blue/chassis</td><td>vehicle_blue/odom → vehicle_blue/chassis</td></tr>
 </tbody></table>
-<p class="provenance">Gazebo - ROS 2 Jazzy - copied-bundle replay verified.</p>
+<p>The checks passed because these observations matched their expected values.</p>
+<p class="provenance">Presence check / gazebo_nav2_substrate. results.yaml + nav2_observer_evidence.json. Run 20261001T151956.546871Z-ba4189019e54; Gazebo / ROS 2 Jazzy.</p>
 
 </div>
 
 <!--
-Slide 17. Stage 1 recorded observations. Do not imply navigation failure from this presence result.
+Slide 17. 17:00–19:00. Explain why 17 passed checks and a missing required edge coexist. Selected expectations/observations come from recorded check results; topic evidence and lookup evidence remain separate.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Same question - more evidence
+# The run adds evidence to the declared setup
 
-<div class="slide-content">
+<div class="slide-content ">
 
-<div class="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
-<section class="remaining-card"><div class="card-kicker">BEFORE THE RUN</div><p>Descriptions establish:</p><ul><li><code>/odom</code> and <code>/tf</code> configured</li><li><code>odom → base_link</code> - unknown</li><li>No runtime evidence</li></ul></section>
-<section class="remaining-card"><div class="card-kicker">AFTER THE RUN</div><p>Observed:</p><ul><li><code>/odom</code> and <code>/tf</code> present</li><li><code>odom → base_link</code> not observed</li></ul></section>
+<div class="grid grid-cols-2 gap-6">
+<section class="remaining-card"><div class="card-kicker">BEFORE THE RUN</div><ul><li>TF binding and bridge recipe resolved</li><li>Model preflight infers a different frame edge</li><li>Requested runtime lookup remains open</li></ul></section>
+<section class="remaining-card"><div class="card-kicker">AFTER THE RUN</div><ul><li>TF publisher and odometry observed</li><li>Measured frames match the model preflight</li><li><code>odom → base_link</code> lookup reports <code>missing</code></li></ul></section>
 </div>
-<p class="mt-8 text-center text-2xl">The descriptions and the run tell us different things. Keep both.</p>
+<p>The declaration, static inspection and runtime observation each retain their basis.</p>
+<p class="provenance">Same selected presence-check configuration. Observation does not replace the experimental TF declaration.</p>
 
 </div>
 
 <!--
-Slide 18. Contrast the authored account with the new runtime observations.
+Slide 18. 19:00–21:00. Compare the same authored setup with new evidence. Do not present UNKNOWN as a native automated edge-entailment result.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# The current account
+# The current account has an inspectable basis
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <dl class="account-rows">
-<dt>System</dt><dd>warehouse_navigation@gazebo_nav2_substrate</dd>
-<dt>Question</dt><dd>Is <code>odom → base_link</code> available?</dd>
-<dt>Before running</dt><dd>Not established by the software descriptions</dd>
-<dt>Observed</dt><dd><code>/odom</code> and <code>/tf</code> present; required relationship not observed</dd>
-<dt>What we can say</dt><dd>The required relationship was not found during this inspection</dd>
-<dt>Still open</dt><dd>Why it was unavailable - whether navigation would work</dd>
+<dt>Selected system</dt><dd>warehouse_navigation@gazebo_nav2_substrate</dd>
+<dt>Question</dt><dd><code>odom → base_link</code>, configured in the experiment</dd>
+<dt>Declared / resolved</dt><dd>Realisation TF binding + Gazebo bridge recipe</dd>
+<dt>Static inspection</dt><dd>Selected model implies a different frame edge</dd>
+<dt>Runtime basis</dt><dd>Recorded observer lookup reports <code>missing</code></dd>
+<dt>What we can say</dt><dd>The requested edge was not found during this run</dd>
+<dt>Still open</dt><dd>Frame ownership, timing and navigation behaviour</dd>
 </dl>
-<p class="provenance">Prepared account view assembled from the experiment, resolved description and recorded evidence.</p>
+<p class="provenance">Prepared account assembled from source, resolved-plan artifacts and presence-check run 20261001T151956.546871Z-ba4189019e54.</p>
 
 </div>
 
 <!--
-Slide 19. The current CLI does not produce this combined account automatically; it is a prepared view over retained material.
+Slide 19. 19:00–21:00. Combined account is a prepared interpretation; sources and run remain identifiable.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Stage 1 - Presence
+# Stage 1 - A more specific question
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <dl class="account-rows">
-<dt>Assumption</dt><dd><code>odom → base_link</code> available</dd>
-<dt>Probe</dt><dd>ROS topics - odometry - TF lookup</dd>
-<dt>Evidence</dt><dd><code>/odom</code> and <code>/tf</code> present<br><code>odom → base_link</code> not observed</dd>
-<dt>What this shows</dt><dd>Required relationship not found in this run</dd>
-<dt>Still open</dt><dd>Frame structure - timing - navigation behaviour</dd>
+<dt>Authored question</dt><dd>Is <code>odom → base_link</code> available?</dd>
+<dt>Selected inspection</dt><dd>TF publisher, odometry frames and TF lookup</dd>
+<dt>Recorded result</dt><dd>Publisher present; requested edge missing</dd>
+<dt>Bounded conclusion</dt><dd>Required edge not found in this run</dd>
+<dt>Next question</dt><dd>Which part of the selected configuration establishes the frames?</dd>
 </dl>
+<p class="provenance">Presence-check source and run kept together. The engineer chooses the next investigation.</p>
 
 </div>
 
 <!--
-Slide 20. Stage 1 bounded claim; transition to the next question about how the frames are constructed.
+Slide 20. 19:00–21:00. Transition from recorded check results to the human choice of a structural investigation.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Stage 2 - Required relationships
+# Stage 2 - Attribute each structural finding
 
-<div class="slide-content">
+<div class="slide-content ">
 
-<table><thead><tr><th>Experiment → realisation</th><th>Structural observation</th></tr></thead><tbody>
-<tr><td>Odometry link → warehouse_navigation@gazebo_nav2_tf_substrate</td><td>odom → base_link present</td></tr>
-<tr><td>Scan source → warehouse_navigation@gazebo_nav2_scan_substrate</td><td>/scan present; its frame disconnected</td></tr>
-<tr><td>Scan integration → warehouse_navigation@gazebo_nav2_scan_tf_substrate</td><td>base_link → vehicle_blue/laser_frame/scan present</td></tr>
+<table><thead><tr><th>Experiment / selected realisation</th><th>Question and observation</th></tr></thead><tbody>
+<tr><td>Odometry link<br><code>gazebo_nav2_tf_substrate</code></td><td>Required <code>odom → base_link</code>: observed</td></tr>
+<tr><td>Scan source<br><code>gazebo_nav2_scan_substrate</code></td><td><code>/scan</code> observed; base-to-scan connection missing</td></tr>
+<tr><td>Scan integration<br><code>gazebo_nav2_scan_tf_substrate</code></td><td>Realisation-owned static base-to-scan edge: observed</td></tr>
 </tbody></table>
-<p class="provenance">Three separate Gazebo / ROS 2 Jazzy configurations.</p>
+<p class="provenance">warehouse_navigation scenario; three separate Gazebo / Jazzy configurations and recorded experiments. Source names and run identities are retained in the evidence summary.</p>
 
 </div>
 
 <!--
-Slide 21. Three structural findings from distinct configurations, shown together as one investigation.
+Slide 21. 21:00–24:00. Requirement/observer request, owner and observation remain tied to each configuration. No continuous repair or cross-configuration satisfaction claim.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
- Structural evidence across three configurations
+# Structural evidence across three configurations
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <MockRepl :stage="2" />
+<p class="provenance">structural_summary reads retained evidence from three experiments. Each OBSERVED line keeps its source; this summary performs no new run.</p>
 
 </div>
 
 <!--
-Slide 22. Stage 2 summary command resolves three distinct retained experiments; do not imply runtime timing.
+Slide 22. 21:00–24:00. Retained aggregate, not pre-run derivation or a new combined experiment.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide structure-slide
 ---
 
-# The structural account
+# The structural evidence has a scope
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <div class="structure-chain"><span>odom</span><span>→</span><span>base_link</span><span>→</span><span>scan frame</span></div>
-<div class="structure-facts"><p><strong>Observed:</strong> odom → base_link; the /scan source and frame.</p><p><strong>Scan link:</strong> missing in the scan-only run; present in the final scan-TF run.</p></div>
-<p class="structure-boundary">Structural links established for this setup. Scan timing and navigation remain open.</p>
-<p class="provenance">Three separate configurations - counted captures - copied-bundle replay verified.</p>
+<div class="structure-facts"><p><strong>Odometry link:</strong> required odometry edge observed.</p><p><strong>Scan source:</strong> scan observed; base-to-scan edge missing.</p><p><strong>Scan integration:</strong> realisation-owned static edge observed.</p></div>
+<p class="structure-boundary">These findings belong to three selected configurations. The next configuration needs its own runtime checks.</p>
+<p class="provenance">Retained structural observations. Scan-time availability and navigation remain open.</p>
 
 </div>
 
 <!--
-Slide 23. Stage 2 structural claim and boundary.
+Slide 23. 21:00–24:00. Remove the implication that all structural evidence automatically establishes the later realisation.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Stage 3 - Is the transform available in time?
+# Stage 3 - The timing question belongs to a configuration
 
-<div class="slide-content">
+<div class="slide-content ">
 
-<table><thead><tr><th>Runtime experiment</th><th>Realisation</th></tr></thead><tbody>
-<tr><td>Runtime surface</td><td>warehouse_navigation@gazebo_nav2_map_surface</td></tr>
-<tr><td>Timing follow-up</td><td>warehouse_navigation@gazebo_nav2_costmap_timing</td></tr>
+<table><thead><tr><th>Experiment</th><th>Selected realisation</th><th>Declared odom/TF rate</th></tr></thead><tbody>
+<tr><td>Runtime surface</td><td><code>gazebo_nav2_map_surface</code></td><td>1 Hz</td></tr>
+<tr><td>Timing follow-up</td><td><code>gazebo_nav2_costmap_timing</code></td><td>10 Hz</td></tr>
 </tbody></table>
-<p class="provenance">Both counted captures. The timing run used 10 Hz odometry/TF publication.</p>
+<p>Both configure scan and TF observations. Each must establish transform availability at the scan timestamp.</p>
+<p class="provenance">warehouse_navigation scenario. Separate realisations and Gazebo world files; publication rate is not isolated as the cause of the different outcomes.</p>
 
 </div>
 
 <!--
-Slide 24. Stage 3 selected experiments and realisations.
+Slide 24. 24:00–27:00. Distinguish declared source settings from runtime compatibility; preserve the two realisations and world-file difference.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Runtime observations
+# Inspect the runtime experiment before running
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <MockRepl :stage="3" />
-<p class="provenance">The interface evidence does not establish successful navigation.</p>
+<p class="provenance">Select an experiment, inspect its source and pre-run explanation, then run and explain again. Selecting timing_follow_up starts with its own unanswered runtime question.</p>
 
 </div>
 
 <!--
-Slide 25. Order 5 map-surface capture; stable Stage 3 bundle replay verified.
+Slide 25. 24:00–27:00. Each pre-run view uses the selected experiment metadata/model setting. Do not carry observations from runtime_surface into timing_follow_up as established facts.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# The scan arrived before its transform
+# The requested scan-time lookup was unavailable
 
 <div class="slide-content">
 
 <dl class="account-rows">
-<dt>What happened</dt><dd>The scan arrived at 153.4 s, but the latest odom → base_link transform was from 153.0 s.</dd>
-<dt>Effect</dt><dd>The costmap recorded 2,358 scan drops.</dd>
+<dt>Configured query</dt><dd><code>odom → base_link</code> at the scan timestamp</dd>
+<dt>Recorded stamps</dt><dd>Scan: 153.4 s; latest odometry transform: 153.0 s</dd>
+<dt>Lookup result</dt><dd>Transform unavailable at the sampled scan timestamp</dd>
+<dt>Costmap logs</dt><dd>2,358 scan drops</dd>
 </dl>
-<p class="provenance">warehouse_navigation@gazebo_nav2_map_surface.</p>
+<p class="provenance">runtime_surface / warehouse_navigation@gazebo_nav2_map_surface. Observer evidence and lifecycle logs; run 20261001T153245.099238Z-107ca497021c.</p>
 
 </div>
 
 <!--
-Slide 26. Stage 3 blocker evidence with recorded latest and scan stamps.
+Slide 26. Stage 3. Connect the configured scan-stamp query to its measured stamps, lookup result and recorded drops. These observations establish the failed lookup, not its full cause.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide compact-body-slide
 ---
 
-# The transform is available when the scan arrives
+# The follow-up recorded scan-time availability
 
-<div class="slide-content">
+<div class="slide-content ">
 
-<div class="plain-columns"><section><h2>Follow-up run</h2><ul><li>Odometry/TF publication: 1 Hz → 10 Hz</li></ul></section><section><h2>What changed</h2><ul><li>Transform available at scan stamp 12.7 s</li><li>No costmap scan drops observed</li><li>21/21 declared checks passed</li></ul></section></div>
+<div class="plain-columns"><section><h2>Selected configuration</h2><p>Timing follow-up</p><p>Declared odometry/TF publication: 10 Hz</p><p>Separate Gazebo world and realisation</p></section><section><h2>Recorded observations</h2><ul><li>Transform available at scan stamp 12.7 s</li><li>Zero costmap scan drops in the observation window</li><li>21/21 authored checks matched their expected values</li></ul></section></div>
+<p class="provenance">timing_follow_up / gazebo_nav2_costmap_timing. Run 20261001T153845.573476Z-8e9c452738e4. No goal attempted.</p>
 
 </div>
 
 <!--
-Slide 27. Stage 3 timing-compatible result. No goal was attempted.
+Slide 27. 24:00–27:00. Rate is a declaration; scan-time availability is an observation. This separate run does not isolate the cause of the difference.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
 class: simple-slide
 ---
 
-# Stage 3 - The updated account
+# Stage 3 - Update the account with the selected run
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <dl class="account-rows">
-<dt>Assumption</dt><dd>Critical transforms available at scan time</dd>
-<dt>Probe</dt><dd>Runtime surface - scan-time TF - costmap drops</dd>
-<dt>Evidence</dt><dd>First run: scan 153.4 s - latest TF 153.0 s - 2,358 drops<br>Follow-up: 10 Hz - scan/TF at 12.7 s - zero drops</dd>
-<dt>What this shows</dt><dd>Follow-up transform available at scan time; no drops observed</dd>
-<dt>Still open</dt><dd>Localisation - downstream costmap - navigation success</dd>
+<dt>Authored question</dt><dd>Is the transform available when the scan needs it?</dd>
+<dt>Configured probe</dt><dd>Scan-stamp TF lookup and costmap message-filter logs</dd>
+<dt>Runtime surface</dt><dd>Scan 153.4 s; latest TF 153.0 s; 2,358 drops</dd>
+<dt>Timing follow-up</dt><dd>Scan-stamp TF available at 12.7 s; zero drops</dd>
+<dt>What this supports</dt><dd>Scan-time compatibility in the recorded follow-up window</dd>
+<dt>Still open</dt><dd>Localisation quality, costmap correctness and task success</dd>
 </dl>
-<p class="provenance">Selected runs replayed from the stable Stage 3 bundle.</p>
+<p class="provenance">Prepared account over two separately identified configurations and counted captures.</p>
 
 </div>
 
 <!--
-Slide 28. Stage 3 claim uses the order 6 evidence only.
+Slide 28. 24:00–27:00. Preserve source setting, probe, recorded outcome and bounded conclusion.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 
@@ -628,17 +722,18 @@ Slide 29. Stage 4 mocked REPL and saved run goal records.
 class: simple-slide
 ---
 
-# The behavioural account
+# The behavioural experiment specifies the task
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <MockRepl :stage="4" />
-<p class="provenance">Prepared presentation projection; it does not independently diagnose the controller.</p>
+<p class="provenance">source show identifies goal, timeout, parameter file and probes. Pre-run explain separates that authored task from evidence still to be collected. Local-corridor evidence comes from a separate attempt.</p>
 
 </div>
 
 <!--
-Slide 30. Stage 4 existing account and selected realisation.
+Slide 30. 27:00–30:00. Expected progress is an authored investigative question, not a static guarantee or a diagnosis derived by the resolver.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
@@ -710,17 +805,18 @@ Slide 33. Stage 4 to 5 transition. Preserve the result reveal for the next slide
 class: simple-slide
 ---
 
-# Stage 5 - What happened with RPP?
+# Inspect the RPP contrast, then run it
 
-<div class="slide-content">
+<div class="slide-content ">
 
 <MockRepl :stage="5" />
-<p class="provenance">The mocked REPL shows movement; the run goal record reports acceptance and success.</p>
+<p class="provenance">The experiment selects the RPP parameter file and the same named task realisation. MPPI evidence retains its earlier source; RPP progress requires this run. Native goal evidence supplies the final result.</p>
 
 </div>
 
 <!--
-Slide 34. Stage 5 evidence first. A single bounded RPP success; no superiority or repeatability claim.
+Slide 34. 33:00–37:00. Keep parameter selection, prior MPPI observations and new RPP evidence distinct. The human chooses the contrast.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
@@ -753,15 +849,21 @@ class: simple-slide
 
 # Replace the laser provider
 
-<div class="slide-content">
+<div class="slide-content ">
 
-<table><thead><tr><th>OLD REALISATION - LASER A</th><th>NEW REALISATION - LASER B</th></tr></thead><tbody><tr><td>Evidence: odom → base_link</td><td>Carry it forward if the odometry source and conditions are unchanged.</td></tr><tr><td>Evidence: scan A source and frame</td><td>Check scan B source and frame.</td></tr><tr><td>Evidence: scan-time transform</td><td>Recheck transform availability when the scan arrives.</td></tr><tr><td>Evidence: navigation result</td><td>Revisit costmap and navigation behaviour.</td></tr></tbody></table><p class="provenance">Earlier evidence remains evidence about Laser A. Illustrative handover view; it does not imply automatic claim reopening.</p>
+<table><thead><tr><th>Retained basis on Laser A</th><th>Review on Laser B</th></tr></thead><tbody>
+<tr><td>Selected odometry source and lookup evidence</td><td>Review whether that source and its relevant conditions are preserved.</td></tr>
+<tr><td>Laser A contract, binding and observed frame</td><td>Resolve the new binding; inspect the new scan source and frame.</td></tr>
+<tr><td>Scan-time lookup and recorded drops</td><td>Run the timing investigation for the new configuration.</td></tr>
+<tr><td>Task and recorded navigation result</td><td>Review downstream assumptions; collect new task evidence where needed.</td></tr>
+</tbody></table>
+<p class="provenance">Illustrative handover review. Previous evidence remains attached to its source/configuration; the engineer judges what can carry forward.</p>
 
 </div>
 
 <!--
-Slide 36. 37:00–39:00. The earlier evidence remains about the earlier system. Support only survives where the relevant dependencies and conditions remain unchanged.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 36. 37:00–39:00. Refer back to the worked source-to-binding-to-probe chain. No automatic claim reopening or evidence transfer is implied.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 ---
@@ -770,29 +872,24 @@ class: simple-slide retention-slide
 
 # What Rotifer tries to retain
 
-<div class="slide-content">
+<div class="slide-content ">
 
-<pre class="retention-card">Particular system / conditions
+<pre class="retention-card">Selected system and conditions
              ↓
-What are we trying to establish?
+Declared sources and resolved bindings
              ↓
-Selected investigation
+Question and authored investigation
              ↓
-Retained evidence
+Run and retained observations
              ↓
-What can we reasonably say?
-             ↓
-What remains open?</pre>
-<div class="retention-notes">
-<p class="provenance">Prepared interaction over retained run evidence - Rotifer remains in development.</p>
-<p class="provenance">Open research questions: practitioner value and what this account misses.</p>
-</div>
+Conclusion, its basis and what remains open</pre>
+<div class="retention-notes"><p class="provenance">The worked example connects real declarations and resolved-plan artifacts to retained run evidence. The combined account is a prepared presentation view.</p><p class="provenance">Rotifer remains in development. Research questions: practitioner value and what this account misses.</p></div>
 
 </div>
 
 <!--
-Slide 37. 39:00–43:00. Step back to the research proposition. Avoid repeating the RPP result and the full handover argument.
-Authoritative content: say-show-script.md (updated 2026-10-03).
+Slide 37. 39:00–43:00. Close by referring back to specific requirement/source/probe/observation provenance. Preserve the implementation boundary.
+Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
 

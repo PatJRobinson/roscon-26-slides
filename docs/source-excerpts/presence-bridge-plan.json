@@ -1,0 +1,61 @@
+{
+  "bridges": [
+    {
+      "contract": "sim_clock",
+      "direction": "gz_to_ros",
+      "gzTopic": "/world/warehouse_teleop/clock",
+      "gzType": "gz.msgs.Clock",
+      "kind": "observation",
+      "rosTopic": "/clock",
+      "rosType": "rosgraph_msgs/msg/Clock",
+      "source": "provider:gazebo:runtime.bridgeRecipes"
+    },
+    {
+      "contract": "odometry",
+      "direction": "gz_to_ros",
+      "gzTopic": "/model/vehicle_blue/odometry",
+      "gzType": "gz.msgs.Odometry",
+      "kind": "observation",
+      "rosTopic": "/odom",
+      "rosType": "nav_msgs/msg/Odometry",
+      "source": "provider:gazebo:runtime.bridgeRecipes"
+    },
+    {
+      "contract": "tf_tree",
+      "direction": "gz_to_ros",
+      "gzTopic": "/model/vehicle_blue/tf",
+      "gzType": "gz.msgs.Pose_V",
+      "kind": "observation",
+      "rosTopic": "/tf",
+      "rosType": "tf2_msgs/msg/TFMessage",
+      "source": "provider:gazebo:runtime.bridgeRecipes"
+    },
+    {
+      "contract": "differential_drive_cmd_vel",
+      "direction": "ros_to_gz",
+      "gzTopic": "/model/vehicle_blue/cmd_vel",
+      "gzType": "gz.msgs.Twist",
+      "kind": "command",
+      "rosTopic": "/cmd_vel",
+      "rosType": "geometry_msgs/msg/Twist",
+      "source": "provider:gazebo:runtime.bridgeRecipes"
+    }
+  ],
+  "materialisationIdentity": {
+    "producingRunId": "20261001T151956.546871Z-ba4189019e54",
+    "resolvedPlanSha256": "22cc04157b0de6de943b6577d2fbf11f20165a1a238b13abc7ecc8b4fed7a0ad"
+  },
+  "model": {
+    "name": "vehicle_blue"
+  },
+  "provider": "gazebo",
+  "realisation": "warehouse_teleop@gazebo_nav2_substrate",
+  "world": {
+    "name": "warehouse_teleop",
+    "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf",
+    "selectedSource": {
+      "originClass": "workspace_owned",
+      "path": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf"
+    }
+  }
+}

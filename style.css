@@ -1291,20 +1291,42 @@ a.button:hover {
 .experiment-diagram-arrow { min-height: 1.5rem; }
 .experiment-diagram-scope { padding: 0.2rem 0.05rem 0; }
 .experiment-diagram-scope p { margin: 0; font-size: 1rem; }
-.description-result {
+.simple-slide .source-columns {
   display: grid;
-  align-content: start;
-  gap: 0.65rem;
-  min-height: 15rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.6rem;
+  align-items: start;
 }
-.description-result h2 { margin: 0; font-size: 1.05rem; }
-.description-result p { margin: 0; font-size: 1.05rem !important; }
-.unknown-takeaway {
-  margin: 1.2rem 0 0 !important;
-  text-align: center;
-  font-size: 1.5rem !important;
-  font-weight: 700;
+.simple-slide .source-columns > section { min-width: 0; }
+.simple-slide .source-columns .source-code { box-shadow: none; border-radius: 5px; }
+.simple-slide .source-slide { gap: 0.65rem; }
+.simple-slide .source-columns h2 { font-size: 1.15rem; margin: 0 0 0.65rem; }
+.simple-slide .source-columns p,
+.simple-slide .source-facts { font-size: 1.05rem; line-height: 1.35; }
+.simple-slide .source-columns .slidev-code {
+  font-size: 0.77rem !important;
+  line-height: 1.18 !important;
+  padding: 0.8rem !important;
 }
+.simple-slide .source-facts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+}
+.simple-slide .source-facts dt { font-weight: 500; }
+.simple-slide .source-facts dd { margin: 0 0 0.45rem; }
+.simple-slide .trace-rows {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: 0.85rem 1.2rem;
+  align-items: baseline;
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+.simple-slide .trace-rows dt { font-weight: 500; }
+.simple-slide .trace-rows dd { margin: 0; }
 .simple-slide .account-rows {
   display: grid;
   grid-template-columns: 10.5rem 1fr;

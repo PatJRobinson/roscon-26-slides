@@ -1,0 +1,3415 @@
+{
+  "sourceCheckout": "/home/paddy/dev/phd/robotics-testbench-framework",
+  "sourceRevision": "1279e9217931a53285ac32f7b0b1d791beb2aed7",
+  "sources": [
+    {
+      "path": "providers/gazebo/provider.yaml",
+      "sha256": "470c17fe3ceeda8821a05ff82a56a898ca56a4dc5cdc24aee91e019c52983ebb"
+    },
+    {
+      "path": "scenarios/warehouse_teleop/gazebo_nav2_substrate/realisation.yaml",
+      "sha256": "6c8585a333fdfb3d095fceb551d84348ca3432d3ac8b048b5e4cfc3c82067e30"
+    },
+    {
+      "path": "contracts/observation/tf_tree.yaml",
+      "sha256": "0dc5c3073e8b44317d27fcd8764140caf3b58d788a05c7ac55960ed6c716f706"
+    },
+    {
+      "path": "apps/nav2_corridor_probe/app.yaml",
+      "sha256": "4dfcf251d40a2e6297b9bf9a86ccb515f0c1b049bb95608d3e6b7811adb0e5d5"
+    },
+    {
+      "path": "experiments/nav2_corridor_gazebo_substrate/experiment.yaml",
+      "sha256": "1adf613547ccf63db3957af17c3700d263940dbf4f16e1efbdabbddcd07340cb"
+    },
+    {
+      "path": "tools/rotifer/contracts.py",
+      "sha256": "fb33e3ec2ed3756ada62dc46979a2b283fc319eabdcda44592e71e8252518415"
+    },
+    {
+      "path": "tools/rotifer/providers.py",
+      "sha256": "2edad8e6f00fd2fd2cf2510ad0f3e27d5ca71816eeb46d734333ae401ef01849"
+    },
+    {
+      "path": "tools/rotifer/output.py",
+      "sha256": "79c1ca24c3cf05b870a1d0b5f77d000deaf6f8e8240404939fd7d67283bea6a3"
+    },
+    {
+      "path": "tools/rotifer/rotifer.py",
+      "sha256": "94a815d3fc4a39cdf4b7ce9e64aaaa4ad534c9f47a5415b59c8f12310d94d5ac"
+    }
+  ],
+  "accounts": {
+    "presence_check": {
+      "experiment": "nav2_corridor_gazebo_substrate",
+      "realisation": "warehouse_teleop@gazebo_nav2_substrate",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_substrate",
+      "evidencePath": "selected-evidence/phase-a-stages-1-2/stage-1-presence",
+      "run": "20261001T151956.546871Z-ba4189019e54",
+      "metadataFile": "metadata.yaml",
+      "metadataSha256": "978b8fa17fdcff8c1846266c89c0b751fb9a9abe5a82dadb370546314d95e159",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "rosbag_recorder": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_ROSBAG_TOPIC_PROFILE": "core",
+          "NAV2_ROSBAG_COMPLETION_FILES": "[\"nav2_observer_evidence.json\"]",
+          "NAV2_ROSBAG_TIMEOUT_SECONDS": "180",
+          "NAV2_ROSBAG_COMPLETION_GRACE_SECONDS": "2",
+          "NAV2_ROSBAG_FINALIZE_TIMEOUT_SECONDS": "15"
+        },
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "6.0",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {},
+        "nav2_goal_probe": {},
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.rosbag_recorder",
+          "app.roles.nav2_observer",
+          "realisation.warehouse_teleop@gazebo_nav2_substrate",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "real provider startup evidence",
+            "ROS graph evidence for clock, map, odom, TF, cmd_vel, lifecycle, and actions",
+            "failure logs if the realisation does not establish a Nav2 substrate"
+          ],
+          "excludes": [
+            "full Nav2 bringup success",
+            "autonomous navigation",
+            "simulator dynamics correctness",
+            "map/localization quality"
+          ]
+        },
+        "rationale": "This experiment moves from synthetic substrate evidence to the existing headless Gazebo realisation. It classifies the evidence boundary without claiming successful navigation.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_real_substrate_evidence_boundary",
+          "statement": "A real provider-backed Nav2 navigation claim needs durable evidence about which substrate elements are actually present: map, odometry, TF, command velocity, lifecycle state, and NavigateToPose action.\n",
+          "layers": [
+            "app",
+            "provider",
+            "realisation",
+            "deployment",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "provider_started",
+            "map_available",
+            "odom_available",
+            "tf_publisher_present",
+            "cmd_vel_available",
+            "lifecycle_nodes_active",
+            "navigate_to_pose_action_available"
+          ],
+          "limitations": [
+            "This run uses a Gazebo substrate realisation, not a Nav2 bringup."
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_attempt_local_rosbag_capture_integrity",
+          "statement": "The selected attempt's MCAP bag is finalized, hashed, and inspectable in its Rotifer attempt directory before evidence evaluation.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "recorder_exit_zero",
+            "metadata_and_data_hashes_verified",
+            "ros2_bag_info_succeeded",
+            "expected_topic_classification_recorded"
+          ],
+          "limitations": [
+            "Bag integrity does not establish semantic transform or navigation compatibility."
+          ],
+          "theoreticalAnchors": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf",
+        "sha256": "ab7707b1717600f79ae791e44dd7ea888c0672ef433b93e9790b237d95e93f45",
+        "odomTfHz": 1
+      },
+      "bridges": [
+        {
+          "contract": "sim_clock",
+          "direction": "gz_to_ros",
+          "gzTopic": "/world/warehouse_teleop/clock",
+          "gzType": "gz.msgs.Clock",
+          "kind": "observation",
+          "rosTopic": "/clock",
+          "rosType": "rosgraph_msgs/msg/Clock",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "odometry",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/odometry",
+          "gzType": "gz.msgs.Odometry",
+          "kind": "observation",
+          "rosTopic": "/odom",
+          "rosType": "nav_msgs/msg/Odometry",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "tf_tree",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/tf",
+          "gzType": "gz.msgs.Pose_V",
+          "kind": "observation",
+          "rosTopic": "/tf",
+          "rosType": "tf2_msgs/msg/TFMessage",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "differential_drive_cmd_vel",
+          "direction": "ros_to_gz",
+          "gzTopic": "/model/vehicle_blue/cmd_vel",
+          "gzType": "gz.msgs.Twist",
+          "kind": "command",
+          "rosTopic": "/cmd_vel",
+          "rosType": "geometry_msgs/msg/Twist",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        }
+      ],
+      "preflight": {
+        "checks": [
+          {
+            "check": "world_file",
+            "evidence": "Selected SDF world file exists.",
+            "status": "passed",
+            "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf"
+          },
+          {
+            "check": "model",
+            "evidence": "Model vehicle_blue found in selected SDF world.",
+            "model": "vehicle_blue",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "sim_clock",
+            "evidence": "Provider bridge recipe resolved sim_clock.",
+            "gzTopic": "/world/warehouse_teleop/clock",
+            "rosTopic": "/clock",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "differential_drive_cmd_vel",
+            "evidence": "DiffDrive plugin found and command bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/cmd_vel",
+            "rosTopic": "/cmd_vel",
+            "sdfTopic": "/model/vehicle_blue/cmd_vel",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "odometry",
+            "evidence": "DiffDrive plugin found and odometry bridge recipe resolved, but SDF does not explicitly declare an odometry topic.",
+            "expectedChildFrameId": "vehicle_blue/chassis",
+            "expectedHeaderFrameId": "vehicle_blue/odom",
+            "gzTopic": "/model/vehicle_blue/odometry",
+            "rosTopic": "/odom",
+            "sdfTopic": "/model/vehicle_blue/odometry",
+            "status": "weak"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "tf_tree",
+            "evidence": "TF topic publication requires frame-edge evidence beyond topic presence.",
+            "requiredEdges": [
+              {
+                "child": "base_link",
+                "evidence": "Gazebo DiffDrive TF appears model-scoped as vehicle_blue/odom -> vehicle_blue/chassis.",
+                "parent": "odom",
+                "source": "sdf_plugin",
+                "status": "mismatched"
+              }
+            ],
+            "sdfTopic": "/model/vehicle_blue/tf",
+            "status": "weak"
+          },
+          {
+            "bridgeRecipe": null,
+            "contract": "lidar2d",
+            "evidence": "No lidar sensor/source found in selected SDF model.",
+            "gzTopic": null,
+            "rosTopic": null,
+            "status": "missing"
+          }
+        ],
+        "conformance": {
+          "issues": [],
+          "status": "passed"
+        },
+        "model": "vehicle_blue",
+        "provider": "gazebo",
+        "realisation": "warehouse_teleop@gazebo_nav2_substrate",
+        "sdf": {
+          "model": {
+            "links": [
+              "chassis",
+              "left_wheel",
+              "right_wheel",
+              "caster"
+            ],
+            "name": "vehicle_blue",
+            "plugins": [
+              {
+                "childFrameId": null,
+                "filename": "gz-sim-diff-drive-system",
+                "frameId": null,
+                "inferredChildFrameId": "vehicle_blue/chassis",
+                "inferredFrameId": "vehicle_blue/odom",
+                "inferredTfTopic": "/model/vehicle_blue/tf",
+                "leftJoint": "left_wheel_joint",
+                "name": "gz::sim::systems::DiffDrive",
+                "odomTopic": null,
+                "rightJoint": "right_wheel_joint",
+                "tfTopic": null,
+                "topic": null
+              }
+            ],
+            "sensors": [],
+            "status": "present"
+          },
+          "world": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf",
+          "worldFileExists": true,
+          "worldName": "warehouse_teleop"
+        },
+        "summary": {
+          "differential_drive_cmd_vel": "passed",
+          "lidar2d": "missing",
+          "model": "passed",
+          "odometry": "weak",
+          "sim_clock": "passed",
+          "tf_tree": "weak",
+          "world_file": "passed"
+        },
+        "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop.sdf"
+      },
+      "checkExamples": [
+        {
+          "field": "observations.tfPublisherPresent",
+          "expected": true,
+          "observed": true,
+          "status": "passed"
+        },
+        {
+          "field": "tf.edges.odom__base_link.status",
+          "expected": "missing",
+          "observed": "missing",
+          "status": "passed"
+        }
+      ]
+    },
+    "odometry_link": {
+      "experiment": "nav2_corridor_gazebo_tf_substrate",
+      "realisation": "warehouse_teleop@gazebo_nav2_tf_substrate",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_tf_substrate",
+      "evidencePath": "selected-evidence/phase-a-stages-1-2/stage-2-odom-edge",
+      "run": "20261001T152557.040227Z-712ae09c7a39",
+      "metadataFile": "metadata.yaml",
+      "metadataSha256": "2d5ef04d18b3e0ce2d025440a2abe63d44bf02aeed877900209912902c795957",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "rosbag_recorder": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_ROSBAG_TOPIC_PROFILE": "core",
+          "NAV2_ROSBAG_COMPLETION_FILES": "[\"nav2_observer_evidence.json\"]",
+          "NAV2_ROSBAG_TIMEOUT_SECONDS": "180",
+          "NAV2_ROSBAG_COMPLETION_GRACE_SECONDS": "2",
+          "NAV2_ROSBAG_FINALIZE_TIMEOUT_SECONDS": "15"
+        },
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "6.0",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {},
+        "nav2_goal_probe": {},
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.rosbag_recorder",
+          "app.roles.nav2_observer",
+          "realisation.warehouse_teleop@gazebo_nav2_tf_substrate",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "provider/model-owned TF edge evidence",
+            "ROS graph evidence for clock, odom, TF, and cmd_vel",
+            "preflight and runtime agreement for odom -> base_link"
+          ],
+          "excludes": [
+            "full Nav2 bringup success",
+            "autonomous navigation",
+            "simulator dynamics correctness",
+            "map/localization quality"
+          ]
+        },
+        "rationale": "This experiment preserves the existing Gazebo mismatch case by using a separate realisation that changes only the provider/model TF frame configuration needed for the configured tf_tree requirement.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_provider_owned_tf_edge",
+          "statement": "A provider/model-owned TF stream must satisfy the configured odom -> base_link edge before it can support a Nav2-style navigation substrate claim.\n",
+          "layers": [
+            "app",
+            "provider",
+            "realisation",
+            "deployment",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "provider_started",
+            "odom_available",
+            "tf_publisher_present",
+            "cmd_vel_available",
+            "odom_to_base_link_present",
+            "preflight_tf_edge_expected"
+          ],
+          "limitations": [
+            "This run verifies a TF substrate edge only, not Nav2 bringup."
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_attempt_local_rosbag_capture_integrity",
+          "statement": "The selected attempt's MCAP bag is finalized, hashed, and inspectable in its Rotifer attempt directory before evidence evaluation.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "recorder_exit_zero",
+            "metadata_and_data_hashes_verified",
+            "ros2_bag_info_succeeded",
+            "expected_topic_classification_recorded"
+          ],
+          "limitations": [
+            "Bag integrity does not establish semantic transform or navigation compatibility."
+          ],
+          "theoreticalAnchors": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_tf.sdf",
+        "sha256": "0535a61a041050ff06813d6a5f0150a9a833c24a64d67fd6470bfab43fe6d775",
+        "odomTfHz": 1
+      },
+      "bridges": [
+        {
+          "contract": "sim_clock",
+          "direction": "gz_to_ros",
+          "gzTopic": "/world/warehouse_teleop/clock",
+          "gzType": "gz.msgs.Clock",
+          "kind": "observation",
+          "rosTopic": "/clock",
+          "rosType": "rosgraph_msgs/msg/Clock",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "odometry",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/odometry",
+          "gzType": "gz.msgs.Odometry",
+          "kind": "observation",
+          "rosTopic": "/odom",
+          "rosType": "nav_msgs/msg/Odometry",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "tf_tree",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/tf",
+          "gzType": "gz.msgs.Pose_V",
+          "kind": "observation",
+          "rosTopic": "/tf",
+          "rosType": "tf2_msgs/msg/TFMessage",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "differential_drive_cmd_vel",
+          "direction": "ros_to_gz",
+          "gzTopic": "/model/vehicle_blue/cmd_vel",
+          "gzType": "gz.msgs.Twist",
+          "kind": "command",
+          "rosTopic": "/cmd_vel",
+          "rosType": "geometry_msgs/msg/Twist",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        }
+      ],
+      "preflight": {
+        "checks": [
+          {
+            "check": "world_file",
+            "evidence": "Selected SDF world file exists.",
+            "status": "passed",
+            "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_tf.sdf"
+          },
+          {
+            "check": "model",
+            "evidence": "Model vehicle_blue found in selected SDF world.",
+            "model": "vehicle_blue",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "sim_clock",
+            "evidence": "Provider bridge recipe resolved sim_clock.",
+            "gzTopic": "/world/warehouse_teleop/clock",
+            "rosTopic": "/clock",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "differential_drive_cmd_vel",
+            "evidence": "DiffDrive plugin found and command bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/cmd_vel",
+            "rosTopic": "/cmd_vel",
+            "sdfTopic": "/model/vehicle_blue/cmd_vel",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "odometry",
+            "evidence": "DiffDrive plugin declares an odometry topic and bridge recipe resolved.",
+            "expectedChildFrameId": "base_link",
+            "expectedHeaderFrameId": "odom",
+            "gzTopic": "/model/vehicle_blue/odometry",
+            "rosTopic": "/odom",
+            "sdfTopic": "/model/vehicle_blue/odometry",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "tf_tree",
+            "evidence": "TF topic publication requires frame-edge evidence beyond topic presence.",
+            "requiredEdges": [
+              {
+                "child": "base_link",
+                "evidence": "SDF plugin frame_id and child_frame_id match required edge.",
+                "parent": "odom",
+                "source": "sdf_plugin",
+                "status": "expected"
+              }
+            ],
+            "sdfTopic": "/model/vehicle_blue/tf",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": null,
+            "contract": "lidar2d",
+            "evidence": "No lidar sensor/source found in selected SDF model.",
+            "gzTopic": null,
+            "rosTopic": null,
+            "status": "missing"
+          }
+        ],
+        "conformance": {
+          "issues": [],
+          "status": "passed"
+        },
+        "model": "vehicle_blue",
+        "provider": "gazebo",
+        "realisation": "warehouse_teleop@gazebo_nav2_tf_substrate",
+        "sdf": {
+          "model": {
+            "links": [
+              "chassis",
+              "left_wheel",
+              "right_wheel",
+              "caster"
+            ],
+            "name": "vehicle_blue",
+            "plugins": [
+              {
+                "childFrameId": "base_link",
+                "filename": "gz-sim-diff-drive-system",
+                "frameId": "odom",
+                "inferredChildFrameId": "base_link",
+                "inferredFrameId": "odom",
+                "inferredTfTopic": "/model/vehicle_blue/tf",
+                "leftJoint": "left_wheel_joint",
+                "name": "gz::sim::systems::DiffDrive",
+                "odomTopic": "/model/vehicle_blue/odometry",
+                "rightJoint": "right_wheel_joint",
+                "tfTopic": "/model/vehicle_blue/tf",
+                "topic": null
+              }
+            ],
+            "sensors": [],
+            "status": "present"
+          },
+          "world": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_tf.sdf",
+          "worldFileExists": true,
+          "worldName": "warehouse_teleop"
+        },
+        "summary": {
+          "differential_drive_cmd_vel": "passed",
+          "lidar2d": "missing",
+          "model": "passed",
+          "odometry": "passed",
+          "sim_clock": "passed",
+          "tf_tree": "passed",
+          "world_file": "passed"
+        },
+        "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_tf.sdf"
+      },
+      "checkExamples": [
+        {
+          "field": "observations.tfPublisherPresent",
+          "expected": true,
+          "observed": true,
+          "status": "passed"
+        },
+        {
+          "field": "tf.edges.odom__base_link.status",
+          "expected": "present",
+          "observed": "present",
+          "status": "passed"
+        }
+      ]
+    },
+    "scan_source": {
+      "experiment": "nav2_corridor_gazebo_scan_substrate",
+      "realisation": "warehouse_teleop@gazebo_nav2_scan_substrate",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_scan_substrate",
+      "evidencePath": "selected-evidence/phase-a-stages-1-2/stage-2-scan-only",
+      "run": "20261001T152817.021494Z-02495cda9391",
+      "metadataFile": "metadata.yaml",
+      "metadataSha256": "ec2fddeb231dd5afcad5d4df8789cf8e31587658d521b88e0ace36422db61df2",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "lidar2d",
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "rosbag_recorder": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_ROSBAG_TOPIC_PROFILE": "core",
+          "NAV2_ROSBAG_COMPLETION_FILES": "[\"nav2_observer_evidence.json\"]",
+          "NAV2_ROSBAG_TIMEOUT_SECONDS": "180",
+          "NAV2_ROSBAG_COMPLETION_GRACE_SECONDS": "2",
+          "NAV2_ROSBAG_FINALIZE_TIMEOUT_SECONDS": "15"
+        },
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "14.0",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_SCAN_TOPIC": "/scan"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {},
+        "nav2_goal_probe": {},
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.rosbag_recorder",
+          "app.roles.nav2_observer",
+          "realisation.warehouse_teleop@gazebo_nav2_scan_substrate",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "provider/model-owned lidar2d scan observation evidence",
+            "ROS graph evidence for clock, odom, TF, cmd_vel, and scan",
+            "scan message frame and base-frame transform evidence"
+          ],
+          "excludes": [
+            "full Nav2 bringup success",
+            "autonomous navigation",
+            "simulator dynamics correctness",
+            "map/localization quality",
+            "costmap update success"
+          ]
+        },
+        "rationale": "This experiment preserves the existing TF substrate case by using a separate realisation that adds a provider/model-owned LaserScan source through the lidar2d contract for costmap observation-source evidence.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_costmap_observation_source_message_plausibility",
+          "statement": "The lidar2d costmap observation source provides messages with the expected ROS type, topic binding, frame metadata, and timestamp evidence.\n",
+          "layers": [
+            "provider",
+            "realisation",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_available",
+            "scan_sample_received",
+            "scan_frame_id_present",
+            "scan_timestamp_present"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_costmap_observation_source_tf_connectivity",
+          "statement": "The costmap observation source frame is connected to the navigation TF tree used by the stack, including the robot base frame and odometry frame required by the configured navigation substrate.\n",
+          "layers": [
+            "app",
+            "provider",
+            "realisation",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "tf_publisher_present",
+            "odom_to_base_link_present",
+            "scan_frame_connected_to_base",
+            "scan_frame_connected_to_odom"
+          ],
+          "limitations": [
+            "This run verifies scan-frame connectivity to the navigation TF tree, not Nav2 costmap layer updates or obstacle integration.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_attempt_local_rosbag_capture_integrity",
+          "statement": "The selected attempt's MCAP bag is finalized, hashed, and inspectable in its Rotifer attempt directory before evidence evaluation.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "recorder_exit_zero",
+            "metadata_and_data_hashes_verified",
+            "ros2_bag_info_succeeded",
+            "expected_topic_classification_recorded"
+          ],
+          "limitations": [
+            "Bag integrity does not establish semantic transform or navigation compatibility."
+          ],
+          "theoreticalAnchors": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf",
+        "sha256": "3eed02eebdf65623526a1231b033ad366802bd231a0c5d50446d9c81138f0597",
+        "odomTfHz": 1
+      },
+      "bridges": [
+        {
+          "contract": "sim_clock",
+          "direction": "gz_to_ros",
+          "gzTopic": "/world/warehouse_teleop/clock",
+          "gzType": "gz.msgs.Clock",
+          "kind": "observation",
+          "rosTopic": "/clock",
+          "rosType": "rosgraph_msgs/msg/Clock",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "odometry",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/odometry",
+          "gzType": "gz.msgs.Odometry",
+          "kind": "observation",
+          "rosTopic": "/odom",
+          "rosType": "nav_msgs/msg/Odometry",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "tf_tree",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/tf",
+          "gzType": "gz.msgs.Pose_V",
+          "kind": "observation",
+          "rosTopic": "/tf",
+          "rosType": "tf2_msgs/msg/TFMessage",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "lidar2d",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/scan",
+          "gzType": "gz.msgs.LaserScan",
+          "kind": "observation",
+          "rosTopic": "/scan",
+          "rosType": "sensor_msgs/msg/LaserScan",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "differential_drive_cmd_vel",
+          "direction": "ros_to_gz",
+          "gzTopic": "/model/vehicle_blue/cmd_vel",
+          "gzType": "gz.msgs.Twist",
+          "kind": "command",
+          "rosTopic": "/cmd_vel",
+          "rosType": "geometry_msgs/msg/Twist",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        }
+      ],
+      "preflight": {
+        "checks": [
+          {
+            "check": "world_file",
+            "evidence": "Selected SDF world file exists.",
+            "status": "passed",
+            "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf"
+          },
+          {
+            "check": "model",
+            "evidence": "Model vehicle_blue found in selected SDF world.",
+            "model": "vehicle_blue",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "sim_clock",
+            "evidence": "Provider bridge recipe resolved sim_clock.",
+            "gzTopic": "/world/warehouse_teleop/clock",
+            "rosTopic": "/clock",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "differential_drive_cmd_vel",
+            "evidence": "DiffDrive plugin found and command bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/cmd_vel",
+            "rosTopic": "/cmd_vel",
+            "sdfTopic": "/model/vehicle_blue/cmd_vel",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "odometry",
+            "evidence": "DiffDrive plugin declares an odometry topic and bridge recipe resolved.",
+            "expectedChildFrameId": "base_link",
+            "expectedHeaderFrameId": "odom",
+            "gzTopic": "/model/vehicle_blue/odometry",
+            "rosTopic": "/odom",
+            "sdfTopic": "/model/vehicle_blue/odometry",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "tf_tree",
+            "evidence": "TF topic publication requires frame-edge evidence beyond topic presence.",
+            "requiredEdges": [
+              {
+                "child": "base_link",
+                "evidence": "SDF plugin frame_id and child_frame_id match required edge.",
+                "parent": "odom",
+                "source": "sdf_plugin",
+                "status": "expected"
+              }
+            ],
+            "sdfTopic": "/model/vehicle_blue/tf",
+            "status": "passed"
+          },
+          {
+            "baseFrame": "base_link",
+            "baseToScanTransform": {
+              "evidence": "SDF declares a scan frame matching the configured base frame, but this does not by itself substantiate a TF relationship.",
+              "source": null,
+              "status": "unknown"
+            },
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "lidar2d",
+            "evidence": "Lidar sensor found and LaserScan bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/scan",
+            "parentLink": "laser_frame",
+            "rangeMax": "10.0",
+            "rangeMin": "0.08",
+            "rosTopic": "/scan",
+            "scanFrameId": "base_link",
+            "sdfTopic": "/model/vehicle_blue/scan",
+            "sensor": "scan",
+            "sensorType": "gpu_lidar",
+            "status": "passed",
+            "updateRate": "10"
+          }
+        ],
+        "conformance": {
+          "issues": [],
+          "status": "passed"
+        },
+        "model": "vehicle_blue",
+        "provider": "gazebo",
+        "realisation": "warehouse_teleop@gazebo_nav2_scan_substrate",
+        "sdf": {
+          "model": {
+            "links": [
+              "chassis",
+              "laser_frame",
+              "left_wheel",
+              "right_wheel",
+              "caster"
+            ],
+            "name": "vehicle_blue",
+            "plugins": [
+              {
+                "childFrameId": "base_link",
+                "filename": "gz-sim-diff-drive-system",
+                "frameId": "odom",
+                "inferredChildFrameId": "base_link",
+                "inferredFrameId": "odom",
+                "inferredTfTopic": "/model/vehicle_blue/tf",
+                "leftJoint": "left_wheel_joint",
+                "name": "gz::sim::systems::DiffDrive",
+                "odomTopic": "/model/vehicle_blue/odometry",
+                "rightJoint": "right_wheel_joint",
+                "tfTopic": "/model/vehicle_blue/tf",
+                "topic": null
+              }
+            ],
+            "sensors": [
+              {
+                "frameId": "base_link",
+                "horizontalSamples": "180",
+                "maxAngle": "1.570796",
+                "minAngle": "-1.570796",
+                "name": "scan",
+                "parentLink": "laser_frame",
+                "rangeMax": "10.0",
+                "rangeMin": "0.08",
+                "topic": "/model/vehicle_blue/scan",
+                "type": "gpu_lidar",
+                "updateRate": "10"
+              }
+            ],
+            "status": "present"
+          },
+          "world": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf",
+          "worldFileExists": true,
+          "worldName": "warehouse_teleop"
+        },
+        "summary": {
+          "differential_drive_cmd_vel": "passed",
+          "lidar2d": "passed",
+          "model": "passed",
+          "odometry": "passed",
+          "sim_clock": "passed",
+          "tf_tree": "passed",
+          "world_file": "passed"
+        },
+        "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf"
+      },
+      "checkExamples": [
+        {
+          "field": "observations.tfPublisherPresent",
+          "expected": true,
+          "observed": true,
+          "status": "passed"
+        }
+      ]
+    },
+    "scan_integration": {
+      "experiment": "nav2_corridor_gazebo_scan_tf_substrate",
+      "realisation": "warehouse_teleop@gazebo_nav2_scan_tf_substrate",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_scan_tf_substrate",
+      "evidencePath": "selected-evidence/phase-a-stages-1-2/stage-2-scan-tf",
+      "run": "20261001T153019.321569Z-f6c639a7d491",
+      "metadataFile": "metadata.yaml",
+      "metadataSha256": "98bdf761fab3f72828c2a319493b3ad45f9a6c8f6f902765d2e587eb0ecc3820",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "lidar2d",
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "rosbag_recorder": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_ROSBAG_TOPIC_PROFILE": "core",
+          "NAV2_ROSBAG_COMPLETION_FILES": "[\"nav2_observer_evidence.json\"]",
+          "NAV2_ROSBAG_TIMEOUT_SECONDS": "180",
+          "NAV2_ROSBAG_COMPLETION_GRACE_SECONDS": "2",
+          "NAV2_ROSBAG_FINALIZE_TIMEOUT_SECONDS": "15"
+        },
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "24.0",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_SCAN_TOPIC": "/scan"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {},
+        "nav2_goal_probe": {},
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {},
+        "scan_frame_static_transform": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.rosbag_recorder",
+          "app.roles.nav2_observer",
+          "realisation.warehouse_teleop@gazebo_nav2_scan_tf_substrate",
+          "realisation.processes.scan_frame_static_transform",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "provider/model-owned lidar2d scan observation evidence",
+            "realisation-owned scan-frame TF connectivity evidence",
+            "ROS graph evidence for clock, odom, TF, cmd_vel, and scan"
+          ],
+          "excludes": [
+            "full Nav2 bringup success",
+            "autonomous navigation",
+            "simulator dynamics correctness",
+            "map/localization quality",
+            "costmap update success"
+          ]
+        },
+        "rationale": "This experiment contrasts with nav2_corridor_gazebo_scan_substrate by keeping the same provider/model-owned LaserScan stream while explicitly adding a realisation-owned integration transform from base_link to the observed scan frame declared by the lidar2d contract binding.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_costmap_observation_source_message_plausibility",
+          "statement": "The lidar2d costmap observation source provides messages with the expected ROS type, topic binding, frame metadata, and timestamp evidence.\n",
+          "layers": [
+            "provider",
+            "realisation",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_available",
+            "scan_sample_received",
+            "scan_frame_id_present",
+            "scan_timestamp_present"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_costmap_observation_source_tf_connectivity",
+          "statement": "The costmap observation source frame is connected to the navigation TF tree used by the stack, including the robot base frame and odometry frame required by the configured navigation substrate.\n",
+          "layers": [
+            "provider",
+            "realisation",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "tf_publisher_present",
+            "odom_to_base_link_present",
+            "scan_frame_connected_to_base",
+            "scan_frame_connected_to_odom"
+          ],
+          "limitations": [
+            "This run verifies scan-frame connectivity only, not Nav2 costmap layer updates or obstacle integration.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_attempt_local_rosbag_capture_integrity",
+          "statement": "The selected attempt's MCAP bag is finalized, hashed, and inspectable in its Rotifer attempt directory before evidence evaluation.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "recorder_exit_zero",
+            "metadata_and_data_hashes_verified",
+            "ros2_bag_info_succeeded",
+            "expected_topic_classification_recorded"
+          ],
+          "limitations": [
+            "Bag integrity does not establish semantic transform or navigation compatibility."
+          ],
+          "theoreticalAnchors": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf",
+        "sha256": "3eed02eebdf65623526a1231b033ad366802bd231a0c5d50446d9c81138f0597",
+        "odomTfHz": 1
+      },
+      "bridges": [
+        {
+          "contract": "sim_clock",
+          "direction": "gz_to_ros",
+          "gzTopic": "/world/warehouse_teleop/clock",
+          "gzType": "gz.msgs.Clock",
+          "kind": "observation",
+          "rosTopic": "/clock",
+          "rosType": "rosgraph_msgs/msg/Clock",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "odometry",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/odometry",
+          "gzType": "gz.msgs.Odometry",
+          "kind": "observation",
+          "rosTopic": "/odom",
+          "rosType": "nav_msgs/msg/Odometry",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "tf_tree",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/tf",
+          "gzType": "gz.msgs.Pose_V",
+          "kind": "observation",
+          "rosTopic": "/tf",
+          "rosType": "tf2_msgs/msg/TFMessage",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "lidar2d",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/scan",
+          "gzType": "gz.msgs.LaserScan",
+          "kind": "observation",
+          "rosTopic": "/scan",
+          "rosType": "sensor_msgs/msg/LaserScan",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "differential_drive_cmd_vel",
+          "direction": "ros_to_gz",
+          "gzTopic": "/model/vehicle_blue/cmd_vel",
+          "gzType": "gz.msgs.Twist",
+          "kind": "command",
+          "rosTopic": "/cmd_vel",
+          "rosType": "geometry_msgs/msg/Twist",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        }
+      ],
+      "preflight": {
+        "checks": [
+          {
+            "check": "world_file",
+            "evidence": "Selected SDF world file exists.",
+            "status": "passed",
+            "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf"
+          },
+          {
+            "check": "model",
+            "evidence": "Model vehicle_blue found in selected SDF world.",
+            "model": "vehicle_blue",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "sim_clock",
+            "evidence": "Provider bridge recipe resolved sim_clock.",
+            "gzTopic": "/world/warehouse_teleop/clock",
+            "rosTopic": "/clock",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "differential_drive_cmd_vel",
+            "evidence": "DiffDrive plugin found and command bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/cmd_vel",
+            "rosTopic": "/cmd_vel",
+            "sdfTopic": "/model/vehicle_blue/cmd_vel",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "odometry",
+            "evidence": "DiffDrive plugin declares an odometry topic and bridge recipe resolved.",
+            "expectedChildFrameId": "base_link",
+            "expectedHeaderFrameId": "odom",
+            "gzTopic": "/model/vehicle_blue/odometry",
+            "rosTopic": "/odom",
+            "sdfTopic": "/model/vehicle_blue/odometry",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "tf_tree",
+            "evidence": "TF topic publication requires frame-edge evidence beyond topic presence.",
+            "requiredEdges": [
+              {
+                "child": "base_link",
+                "evidence": "SDF plugin frame_id and child_frame_id match required edge.",
+                "parent": "odom",
+                "source": "sdf_plugin",
+                "status": "expected"
+              }
+            ],
+            "sdfTopic": "/model/vehicle_blue/tf",
+            "status": "passed"
+          },
+          {
+            "baseFrame": "base_link",
+            "baseToScanTransform": {
+              "evidence": "Realisation declares a static transform from the configured base frame to the scan frame.",
+              "source": "realisation_integration",
+              "status": "passed"
+            },
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "lidar2d",
+            "evidence": "Lidar sensor found and LaserScan bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/scan",
+            "parentLink": "laser_frame",
+            "rangeMax": "10.0",
+            "rangeMin": "0.08",
+            "rosTopic": "/scan",
+            "scanFrameId": "vehicle_blue/laser_frame/scan",
+            "sdfTopic": "/model/vehicle_blue/scan",
+            "sensor": "scan",
+            "sensorType": "gpu_lidar",
+            "status": "passed",
+            "updateRate": "10"
+          }
+        ],
+        "conformance": {
+          "issues": [],
+          "status": "passed"
+        },
+        "model": "vehicle_blue",
+        "provider": "gazebo",
+        "realisation": "warehouse_teleop@gazebo_nav2_scan_tf_substrate",
+        "sdf": {
+          "model": {
+            "links": [
+              "chassis",
+              "laser_frame",
+              "left_wheel",
+              "right_wheel",
+              "caster"
+            ],
+            "name": "vehicle_blue",
+            "plugins": [
+              {
+                "childFrameId": "base_link",
+                "filename": "gz-sim-diff-drive-system",
+                "frameId": "odom",
+                "inferredChildFrameId": "base_link",
+                "inferredFrameId": "odom",
+                "inferredTfTopic": "/model/vehicle_blue/tf",
+                "leftJoint": "left_wheel_joint",
+                "name": "gz::sim::systems::DiffDrive",
+                "odomTopic": "/model/vehicle_blue/odometry",
+                "rightJoint": "right_wheel_joint",
+                "tfTopic": "/model/vehicle_blue/tf",
+                "topic": null
+              }
+            ],
+            "sensors": [
+              {
+                "frameId": "base_link",
+                "horizontalSamples": "180",
+                "maxAngle": "1.570796",
+                "minAngle": "-1.570796",
+                "name": "scan",
+                "parentLink": "laser_frame",
+                "rangeMax": "10.0",
+                "rangeMin": "0.08",
+                "topic": "/model/vehicle_blue/scan",
+                "type": "gpu_lidar",
+                "updateRate": "10"
+              }
+            ],
+            "status": "present"
+          },
+          "world": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf",
+          "worldFileExists": true,
+          "worldName": "warehouse_teleop"
+        },
+        "summary": {
+          "differential_drive_cmd_vel": "passed",
+          "lidar2d": "passed",
+          "model": "passed",
+          "odometry": "passed",
+          "sim_clock": "passed",
+          "tf_tree": "passed",
+          "world_file": "passed"
+        },
+        "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf"
+      },
+      "checkExamples": [
+        {
+          "field": "observations.tfPublisherPresent",
+          "expected": true,
+          "observed": true,
+          "status": "passed"
+        },
+        {
+          "field": "tf.edges.odom__base_link.status",
+          "expected": "present",
+          "observed": "present",
+          "status": "passed"
+        }
+      ]
+    },
+    "runtime_surface": {
+      "experiment": "nav2_corridor_gazebo_nav2_map_surface",
+      "realisation": "warehouse_teleop@gazebo_nav2_map_surface",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_map_surface",
+      "evidencePath": "selected-evidence/phase-a-stage-3/order-5-map-surface",
+      "run": "20261001T153245.099238Z-107ca497021c",
+      "metadataFile": "metadata.yaml",
+      "metadataSha256": "5eb6733145ab6619ce5b5d045eee08356efd21dda89cf4143ab1a8509fb60eef",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "lidar2d",
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "rosbag_recorder": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_ROSBAG_TOPIC_PROFILE": "core",
+          "NAV2_ROSBAG_COMPLETION_FILES": "[\"nav2_observer_evidence.json\", \"nav2_lifecycle_surface_status.json\"]",
+          "NAV2_ROSBAG_TIMEOUT_SECONDS": "330",
+          "NAV2_ROSBAG_COMPLETION_GRACE_SECONDS": "2",
+          "NAV2_ROSBAG_FINALIZE_TIMEOUT_SECONDS": "15"
+        },
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "150.0",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_REQUIRED_LIFECYCLE_NODES": "planner_server,controller_server,bt_navigator",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_LIFECYCLE_PROBE_ENABLED": "true",
+          "NAV2_LIFECYCLE_PROBE_SECONDS": "170",
+          "NAV2_SUBSTRATE_WAIT_SECONDS": "120",
+          "NAV2_SUBSTRATE_READINESS_FILE": "nav2_substrate_readiness.json",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_REQUIRE_MAP": "true",
+          "NAV2_REQUIRE_MAP_TO_ODOM": "true",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan"
+        },
+        "nav2_goal_probe": {},
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {},
+        "scan_frame_static_transform": {},
+        "map_to_odom_static_transform": {},
+        "static_map_publisher": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.rosbag_recorder",
+          "app.roles.nav2_observer",
+          "app.roles.nav2_lifecycle_surface",
+          "realisation.warehouse_teleop@gazebo_nav2_map_surface",
+          "realisation.processes.scan_frame_static_transform",
+          "realisation.processes.map_to_odom_static_transform",
+          "realisation.processes.static_map_publisher",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "provider/model-owned lidar2d scan observation evidence",
+            "provider/model-owned odometry and TF evidence",
+            "realisation-owned scan-frame TF connectivity evidence",
+            "declared static map surface evidence",
+            "declared static map-to-odom integration evidence",
+            "Nav2 lifecycle service, action, map, and costmap surface evidence"
+          ],
+          "excludes": [
+            "real localization quality",
+            "full Nav2 navigation success",
+            "autonomous navigation",
+            "costmap update success",
+            "NavigateToPose goal execution"
+          ]
+        },
+        "rationale": "This experiment preserves the previous scan+TF substrate and adds a declared static map surface plus map -> odom transform. The slice does not validate localization; it moves the evidence boundary beyond the previous map-frame-missing blocker so lifecycle/action behaviour can be classified against a connected map frame.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_map_surface_available",
+          "statement": "The navigation stack has access to a map surface with the expected topic, message type, frame metadata, and timing evidence.\n",
+          "layers": [
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "map_topic_present",
+            "map_sample_received",
+            "map_message_type_recorded",
+            "map_header_frame_matches"
+          ],
+          "limitations": [
+            "The map is a tiny static simplification. It is not a validated warehouse map.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_map_to_odom_connected",
+          "statement": "The navigation TF tree connects the map frame to the odometry and robot base frames used by the configured substrate.\n",
+          "layers": [
+            "realisation",
+            "contract",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "map_to_odom_present",
+            "odom_to_map_present",
+            "map_to_base_link_present",
+            "base_link_to_map_present"
+          ],
+          "limitations": [
+            "The map -> odom relationship is a declared static simplification. This run does not validate AMCL, SLAM, or localization accuracy.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_substrate_ready_before_lifecycle_activation",
+          "statement": "The navigation substrate, map surface, and map-to-odom relationship are available before lifecycle-managed Nav2 components are configured or activated.\n",
+          "layers": [
+            "provider",
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "clock_sample_received_before_nav2_launch",
+            "odom_sample_received_before_nav2_launch",
+            "scan_sample_received_before_nav2_launch",
+            "map_sample_received_before_nav2_launch",
+            "odom_to_base_link_present_before_nav2_launch",
+            "map_to_odom_present_before_nav2_launch",
+            "scan_frame_connected_before_nav2_launch"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_lifecycle_active_state_after_map_surface",
+          "statement": "The lifecycle-managed Nav2 nodes required for planning and control reach the expected active state after substrate and map/localization readiness.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "lifecycle_services_present",
+            "lifecycle_states_recorded",
+            "required_nodes_active",
+            "lifecycle_activation_errors_logged"
+          ],
+          "limitations": [
+            "This run records lifecycle/action surfaces only. It does not execute a NavigateToPose goal or claim autonomous navigation.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_attempt_local_rosbag_capture_integrity",
+          "statement": "The selected attempt's MCAP bag is finalized, hashed, and inspectable in its Rotifer attempt directory before evidence evaluation.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "recorder_exit_zero",
+            "metadata_and_data_hashes_verified",
+            "ros2_bag_info_succeeded",
+            "expected_topic_classification_recorded"
+          ],
+          "limitations": [
+            "Bag integrity does not establish semantic transform or navigation compatibility."
+          ],
+          "theoreticalAnchors": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf",
+        "sha256": "3eed02eebdf65623526a1231b033ad366802bd231a0c5d50446d9c81138f0597",
+        "odomTfHz": 1
+      },
+      "bridges": [
+        {
+          "contract": "sim_clock",
+          "direction": "gz_to_ros",
+          "gzTopic": "/world/warehouse_teleop/clock",
+          "gzType": "gz.msgs.Clock",
+          "kind": "observation",
+          "rosTopic": "/clock",
+          "rosType": "rosgraph_msgs/msg/Clock",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "odometry",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/odometry",
+          "gzType": "gz.msgs.Odometry",
+          "kind": "observation",
+          "rosTopic": "/odom",
+          "rosType": "nav_msgs/msg/Odometry",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "tf_tree",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/tf",
+          "gzType": "gz.msgs.Pose_V",
+          "kind": "observation",
+          "rosTopic": "/tf",
+          "rosType": "tf2_msgs/msg/TFMessage",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "lidar2d",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/scan",
+          "gzType": "gz.msgs.LaserScan",
+          "kind": "observation",
+          "rosTopic": "/scan",
+          "rosType": "sensor_msgs/msg/LaserScan",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "differential_drive_cmd_vel",
+          "direction": "ros_to_gz",
+          "gzTopic": "/model/vehicle_blue/cmd_vel",
+          "gzType": "gz.msgs.Twist",
+          "kind": "command",
+          "rosTopic": "/cmd_vel",
+          "rosType": "geometry_msgs/msg/Twist",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        }
+      ],
+      "preflight": {
+        "checks": [
+          {
+            "check": "world_file",
+            "evidence": "Selected SDF world file exists.",
+            "status": "passed",
+            "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf"
+          },
+          {
+            "check": "model",
+            "evidence": "Model vehicle_blue found in selected SDF world.",
+            "model": "vehicle_blue",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "sim_clock",
+            "evidence": "Provider bridge recipe resolved sim_clock.",
+            "gzTopic": "/world/warehouse_teleop/clock",
+            "rosTopic": "/clock",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "differential_drive_cmd_vel",
+            "evidence": "DiffDrive plugin found and command bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/cmd_vel",
+            "rosTopic": "/cmd_vel",
+            "sdfTopic": "/model/vehicle_blue/cmd_vel",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "odometry",
+            "evidence": "DiffDrive plugin declares an odometry topic and bridge recipe resolved.",
+            "expectedChildFrameId": "base_link",
+            "expectedHeaderFrameId": "odom",
+            "gzTopic": "/model/vehicle_blue/odometry",
+            "rosTopic": "/odom",
+            "sdfTopic": "/model/vehicle_blue/odometry",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "tf_tree",
+            "evidence": "TF topic publication requires frame-edge evidence beyond topic presence.",
+            "requiredEdges": [
+              {
+                "child": "base_link",
+                "evidence": "SDF plugin frame_id and child_frame_id match required edge.",
+                "parent": "odom",
+                "source": "sdf_plugin",
+                "status": "expected"
+              }
+            ],
+            "sdfTopic": "/model/vehicle_blue/tf",
+            "status": "passed"
+          },
+          {
+            "baseFrame": "base_link",
+            "baseToScanTransform": {
+              "evidence": "Realisation declares a static transform from the configured base frame to the scan frame.",
+              "source": "realisation_integration",
+              "status": "passed"
+            },
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "lidar2d",
+            "evidence": "Lidar sensor found and LaserScan bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/scan",
+            "parentLink": "laser_frame",
+            "rangeMax": "10.0",
+            "rangeMin": "0.08",
+            "rosTopic": "/scan",
+            "scanFrameId": "vehicle_blue/laser_frame/scan",
+            "sdfTopic": "/model/vehicle_blue/scan",
+            "sensor": "scan",
+            "sensorType": "gpu_lidar",
+            "status": "passed",
+            "updateRate": "10"
+          }
+        ],
+        "conformance": {
+          "issues": [],
+          "status": "passed"
+        },
+        "model": "vehicle_blue",
+        "provider": "gazebo",
+        "realisation": "warehouse_teleop@gazebo_nav2_map_surface",
+        "sdf": {
+          "model": {
+            "links": [
+              "chassis",
+              "laser_frame",
+              "left_wheel",
+              "right_wheel",
+              "caster"
+            ],
+            "name": "vehicle_blue",
+            "plugins": [
+              {
+                "childFrameId": "base_link",
+                "filename": "gz-sim-diff-drive-system",
+                "frameId": "odom",
+                "inferredChildFrameId": "base_link",
+                "inferredFrameId": "odom",
+                "inferredTfTopic": "/model/vehicle_blue/tf",
+                "leftJoint": "left_wheel_joint",
+                "name": "gz::sim::systems::DiffDrive",
+                "odomTopic": "/model/vehicle_blue/odometry",
+                "rightJoint": "right_wheel_joint",
+                "tfTopic": "/model/vehicle_blue/tf",
+                "topic": null
+              }
+            ],
+            "sensors": [
+              {
+                "frameId": "base_link",
+                "horizontalSamples": "180",
+                "maxAngle": "1.570796",
+                "minAngle": "-1.570796",
+                "name": "scan",
+                "parentLink": "laser_frame",
+                "rangeMax": "10.0",
+                "rangeMin": "0.08",
+                "topic": "/model/vehicle_blue/scan",
+                "type": "gpu_lidar",
+                "updateRate": "10"
+              }
+            ],
+            "status": "present"
+          },
+          "world": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf",
+          "worldFileExists": true,
+          "worldName": "warehouse_teleop"
+        },
+        "summary": {
+          "differential_drive_cmd_vel": "passed",
+          "lidar2d": "passed",
+          "model": "passed",
+          "odometry": "passed",
+          "sim_clock": "passed",
+          "tf_tree": "passed",
+          "world_file": "passed"
+        },
+        "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf"
+      },
+      "checkExamples": []
+    },
+    "timing_follow_up": {
+      "experiment": "nav2_corridor_gazebo_nav2_costmap_timing",
+      "realisation": "warehouse_teleop@gazebo_nav2_costmap_timing",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_costmap_timing",
+      "evidencePath": "selected-evidence/phase-a-stage-3/order-6-costmap-timing",
+      "run": "20261001T153845.573476Z-8e9c452738e4",
+      "metadataFile": "metadata.yaml",
+      "metadataSha256": "a4a27ea4829f146493f0380526e9516014483236b0995d730fba991b6d6b3269",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "lidar2d",
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "rosbag_recorder": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_ROSBAG_TOPIC_PROFILE": "core",
+          "NAV2_ROSBAG_COMPLETION_FILES": "[\"nav2_observer_evidence.json\", \"nav2_lifecycle_surface_status.json\"]",
+          "NAV2_ROSBAG_TIMEOUT_SECONDS": "330",
+          "NAV2_ROSBAG_COMPLETION_GRACE_SECONDS": "2",
+          "NAV2_ROSBAG_FINALIZE_TIMEOUT_SECONDS": "15"
+        },
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "90.0",
+          "NAV2_OBSERVER_EARLY_EXIT_COSTMAP_TIMING": "true",
+          "NAV2_OBSERVER_EARLY_EXIT_MIN_SECONDS": "10",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_REQUIRED_LIFECYCLE_NODES": "planner_server,controller_server,bt_navigator",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_LIFECYCLE_PROBE_ENABLED": "true",
+          "NAV2_LIFECYCLE_PROBE_SECONDS": "90",
+          "NAV2_LIFECYCLE_EARLY_EXIT_COSTMAP_TIMING": "true",
+          "NAV2_LIFECYCLE_EARLY_EXIT_MIN_SECONDS": "10",
+          "NAV2_SUBSTRATE_WAIT_SECONDS": "120",
+          "NAV2_SUBSTRATE_READINESS_FILE": "nav2_substrate_readiness.json",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_REQUIRE_MAP": "true",
+          "NAV2_REQUIRE_MAP_TO_ODOM": "true",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan",
+          "NAV2_CLASSIFY_COSTMAP_TIMING": "true"
+        },
+        "nav2_goal_probe": {},
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {},
+        "scan_frame_static_transform": {},
+        "map_to_odom_static_transform": {},
+        "static_map_publisher": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.rosbag_recorder",
+          "app.roles.nav2_observer",
+          "app.roles.nav2_lifecycle_surface",
+          "realisation.warehouse_teleop@gazebo_nav2_costmap_timing",
+          "realisation.processes.scan_frame_static_transform",
+          "realisation.processes.map_to_odom_static_transform",
+          "realisation.processes.static_map_publisher",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "provider/model-owned lidar2d scan observation evidence",
+            "scan timestamp and frame evidence",
+            "static map, scan-frame, and map-to-odom TF evidence",
+            "Nav2 lifecycle, action, and costmap surface evidence",
+            "costmap message-filter log classification"
+          ],
+          "excludes": [
+            "NavigateToPose goal execution",
+            "costmap update correctness",
+            "real localization quality",
+            "autonomous navigation"
+          ]
+        },
+        "rationale": "This experiment preserves the map-surface lifecycle slice while testing whether matching provider/model odometry-TF publication to the lidar rate removes the scan/TF cache mismatch. It does not alter transform tolerance or add startup delay.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_costmap_scan_timing_compatible",
+          "statement": "Costmap observation messages have timestamps compatible with the transform data available in the Nav2 TF buffer.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "contract",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_timestamp_recorded",
+            "clock_sample_recorded",
+            "transforms_checked_at_scan_timestamp",
+            "nav2_use_sim_time_recorded",
+            "costmap_message_filter_logs_classified"
+          ],
+          "limitations": [
+            "This slice classifies timing compatibility only. It does not inspect costmap contents or send a navigation goal.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_costmap_scan_timing_correction_evidenced",
+          "statement": "Matching the provider/model odometry-TF publication rate to the scan rate makes the required transforms available at scan timestamps without costmap message-filter drops in the bounded observation window.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_timestamp_recorded",
+            "transforms_checked_at_scan_timestamp",
+            "provider_scan_and_tf_rates_recorded",
+            "costmap_message_filter_logs_classified",
+            "bounded_active_window_without_scan_drops"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_map_surface_available",
+          "statement": "The navigation stack has access to a map surface with the expected topic, message type, frame metadata, and timing evidence.\n",
+          "layers": [
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "map_topic_present",
+            "map_sample_received",
+            "map_message_type_recorded",
+            "map_header_frame_matches"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_lifecycle_active_state_after_map_surface",
+          "statement": "The lifecycle-managed Nav2 nodes required for planning and control reach the expected active state after substrate and map/localization readiness.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "lifecycle_services_present",
+            "lifecycle_states_recorded",
+            "required_nodes_active",
+            "navigate_to_pose_action_available"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_attempt_local_rosbag_capture_integrity",
+          "statement": "The selected attempt's MCAP bag is finalized, hashed, and inspectable in its Rotifer attempt directory before evidence evaluation.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "recorder_exit_zero",
+            "metadata_and_data_hashes_verified",
+            "ros2_bag_info_succeeded",
+            "expected_topic_classification_recorded"
+          ],
+          "limitations": [
+            "Bag integrity does not establish semantic transform or navigation compatibility."
+          ],
+          "theoreticalAnchors": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_costmap_timing.sdf",
+        "sha256": "18c8f2dadaf8825b2259b9e0a9f377dd58705df12e987b25497279f55de2d430",
+        "odomTfHz": 10
+      },
+      "bridges": [
+        {
+          "contract": "sim_clock",
+          "direction": "gz_to_ros",
+          "gzTopic": "/world/warehouse_teleop/clock",
+          "gzType": "gz.msgs.Clock",
+          "kind": "observation",
+          "rosTopic": "/clock",
+          "rosType": "rosgraph_msgs/msg/Clock",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "odometry",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/odometry",
+          "gzType": "gz.msgs.Odometry",
+          "kind": "observation",
+          "rosTopic": "/odom",
+          "rosType": "nav_msgs/msg/Odometry",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "tf_tree",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/tf",
+          "gzType": "gz.msgs.Pose_V",
+          "kind": "observation",
+          "rosTopic": "/tf",
+          "rosType": "tf2_msgs/msg/TFMessage",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "lidar2d",
+          "direction": "gz_to_ros",
+          "gzTopic": "/model/vehicle_blue/scan",
+          "gzType": "gz.msgs.LaserScan",
+          "kind": "observation",
+          "rosTopic": "/scan",
+          "rosType": "sensor_msgs/msg/LaserScan",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        },
+        {
+          "contract": "differential_drive_cmd_vel",
+          "direction": "ros_to_gz",
+          "gzTopic": "/model/vehicle_blue/cmd_vel",
+          "gzType": "gz.msgs.Twist",
+          "kind": "command",
+          "rosTopic": "/cmd_vel",
+          "rosType": "geometry_msgs/msg/Twist",
+          "source": "provider:gazebo:runtime.bridgeRecipes"
+        }
+      ],
+      "preflight": {
+        "checks": [
+          {
+            "check": "world_file",
+            "evidence": "Selected SDF world file exists.",
+            "status": "passed",
+            "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_costmap_timing.sdf"
+          },
+          {
+            "check": "model",
+            "evidence": "Model vehicle_blue found in selected SDF world.",
+            "model": "vehicle_blue",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "sim_clock",
+            "evidence": "Provider bridge recipe resolved sim_clock.",
+            "gzTopic": "/world/warehouse_teleop/clock",
+            "rosTopic": "/clock",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "differential_drive_cmd_vel",
+            "evidence": "DiffDrive plugin found and command bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/cmd_vel",
+            "rosTopic": "/cmd_vel",
+            "sdfTopic": "/model/vehicle_blue/cmd_vel",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "odometry",
+            "evidence": "DiffDrive plugin declares an odometry topic and bridge recipe resolved.",
+            "expectedChildFrameId": "base_link",
+            "expectedHeaderFrameId": "odom",
+            "gzTopic": "/model/vehicle_blue/odometry",
+            "rosTopic": "/odom",
+            "sdfTopic": "/model/vehicle_blue/odometry",
+            "status": "passed"
+          },
+          {
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "tf_tree",
+            "evidence": "TF topic publication requires frame-edge evidence beyond topic presence.",
+            "requiredEdges": [
+              {
+                "child": "base_link",
+                "evidence": "SDF plugin frame_id and child_frame_id match required edge.",
+                "parent": "odom",
+                "source": "sdf_plugin",
+                "status": "expected"
+              }
+            ],
+            "sdfTopic": "/model/vehicle_blue/tf",
+            "status": "passed"
+          },
+          {
+            "baseFrame": "base_link",
+            "baseToScanTransform": {
+              "evidence": "Realisation declares a static transform from the configured base frame to the scan frame.",
+              "source": "realisation_integration",
+              "status": "passed"
+            },
+            "bridgeRecipe": "provider:gazebo:runtime.bridgeRecipes",
+            "contract": "lidar2d",
+            "evidence": "Lidar sensor found and LaserScan bridge recipe resolved.",
+            "gzTopic": "/model/vehicle_blue/scan",
+            "parentLink": "laser_frame",
+            "rangeMax": "10.0",
+            "rangeMin": "0.08",
+            "rosTopic": "/scan",
+            "scanFrameId": "vehicle_blue/laser_frame/scan",
+            "sdfTopic": "/model/vehicle_blue/scan",
+            "sensor": "scan",
+            "sensorType": "gpu_lidar",
+            "status": "passed",
+            "updateRate": "10"
+          }
+        ],
+        "conformance": {
+          "issues": [],
+          "status": "passed"
+        },
+        "model": "vehicle_blue",
+        "provider": "gazebo",
+        "realisation": "warehouse_teleop@gazebo_nav2_costmap_timing",
+        "sdf": {
+          "model": {
+            "links": [
+              "chassis",
+              "laser_frame",
+              "left_wheel",
+              "right_wheel",
+              "caster"
+            ],
+            "name": "vehicle_blue",
+            "plugins": [
+              {
+                "childFrameId": "base_link",
+                "filename": "gz-sim-diff-drive-system",
+                "frameId": "odom",
+                "inferredChildFrameId": "base_link",
+                "inferredFrameId": "odom",
+                "inferredTfTopic": "/model/vehicle_blue/tf",
+                "leftJoint": "left_wheel_joint",
+                "name": "gz::sim::systems::DiffDrive",
+                "odomTopic": "/model/vehicle_blue/odometry",
+                "rightJoint": "right_wheel_joint",
+                "tfTopic": "/model/vehicle_blue/tf",
+                "topic": null
+              }
+            ],
+            "sensors": [
+              {
+                "frameId": "base_link",
+                "horizontalSamples": "180",
+                "maxAngle": "1.570796",
+                "minAngle": "-1.570796",
+                "name": "scan",
+                "parentLink": "laser_frame",
+                "rangeMax": "10.0",
+                "rangeMin": "0.08",
+                "topic": "/model/vehicle_blue/scan",
+                "type": "gpu_lidar",
+                "updateRate": "10"
+              }
+            ],
+            "status": "present"
+          },
+          "world": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_costmap_timing.sdf",
+          "worldFileExists": true,
+          "worldName": "warehouse_teleop"
+        },
+        "summary": {
+          "differential_drive_cmd_vel": "passed",
+          "lidar2d": "passed",
+          "model": "passed",
+          "odometry": "passed",
+          "sim_clock": "passed",
+          "tf_tree": "passed",
+          "world_file": "passed"
+        },
+        "world": "/home/paddy/dev/phd/rotifer/scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_costmap_timing.sdf"
+      },
+      "checkExamples": []
+    },
+    "goal_and_path": {
+      "experiment": "nav2_corridor_gazebo_nav2_pose_path_trace",
+      "realisation": "warehouse_teleop@gazebo_nav2_goal_base_footprint",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_goal_base_footprint",
+      "evidencePath": "selected-evidence/one-shot-captures/stage-4-pose-path/native",
+      "run": "2026-10-02T20:33:41Z",
+      "metadataFile": "run-metadata.yaml",
+      "metadataSha256": "5d31b4f78b646b46667faffe1fe805d2d0afc015a402fea2a04eed2917380473",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "lidar2d",
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "90.0",
+          "NAV2_OBSERVER_EARLY_EXIT_COSTMAP_TIMING": "true",
+          "NAV2_OBSERVER_EARLY_EXIT_MIN_SECONDS": "10",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_REQUIRED_LIFECYCLE_NODES": "planner_server,controller_server,bt_navigator",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_LIFECYCLE_PROBE_ENABLED": "true",
+          "NAV2_LAUNCH_FILE": "apps/nav2_corridor_probe/nav2_cmd_output_separated_launch.py",
+          "NAV2_PARAMS_FILE": "apps/nav2_corridor_probe/nav2_forward_only_params.yaml",
+          "NAV2_LIFECYCLE_PROBE_SECONDS": "60",
+          "NAV2_LIFECYCLE_EARLY_EXIT_COSTMAP_TIMING": "false",
+          "NAV2_SUBSTRATE_WAIT_SECONDS": "120",
+          "NAV2_SUBSTRATE_READINESS_FILE": "nav2_substrate_readiness.json",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_REQUIRE_MAP": "true",
+          "NAV2_REQUIRE_MAP_TO_ODOM": "true",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan",
+          "NAV2_CLASSIFY_COSTMAP_TIMING": "true"
+        },
+        "nav2_goal_probe": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_GOAL_PROBE_ENABLED": "true",
+          "NAV2_GOAL_EVIDENCE_FILE": "nav2_goal_evidence.json",
+          "NAV2_GOAL_ACTION": "/navigate_to_pose",
+          "NAV2_GOAL_TIMEOUT_SECONDS": "30",
+          "NAV2_GOAL_PRECONDITION_TIMEOUT_SECONDS": "30",
+          "NAV2_GOAL_FRAME": "map",
+          "NAV2_GOAL_X": "0.5",
+          "NAV2_GOAL_Y": "0.0",
+          "NAV2_GOAL_YAW": "0.0",
+          "NAV2_CMD_VEL_TOPIC": "/cmd_vel",
+          "NAV2_CONTROLLER_CMD_TOPIC": "/cmd_vel_controller",
+          "NAV2_BEHAVIOR_CMD_TOPIC": "/cmd_vel_behavior",
+          "NAV2_MERGED_CMD_TOPIC": "/cmd_vel_nav",
+          "NAV2_SMOOTHER_CMD_TOPIC": "/cmd_vel_smoothed",
+          "NAV2_PLAN_TOPICS": "/plan,/received_global_plan",
+          "NAV2_ODOM_TOPIC": "/odom",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_BASE_FOOTPRINT_FRAME": "base_footprint",
+          "NAV2_REQUIRE_BASE_FOOTPRINT": "true",
+          "NAV2_GOAL_REQUIRED_LIFECYCLE_NODES": "planner_server,controller_server,bt_navigator",
+          "NAV2_SUBSTRATE_READINESS_FILE": "nav2_substrate_readiness.json",
+          "NAV2_LIFECYCLE_LOG_FILE": "nav2_lifecycle_surface.log"
+        },
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {},
+        "scan_frame_static_transform": {},
+        "map_to_odom_static_transform": {},
+        "static_map_publisher": {},
+        "base_footprint_static_transform": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.nav2_observer",
+          "app.roles.nav2_lifecycle_surface",
+          "app.roles.nav2_goal_probe",
+          "realisation.warehouse_teleop@gazebo_nav2_goal_base_footprint",
+          "realisation.processes.scan_frame_static_transform",
+          "realisation.processes.map_to_odom_static_transform",
+          "realisation.processes.static_map_publisher",
+          "realisation.processes.base_footprint_static_transform",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "provider/model-owned lidar2d scan observation evidence",
+            "scan timestamp and frame evidence",
+            "static map, scan-frame, and map-to-odom TF evidence",
+            "Nav2 lifecycle, action, and costmap surface evidence",
+            "costmap message-filter log classification",
+            "bounded NavigateToPose goal acceptance and result evidence",
+            "command velocity activity and odometry displacement evidence",
+            "base_link, base_footprint, odom, and map TF connectivity evidence",
+            "cmd_vel sign and odometry displacement-vector evidence",
+            "controller, velocity smoother, and collision monitor command signs",
+            "separated controller and behavior command output signs",
+            "initial map-frame pose, goal geometry, and global-plan evidence",
+            "occupancy-grid origin and robot pose bounds evidence"
+          ],
+          "excludes": [
+            "costmap update correctness",
+            "real localization quality",
+            "repeated or production navigation"
+          ]
+        },
+        "rationale": "This trace preserves the separated command outputs and bounded goal while recording the initial map-to-base pose, goal heading, planner path, and controller output signs. It classifies controller input geometry without changing planner, controller, provider, or model behavior.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_costmap_scan_timing_compatible",
+          "statement": "Costmap observation messages have timestamps compatible with the transform data available in the Nav2 TF buffer.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "contract",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_timestamp_recorded",
+            "clock_sample_recorded",
+            "transforms_checked_at_scan_timestamp",
+            "nav2_use_sim_time_recorded",
+            "costmap_message_filter_logs_classified"
+          ],
+          "limitations": [
+            "Timing compatibility is a precondition for the bounded goal. This slice still does not inspect costmap cell contents.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_costmap_scan_timing_correction_evidenced",
+          "statement": "Matching the provider/model odometry-TF publication rate to the scan rate makes the required transforms available at scan timestamps without costmap message-filter drops in the bounded observation window.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_timestamp_recorded",
+            "transforms_checked_at_scan_timestamp",
+            "provider_scan_and_tf_rates_recorded",
+            "costmap_message_filter_logs_classified",
+            "bounded_active_window_without_scan_drops"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_map_surface_available",
+          "statement": "The navigation stack has access to a map surface with the expected topic, message type, frame metadata, and timing evidence.\n",
+          "layers": [
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "map_topic_present",
+            "map_sample_received",
+            "map_message_type_recorded",
+            "map_header_frame_matches"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_lifecycle_active_state_after_map_surface",
+          "statement": "The lifecycle-managed Nav2 nodes required for planning and control reach the expected active state after substrate and map/localization readiness.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "lifecycle_services_present",
+            "lifecycle_states_recorded",
+            "required_nodes_active",
+            "navigate_to_pose_action_available"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_bounded_goal_result_interpretable",
+          "statement": "The NavigateToPose action path accepts a bounded goal and produces an interpretable result against the prepared navigation substrate.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "pre_goal_evidence_chain_checked",
+            "navigate_to_pose_goal_sent",
+            "goal_acceptance_recorded",
+            "goal_result_status_recorded",
+            "cmd_vel_activity_recorded",
+            "odometry_displacement_recorded"
+          ],
+          "limitations": [
+            "One bounded goal does not validate localization quality, general navigation performance, or safe operation.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_base_footprint_connected",
+          "statement": "The robot base/control frames expected by Nav2 safety and control components are present and connected to the navigation TF tree.\n",
+          "layers": [
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "base_link_to_base_footprint_present",
+            "base_footprint_to_base_link_present",
+            "odom_to_base_footprint_present",
+            "map_to_base_footprint_present"
+          ],
+          "limitations": [
+            "The identity transform is a declared robot-frame convention, not evidence of physical footprint geometry.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_goal_motion_direction_consistent",
+          "statement": "The command interface, odometry frame, robot model, and map frame agree about the direction and scale of robot motion.\n",
+          "layers": [
+            "provider",
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "cmd_vel_linear_and_angular_signs_recorded",
+            "odometry_displacement_vector_recorded",
+            "goal_direction_dot_product_recorded",
+            "map_origin_and_bounds_recorded",
+            "initial_and_final_pose_bounds_classified"
+          ],
+          "limitations": [
+            "This slice classifies observed direction inconsistency. Static SDF wheel-axis evidence narrows the suspected cause but does not by itself prove whether joint axis, command polarity, or odometry convention is responsible.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_mppi_forward_only_direction_contrast",
+          "statement": "Disabling negative MPPI linear velocity prevents the final Nav2 command path from producing negative linear velocity for a positive-x goal.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "stock_mppi_vx_min_recorded",
+            "forward_only_mppi_vx_min_recorded",
+            "cmd_vel_linear_signs_recorded",
+            "odometry_displacement_vector_recorded",
+            "bounded_goal_result_recorded"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_command_pipeline_direction_trace",
+          "statement": "The Nav2 controller, velocity smoother, collision monitor, and final command interface preserve the intended linear velocity direction.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "controller_command_topic_sampled",
+            "velocity_smoother_command_topic_sampled",
+            "collision_monitor_output_sampled",
+            "first_negative_command_stage_classified"
+          ],
+          "limitations": [
+            "Topic-level sampling locates the first observed negative command stage but does not identify the internal algorithmic decision that created it.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_command_outputs_separated",
+          "statement": "Controller and behavior command outputs can be observed independently before they enter the shared Nav2 command pipeline.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "controller_output_topic_sampled",
+            "behavior_output_topic_sampled",
+            "merged_output_topic_sampled",
+            "first_negative_output_source_classified"
+          ],
+          "limitations": [
+            "The transparent relay adds one app-owned forwarding boundary. If the separated run does not reproduce a negative command, the result remains diagnostic rather than source attribution.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_pose_path_controller_inputs_consistent",
+          "statement": "The initial robot pose, requested goal, global plan, and controller command geometry agree about the direction required for progress.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "initial_map_to_base_pose_recorded",
+            "goal_vector_and_heading_error_recorded",
+            "global_plan_sampled",
+            "first_plan_segment_heading_recorded",
+            "controller_command_stats_recorded",
+            "progress_checker_failure_classified"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_costmap_timing.sdf",
+        "sha256": "18c8f2dadaf8825b2259b9e0a9f377dd58705df12e987b25497279f55de2d430",
+        "odomTfHz": 10
+      },
+      "bridges": [],
+      "preflight": null,
+      "checkExamples": []
+    },
+    "local_corridor_check": {
+      "experiment": "nav2_corridor_gazebo_nav2_local_feasibility_trace",
+      "realisation": "warehouse_teleop@gazebo_nav2_goal_base_footprint",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_goal_base_footprint",
+      "evidencePath": "selected-evidence/one-shot-captures/stage-4-local-feasibility/native",
+      "run": "2026-10-02T20:38:41Z",
+      "metadataFile": "run-metadata.yaml",
+      "metadataSha256": "d79c50200ceba0b750ba1393ec146d33f13d5278c3788fe9fa819c80d0771b05",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "lidar2d",
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "90.0",
+          "NAV2_OBSERVER_EARLY_EXIT_COSTMAP_TIMING": "true",
+          "NAV2_OBSERVER_EARLY_EXIT_MIN_SECONDS": "10",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_REQUIRED_LIFECYCLE_NODES": "planner_server,controller_server,bt_navigator",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_LIFECYCLE_PROBE_ENABLED": "true",
+          "NAV2_LAUNCH_FILE": "apps/nav2_corridor_probe/nav2_cmd_output_separated_launch.py",
+          "NAV2_PARAMS_FILE": "apps/nav2_corridor_probe/nav2_forward_only_params.yaml",
+          "NAV2_LIFECYCLE_PROBE_SECONDS": "60",
+          "NAV2_LIFECYCLE_EARLY_EXIT_COSTMAP_TIMING": "false",
+          "NAV2_SUBSTRATE_WAIT_SECONDS": "120",
+          "NAV2_SUBSTRATE_READINESS_FILE": "nav2_substrate_readiness.json",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_REQUIRE_MAP": "true",
+          "NAV2_REQUIRE_MAP_TO_ODOM": "true",
+          "NAV2_REQUIRE_SCAN_STAMP_TF": "true",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan",
+          "NAV2_CLASSIFY_COSTMAP_TIMING": "true"
+        },
+        "nav2_goal_probe": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_GOAL_PROBE_ENABLED": "true",
+          "NAV2_GOAL_EVIDENCE_FILE": "nav2_goal_evidence.json",
+          "NAV2_GOAL_ACTION": "/navigate_to_pose",
+          "NAV2_GOAL_TIMEOUT_SECONDS": "30",
+          "NAV2_GOAL_PRECONDITION_TIMEOUT_SECONDS": "30",
+          "NAV2_GOAL_FRAME": "map",
+          "NAV2_GOAL_X": "0.5",
+          "NAV2_GOAL_Y": "0.0",
+          "NAV2_GOAL_YAW": "0.0",
+          "NAV2_CMD_VEL_TOPIC": "/cmd_vel",
+          "NAV2_CONTROLLER_CMD_TOPIC": "/cmd_vel_controller",
+          "NAV2_BEHAVIOR_CMD_TOPIC": "/cmd_vel_behavior",
+          "NAV2_MERGED_CMD_TOPIC": "/cmd_vel_nav",
+          "NAV2_SMOOTHER_CMD_TOPIC": "/cmd_vel_smoothed",
+          "NAV2_PLAN_TOPICS": "/plan,/received_global_plan",
+          "NAV2_ODOM_TOPIC": "/odom",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_BASE_FOOTPRINT_FRAME": "base_footprint",
+          "NAV2_REQUIRE_BASE_FOOTPRINT": "true",
+          "NAV2_GOAL_REQUIRED_LIFECYCLE_NODES": "planner_server,controller_server,bt_navigator",
+          "NAV2_SUBSTRATE_READINESS_FILE": "nav2_substrate_readiness.json",
+          "NAV2_LIFECYCLE_LOG_FILE": "nav2_lifecycle_surface.log"
+        },
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_LOCAL_FEASIBILITY_ENABLED": "1",
+          "NAV2_LOCAL_FEASIBILITY_FILE": "nav2_local_feasibility_evidence.json",
+          "NAV2_LOCAL_FEASIBILITY_WAIT_SECONDS": "30",
+          "NAV2_LOCAL_COSTMAP_TOPIC": "/local_costmap/costmap",
+          "NAV2_FOOTPRINT_TOPIC": "/local_costmap/published_footprint",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_FORWARD_SAMPLE_DISTANCE": "0.6",
+          "NAV2_FORWARD_SAMPLE_STEP": "0.05"
+        },
+        "scan_frame_static_transform": {},
+        "map_to_odom_static_transform": {},
+        "static_map_publisher": {},
+        "base_footprint_static_transform": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.nav2_observer",
+          "app.roles.nav2_lifecycle_surface",
+          "app.roles.nav2_goal_probe",
+          "app.roles.nav2_local_feasibility_probe",
+          "realisation.warehouse_teleop@gazebo_nav2_goal_base_footprint",
+          "realisation.processes.scan_frame_static_transform",
+          "realisation.processes.map_to_odom_static_transform",
+          "realisation.processes.static_map_publisher",
+          "realisation.processes.base_footprint_static_transform",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "provider/model-owned lidar2d scan observation evidence",
+            "scan timestamp and frame evidence",
+            "static map, scan-frame, and map-to-odom TF evidence",
+            "Nav2 lifecycle, action, and costmap surface evidence",
+            "costmap message-filter log classification",
+            "bounded NavigateToPose goal acceptance and result evidence",
+            "command velocity activity and odometry displacement evidence",
+            "base_link, base_footprint, odom, and map TF connectivity evidence",
+            "cmd_vel sign and odometry displacement-vector evidence",
+            "controller, velocity smoother, and collision monitor command signs",
+            "separated controller and behavior command output signs",
+            "initial map-frame pose, goal geometry, and global-plan evidence",
+            "local costmap robot-cell and forward-corridor evidence",
+            "published footprint evidence when available"
+          ],
+          "excludes": [
+            "costmap update correctness",
+            "real localization quality",
+            "repeated or production navigation"
+          ]
+        },
+        "rationale": "This trace preserves the separated command outputs and bounded goal while sampling the local costmap at the robot and along the short forward goal corridor. It classifies controller feasibility inputs without requiring the sampled corridor to be free and without changing provider/model behavior.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_costmap_scan_timing_compatible",
+          "statement": "Costmap observation messages have timestamps compatible with the transform data available in the Nav2 TF buffer.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "contract",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_timestamp_recorded",
+            "clock_sample_recorded",
+            "transforms_checked_at_scan_timestamp",
+            "nav2_use_sim_time_recorded",
+            "costmap_message_filter_logs_classified"
+          ],
+          "limitations": [
+            "Timing compatibility is a precondition for the bounded goal. This slice still does not inspect costmap cell contents.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_costmap_scan_timing_correction_evidenced",
+          "statement": "Matching the provider/model odometry-TF publication rate to the scan rate makes the required transforms available at scan timestamps without costmap message-filter drops in the bounded observation window.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_timestamp_recorded",
+            "transforms_checked_at_scan_timestamp",
+            "provider_scan_and_tf_rates_recorded",
+            "costmap_message_filter_logs_classified",
+            "bounded_active_window_without_scan_drops"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_map_surface_available",
+          "statement": "The navigation stack has access to a map surface with the expected topic, message type, frame metadata, and timing evidence.\n",
+          "layers": [
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "map_topic_present",
+            "map_sample_received",
+            "map_message_type_recorded",
+            "map_header_frame_matches"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_lifecycle_active_state_after_map_surface",
+          "statement": "The lifecycle-managed Nav2 nodes required for planning and control reach the expected active state after substrate and map/localization readiness.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "lifecycle_services_present",
+            "lifecycle_states_recorded",
+            "required_nodes_active",
+            "navigate_to_pose_action_available"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_bounded_goal_result_interpretable",
+          "statement": "The NavigateToPose action path accepts a bounded goal and produces an interpretable result against the prepared navigation substrate.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "pre_goal_evidence_chain_checked",
+            "navigate_to_pose_goal_sent",
+            "goal_acceptance_recorded",
+            "goal_result_status_recorded",
+            "cmd_vel_activity_recorded",
+            "odometry_displacement_recorded"
+          ],
+          "limitations": [
+            "One bounded goal does not validate localization quality, general navigation performance, or safe operation.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_base_footprint_connected",
+          "statement": "The robot base/control frames expected by Nav2 safety and control components are present and connected to the navigation TF tree.\n",
+          "layers": [
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "base_link_to_base_footprint_present",
+            "base_footprint_to_base_link_present",
+            "odom_to_base_footprint_present",
+            "map_to_base_footprint_present"
+          ],
+          "limitations": [
+            "The identity transform is a declared robot-frame convention, not evidence of physical footprint geometry.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_goal_motion_direction_consistent",
+          "statement": "The command interface, odometry frame, robot model, and map frame agree about the direction and scale of robot motion.\n",
+          "layers": [
+            "provider",
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "cmd_vel_linear_and_angular_signs_recorded",
+            "odometry_displacement_vector_recorded",
+            "goal_direction_dot_product_recorded",
+            "map_origin_and_bounds_recorded",
+            "initial_and_final_pose_bounds_classified"
+          ],
+          "limitations": [
+            "This slice classifies observed direction inconsistency. Static SDF wheel-axis evidence narrows the suspected cause but does not by itself prove whether joint axis, command polarity, or odometry convention is responsible.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_mppi_forward_only_direction_contrast",
+          "statement": "Disabling negative MPPI linear velocity prevents the final Nav2 command path from producing negative linear velocity for a positive-x goal.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "stock_mppi_vx_min_recorded",
+            "forward_only_mppi_vx_min_recorded",
+            "cmd_vel_linear_signs_recorded",
+            "odometry_displacement_vector_recorded",
+            "bounded_goal_result_recorded"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_command_pipeline_direction_trace",
+          "statement": "The Nav2 controller, velocity smoother, collision monitor, and final command interface preserve the intended linear velocity direction.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "controller_command_topic_sampled",
+            "velocity_smoother_command_topic_sampled",
+            "collision_monitor_output_sampled",
+            "first_negative_command_stage_classified"
+          ],
+          "limitations": [
+            "Topic-level sampling locates the first observed negative command stage but does not identify the internal algorithmic decision that created it.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_command_outputs_separated",
+          "statement": "Controller and behavior command outputs can be observed independently before they enter the shared Nav2 command pipeline.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "controller_output_topic_sampled",
+            "behavior_output_topic_sampled",
+            "merged_output_topic_sampled",
+            "first_negative_output_source_classified"
+          ],
+          "limitations": [
+            "The transparent relay adds one app-owned forwarding boundary. If the separated run does not reproduce a negative command, the result remains diagnostic rather than source attribution.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_pose_path_controller_inputs_consistent",
+          "statement": "The initial robot pose, requested goal, global plan, and controller command geometry agree about the direction required for progress.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "initial_map_to_base_pose_recorded",
+            "goal_vector_and_heading_error_recorded",
+            "global_plan_sampled",
+            "first_plan_segment_heading_recorded",
+            "controller_command_stats_recorded",
+            "progress_checker_failure_classified"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_local_motion_feasibility_classified",
+          "statement": "The local costmap and footprint model classify whether forward motion from the robot's current pose is feasible along the prepared navigation direction.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "local_costmap_available",
+            "robot_cell_classified",
+            "forward_corridor_classified",
+            "footprint_observed"
+          ],
+          "limitations": [
+            "This probe samples local costmap cells around the robot and ahead of base_link. It does not inspect MPPI critic scores or prove that a locally feasible corridor will be selected by the controller.\n"
+          ],
+          "theoreticalAnchors": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_costmap_timing.sdf",
+        "sha256": "18c8f2dadaf8825b2259b9e0a9f377dd58705df12e987b25497279f55de2d430",
+        "odomTfHz": 10
+      },
+      "bridges": [],
+      "preflight": null,
+      "checkExamples": []
+    },
+    "rpp_attempt": {
+      "experiment": "nav2_corridor_gazebo_nav2_rpp_controller",
+      "realisation": "warehouse_teleop@gazebo_nav2_goal_base_footprint",
+      "displayRealisation": "warehouse_navigation@gazebo_nav2_goal_base_footprint",
+      "evidencePath": "selected-evidence/one-shot-captures/stage-5-rpp/native",
+      "run": "2026-10-02T21:07:56Z",
+      "metadataFile": "run-metadata.yaml",
+      "metadataSha256": "8dbd6c25bab8205fa3cfa24422ea936f952507e8f02653df9a1f7fa49afe74bf",
+      "contracts": {
+        "required": {
+          "platforms": [],
+          "commands": [],
+          "observations": []
+        },
+        "provided": {
+          "platforms": [
+            "differential_drive_robot"
+          ],
+          "commands": [
+            "differential_drive_cmd_vel"
+          ],
+          "observations": [
+            "lidar2d",
+            "odometry",
+            "sim_clock",
+            "tf_tree"
+          ]
+        },
+        "satisfactionTrace": [],
+        "resolvedBindings": []
+      },
+      "roles": {
+        "nav2_observer": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_EVIDENCE_FILE": "nav2_observer_evidence.json",
+          "NAV2_OBSERVE_SECONDS": "90.0",
+          "NAV2_OBSERVER_EARLY_EXIT_COSTMAP_TIMING": "true",
+          "NAV2_OBSERVER_EARLY_EXIT_MIN_SECONDS": "10",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_REQUIRED_LIFECYCLE_NODES": "planner_server,controller_server,bt_navigator",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan"
+        },
+        "nav2_mock_substrate": {},
+        "nav2_lifecycle_surface": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_LIFECYCLE_PROBE_ENABLED": "true",
+          "NAV2_LAUNCH_FILE": "apps/nav2_corridor_probe/nav2_cmd_output_separated_launch.py",
+          "NAV2_PARAMS_FILE": "apps/nav2_corridor_probe/nav2_rpp_params.yaml",
+          "NAV2_LIFECYCLE_PROBE_SECONDS": "60",
+          "NAV2_LIFECYCLE_EARLY_EXIT_COSTMAP_TIMING": "false",
+          "NAV2_SUBSTRATE_WAIT_SECONDS": "120",
+          "NAV2_SUBSTRATE_READINESS_FILE": "nav2_substrate_readiness.json",
+          "NAV2_REQUIRED_TF_EDGES": "[{\"parent\":\"odom\",\"child\":\"base_link\"}]",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_ODOM_FRAME": "odom",
+          "NAV2_MAP_TOPIC": "/map",
+          "NAV2_MAP_FRAME": "map",
+          "NAV2_REQUIRE_MAP": "true",
+          "NAV2_REQUIRE_MAP_TO_ODOM": "true",
+          "NAV2_REQUIRE_SCAN_STAMP_TF": "true",
+          "NAV2_LOCALIZATION_OWNERSHIP": "static_simplification",
+          "NAV2_SCAN_TOPIC": "/scan",
+          "NAV2_CLASSIFY_COSTMAP_TIMING": "true"
+        },
+        "nav2_goal_probe": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_GOAL_PROBE_ENABLED": "true",
+          "NAV2_GOAL_EVIDENCE_FILE": "nav2_goal_evidence.json",
+          "NAV2_GOAL_ACTION": "/navigate_to_pose",
+          "NAV2_GOAL_TIMEOUT_SECONDS": "30",
+          "NAV2_GOAL_PRECONDITION_TIMEOUT_SECONDS": "30",
+          "NAV2_GOAL_FRAME": "map",
+          "NAV2_GOAL_X": "0.5",
+          "NAV2_GOAL_Y": "0.0",
+          "NAV2_GOAL_YAW": "0.0",
+          "NAV2_CMD_VEL_TOPIC": "/cmd_vel",
+          "NAV2_CONTROLLER_CMD_TOPIC": "/cmd_vel_controller",
+          "NAV2_BEHAVIOR_CMD_TOPIC": "/cmd_vel_behavior",
+          "NAV2_MERGED_CMD_TOPIC": "/cmd_vel_nav",
+          "NAV2_SMOOTHER_CMD_TOPIC": "/cmd_vel_smoothed",
+          "NAV2_PLAN_TOPICS": "/plan,/received_global_plan",
+          "NAV2_ODOM_TOPIC": "/odom",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_BASE_FOOTPRINT_FRAME": "base_footprint",
+          "NAV2_REQUIRE_BASE_FOOTPRINT": "true",
+          "NAV2_GOAL_REQUIRED_LIFECYCLE_NODES": "planner_server,controller_server,bt_navigator",
+          "NAV2_SUBSTRATE_READINESS_FILE": "nav2_substrate_readiness.json",
+          "NAV2_LIFECYCLE_LOG_FILE": "nav2_lifecycle_surface.log",
+          "NAV2_EXPECTED_CONTROLLER_PLUGIN": "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController",
+          "NAV2_EXPECTED_CONTROLLER_VX_MIN": "",
+          "NAV2_EXPECTED_CONTROLLER_DESIRED_LINEAR_VEL": "0.25"
+        },
+        "cmd_vel_polarity_probe": {},
+        "nav2_local_feasibility_probe": {
+          "ROS_DOMAIN_ID": "0",
+          "NAV2_LOCAL_FEASIBILITY_ENABLED": "1",
+          "NAV2_LOCAL_FEASIBILITY_FILE": "nav2_local_feasibility_evidence.json",
+          "NAV2_LOCAL_FEASIBILITY_WAIT_SECONDS": "30",
+          "NAV2_LOCAL_COSTMAP_TOPIC": "/local_costmap/costmap",
+          "NAV2_FOOTPRINT_TOPIC": "/local_costmap/published_footprint",
+          "NAV2_BASE_FRAME": "base_link",
+          "NAV2_FORWARD_SAMPLE_DISTANCE": "0.6",
+          "NAV2_FORWARD_SAMPLE_STEP": "0.05"
+        },
+        "scan_frame_static_transform": {},
+        "map_to_odom_static_transform": {},
+        "static_map_publisher": {},
+        "base_footprint_static_transform": {}
+      },
+      "boundary": {
+        "underTest": [
+          "app.roles.nav2_observer",
+          "app.roles.nav2_lifecycle_surface",
+          "app.roles.nav2_goal_probe",
+          "app.roles.nav2_local_feasibility_probe",
+          "realisation.warehouse_teleop@gazebo_nav2_goal_base_footprint",
+          "realisation.processes.scan_frame_static_transform",
+          "realisation.processes.map_to_odom_static_transform",
+          "realisation.processes.static_map_publisher",
+          "realisation.processes.base_footprint_static_transform",
+          "providers.embodiment.gazebo"
+        ],
+        "treatedAsProviders": [
+          "providers.embodiment.gazebo"
+        ],
+        "claimScope": {
+          "includes": [
+            "provider/model-owned lidar2d scan observation evidence",
+            "scan timestamp and frame evidence",
+            "static map, scan-frame, and map-to-odom TF evidence",
+            "Nav2 lifecycle, action, and costmap surface evidence",
+            "costmap message-filter log classification",
+            "bounded NavigateToPose goal acceptance and result evidence",
+            "command velocity activity and odometry displacement evidence",
+            "base_link, base_footprint, odom, and map TF connectivity evidence",
+            "cmd_vel sign and odometry displacement-vector evidence",
+            "controller, velocity smoother, and collision monitor command signs",
+            "separated controller and behavior command output signs",
+            "initial map-frame pose, goal geometry, and global-plan evidence",
+            "local costmap robot-cell and forward-corridor evidence",
+            "published footprint evidence when available"
+          ],
+          "excludes": [
+            "costmap update correctness",
+            "real localization quality",
+            "repeated or production navigation"
+          ]
+        },
+        "rationale": "This contrast preserves the provider, map, timing, separated command path, bounded goal, and local feasibility probe while replacing only the FollowPath plugin and plugin-specific parameters. It determines whether a simpler deterministic controller produces forward commands without requiring goal success.\n"
+      },
+      "assumptions": [
+        {
+          "id": "nav2_costmap_scan_timing_compatible",
+          "statement": "Costmap observation messages have timestamps compatible with the transform data available in the Nav2 TF buffer.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "contract",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_timestamp_recorded",
+            "clock_sample_recorded",
+            "transforms_checked_at_scan_timestamp",
+            "nav2_use_sim_time_recorded",
+            "costmap_message_filter_logs_classified"
+          ],
+          "limitations": [
+            "Timing compatibility is a precondition for the bounded goal. This slice still does not inspect costmap cell contents.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_costmap_scan_timing_correction_evidenced",
+          "statement": "Matching the provider/model odometry-TF publication rate to the scan rate makes the required transforms available at scan timestamps without costmap message-filter drops in the bounded observation window.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "scan_timestamp_recorded",
+            "transforms_checked_at_scan_timestamp",
+            "provider_scan_and_tf_rates_recorded",
+            "costmap_message_filter_logs_classified",
+            "bounded_active_window_without_scan_drops"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_map_surface_available",
+          "statement": "The navigation stack has access to a map surface with the expected topic, message type, frame metadata, and timing evidence.\n",
+          "layers": [
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "map_topic_present",
+            "map_sample_received",
+            "map_message_type_recorded",
+            "map_header_frame_matches"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_lifecycle_active_state_after_map_surface",
+          "statement": "The lifecycle-managed Nav2 nodes required for planning and control reach the expected active state after substrate and map/localization readiness.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "lifecycle_services_present",
+            "lifecycle_states_recorded",
+            "required_nodes_active",
+            "navigate_to_pose_action_available"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_bounded_goal_result_interpretable",
+          "statement": "The NavigateToPose action path accepts a bounded goal and produces an interpretable result against the prepared navigation substrate.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "pre_goal_evidence_chain_checked",
+            "navigate_to_pose_goal_sent",
+            "goal_acceptance_recorded",
+            "goal_result_status_recorded",
+            "cmd_vel_activity_recorded",
+            "odometry_displacement_recorded"
+          ],
+          "limitations": [
+            "One bounded goal does not validate localization quality, general navigation performance, or safe operation.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_base_footprint_connected",
+          "statement": "The robot base/control frames expected by Nav2 safety and control components are present and connected to the navigation TF tree.\n",
+          "layers": [
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "base_link_to_base_footprint_present",
+            "base_footprint_to_base_link_present",
+            "odom_to_base_footprint_present",
+            "map_to_base_footprint_present"
+          ],
+          "limitations": [
+            "The identity transform is a declared robot-frame convention, not evidence of physical footprint geometry.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_goal_motion_direction_consistent",
+          "statement": "The command interface, odometry frame, robot model, and map frame agree about the direction and scale of robot motion.\n",
+          "layers": [
+            "provider",
+            "realisation",
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "cmd_vel_linear_and_angular_signs_recorded",
+            "odometry_displacement_vector_recorded",
+            "goal_direction_dot_product_recorded",
+            "map_origin_and_bounds_recorded",
+            "initial_and_final_pose_bounds_classified"
+          ],
+          "limitations": [
+            "This slice classifies observed direction inconsistency. Static SDF wheel-axis evidence narrows the suspected cause but does not by itself prove whether joint axis, command polarity, or odometry convention is responsible.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_mppi_forward_only_direction_contrast",
+          "statement": "Disabling negative MPPI linear velocity prevents the final Nav2 command path from producing negative linear velocity for a positive-x goal.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "stock_mppi_vx_min_recorded",
+            "forward_only_mppi_vx_min_recorded",
+            "cmd_vel_linear_signs_recorded",
+            "odometry_displacement_vector_recorded",
+            "bounded_goal_result_recorded"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_command_pipeline_direction_trace",
+          "statement": "The Nav2 controller, velocity smoother, collision monitor, and final command interface preserve the intended linear velocity direction.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "controller_command_topic_sampled",
+            "velocity_smoother_command_topic_sampled",
+            "collision_monitor_output_sampled",
+            "first_negative_command_stage_classified"
+          ],
+          "limitations": [
+            "Topic-level sampling locates the first observed negative command stage but does not identify the internal algorithmic decision that created it.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_command_outputs_separated",
+          "statement": "Controller and behavior command outputs can be observed independently before they enter the shared Nav2 command pipeline.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "controller_output_topic_sampled",
+            "behavior_output_topic_sampled",
+            "merged_output_topic_sampled",
+            "first_negative_output_source_classified"
+          ],
+          "limitations": [
+            "The transparent relay adds one app-owned forwarding boundary. If the separated run does not reproduce a negative command, the result remains diagnostic rather than source attribution.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_pose_path_controller_inputs_consistent",
+          "statement": "The initial robot pose, requested goal, global plan, and controller command geometry agree about the direction required for progress.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "initial_map_to_base_pose_recorded",
+            "goal_vector_and_heading_error_recorded",
+            "global_plan_sampled",
+            "first_plan_segment_heading_recorded",
+            "controller_command_stats_recorded",
+            "progress_checker_failure_classified"
+          ],
+          "theoreticalAnchors": [],
+          "limitations": []
+        },
+        {
+          "id": "nav2_local_motion_feasibility_classified",
+          "statement": "The local costmap and footprint model classify whether forward motion from the robot's current pose is feasible along the prepared navigation direction.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "local_costmap_available",
+            "robot_cell_classified",
+            "forward_corridor_classified",
+            "footprint_observed"
+          ],
+          "limitations": [
+            "This probe samples local costmap cells around the robot and ahead of base_link. It does not inspect MPPI critic scores or prove that a locally feasible corridor will be selected by the controller.\n"
+          ],
+          "theoreticalAnchors": []
+        },
+        {
+          "id": "nav2_rpp_controller_contrast_interpretable",
+          "statement": "The Regulated Pure Pursuit controller plugin is active at runtime and produces an interpretable bounded command/result contrast against the MPPI local-feasibility result.\n",
+          "layers": [
+            "app",
+            "runtime",
+            "evidence"
+          ],
+          "status": "declared",
+          "probes": [
+            "runtime_controller_plugin_recorded",
+            "controller_command_stats_recorded",
+            "final_command_stats_recorded",
+            "odometry_displacement_recorded",
+            "bounded_goal_result_recorded"
+          ],
+          "limitations": [
+            "This is a one-goal controller contrast. It does not establish general controller quality, navigation reliability, or safe operation.\n"
+          ],
+          "theoreticalAnchors": []
+        }
+      ],
+      "declaredModel": {
+        "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_costmap_timing.sdf",
+        "sha256": "18c8f2dadaf8825b2259b9e0a9f377dd58705df12e987b25497279f55de2d430",
+        "odomTfHz": 10
+      },
+      "bridges": [],
+      "preflight": null,
+      "checkExamples": []
+    }
+  }
+}

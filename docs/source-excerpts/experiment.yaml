@@ -1,0 +1,212 @@
+apiVersion: rotifer/v0.6
+kind: Experiment
+
+metadata:
+  name: nav2_corridor_gazebo_substrate
+  description: >
+    Headless real-provider Nav2 substrate evidence attempt using the existing
+    warehouse Gazebo realisation and the Nav2 observer app.
+
+spec:
+  mode: automatic
+
+  appRef: nav2_corridor_probe
+  realisationRef: warehouse_teleop@gazebo_nav2_substrate
+
+  deployment:
+    targets:
+      local:
+        kind: local
+        capabilities:
+          - ros2_jazzy
+          - docker
+          - gazebo
+          - nav2_available
+
+    placement:
+      app.roles.nav2_observer:
+        target: local
+        mode: auto
+        config:
+          env:
+            ROS_DOMAIN_ID: "0"
+            NAV2_EVIDENCE_FILE: nav2_observer_evidence.json
+            NAV2_OBSERVE_SECONDS: "6.0"
+            NAV2_REQUIRED_TF_EDGES: '[{"parent":"odom","child":"base_link"}]'
+
+  boundary:
+    underTest:
+      - app.roles.nav2_observer
+      - realisation.warehouse_teleop@gazebo_nav2_substrate
+      - providers.embodiment.gazebo
+    treatedAsProviders:
+      - providers.embodiment.gazebo
+    claimScope:
+      includes:
+        - real provider startup evidence
+        - ROS graph evidence for clock, map, odom, TF, cmd_vel, lifecycle, and actions
+        - failure logs if the realisation does not establish a Nav2 substrate
+      excludes:
+        - full Nav2 bringup success
+        - autonomous navigation
+        - simulator dynamics correctness
+        - map/localization quality
+    rationale: >
+      This experiment moves from synthetic substrate evidence to the existing
+      headless Gazebo realisation. It classifies the evidence boundary without
+      claiming successful navigation.
+
+  assumptions:
+    - id: nav2_real_substrate_evidence_boundary
+      statement: >
+        A real provider-backed Nav2 navigation claim needs durable evidence
+        about which substrate elements are actually present: map, odometry, TF,
+        command velocity, lifecycle state, and NavigateToPose action.
+      layers:
+        - app
+        - provider
+        - realisation
+        - deployment
+        - runtime
+        - evidence
+      status: declared
+      probes:
+        - provider_started
+        - map_available
+        - odom_available
+        - tf_available
+        - cmd_vel_available
+        - lifecycle_nodes_active
+        - navigate_to_pose_action_available
+      limitations:
+        - This run uses a Gazebo substrate realisation, not a Nav2 bringup.
+
+  successCriteria:
+    evaluation:
+      delaySeconds: 8
+      mode: evaluate_then_stop
+
+    checked:
+      - type: process_alive
+        name: provider
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: process_exit_code
+        name: app.nav2_observer
+        equals: 0
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: observations.nav2PackagesAvailable
+        equals: true
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: observations.clockAvailable
+        equals: true
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: observations.cmdVelAvailable
+        equals: true
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: observations.tfAvailable
+        equals: true
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: odometry.sampleReceived
+        equals: true
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: odometry.headerFrameId
+        equals: vehicle_blue/odom
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: odometry.childFrameId
+        equals: vehicle_blue/chassis
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: odometry.summary.frameConsistentWithRequiredTf
+        equals: false
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: tf.edges.odom__base_link.status
+        equals: missing
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: nav2_observer_evidence.json
+        field: tf.summary.requiredEdgesMissing
+        equals: 1
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: gazebo_provider_preflight.json
+        field: summary.differential_drive_cmd_vel
+        equals: passed
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: gazebo_provider_preflight.json
+        field: summary.odometry
+        equals: weak
+        assumption: nav2_real_substrate_evidence_boundary
+
+      - type: json_evidence
+        file: gazebo_provider_preflight.json
+        field: summary.tf_tree
+        equals: weak
+        assumption: nav2_real_substrate_evidence_boundary
+
+    intended:
+      - type: nav2_real_substrate_shape
+        status: not_automated
+        probes:
+          - clock_available
+          - map_available
+          - odom_available
+          - tf_available
+          - cmd_vel_available
+          - lifecycle_nodes_active
+          - navigate_to_pose_action_available
+
+  optionalChecks:
+    - /map availability
+    - /odom availability
+    - /tf or /tf_static availability
+    - /cmd_vel availability
+    - lifecycle get_state services
+    - /navigate_to_pose action availability
+
+  perturbations: []
+
+  outputs:
+    record:
+      - runtime_logs
+      - selected_realisation
+      - selected_app
+      - experiment_result
+      - gazebo_provider_preflight.json
+      - nav2_observer_evidence.json
+
+  tags:
+    - nav2
+    - gazebo
+    - real_provider_attempt
+    - substrate_evidence

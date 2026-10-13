@@ -1,0 +1,40 @@
+apiVersion: rotifer/v0.6
+kind: Contract
+
+metadata:
+  name: tf_tree
+  description: >
+    Observation contract for coordinate frame transforms.
+
+spec:
+  contractType: observation
+
+  representation:
+    class: ros_topic
+    messageType: tf2_msgs/msg/TFMessage
+
+  semantics:
+    includes:
+      - frame_transforms
+      - parent_child_relationships
+    timeStamped: true
+    configurable:
+      dynamicTopic: ROS topic carrying dynamic transforms, usually /tf.
+      staticTopic: ROS topic carrying static transforms, usually /tf_static.
+      requiredEdges: >
+        Optional list of required parent/child frame relationships for a
+        stricter use of this contract.
+      requiredChain: >
+        Optional ordered frame chain that can be interpreted as adjacent
+        requiredEdges by apps or observers.
+      rootFrame: Optional expected root or global frame for a specific use.
+      baseFrame: Optional expected robot base frame for a specific use.
+
+  notes:
+    - >
+      This contract indicates transform publication, not necessarily a complete
+      or globally consistent frame tree.
+    - >
+      Topic presence alone does not imply a complete or globally consistent
+      frame tree. Configured requiredEdges or requiredChain can make a
+      particular app, experiment, or realisation use stricter.

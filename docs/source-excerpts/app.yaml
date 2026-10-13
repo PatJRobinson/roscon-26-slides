@@ -1,0 +1,213 @@
+apiVersion: rotifer/v0.6
+kind: App
+
+metadata:
+  name: nav2_corridor_probe
+  description: >
+    Headless Nav2 navigation substrate observer for recording package, action,
+    topic, lifecycle, TF, and command-path evidence without launching a GUI.
+
+spec:
+  environment:
+    ros:
+      distro: jazzy
+      packages:
+        - ros-core
+        - ros-base
+        - navigation2
+        - nav2-bringup
+        - nav2-route
+        - launch
+        - launch-ros
+        - launch-xml
+        - launch-yaml
+        - ros2launch
+
+  roles:
+    - name: nav2_observer
+      description: Records bounded Nav2 substrate evidence from the ROS graph.
+      optional:
+        observations:
+          - contract: tf_tree
+            bindingConfig:
+              dynamicTopic: /tf
+              staticTopic: /tf_static
+              requiredEdges:
+                - parent: odom
+                  child: base_link
+          - contract: lidar2d
+            bindingConfig:
+              topic: /scan
+              messageType: sensor_msgs/msg/LaserScan
+              baseFrame: base_link
+              requireTransformToBase: true
+      runtime:
+        type: ros2_node
+        entrypoint: apps/nav2_corridor_probe/nav2_observer.sh
+        interactive: false
+      deployment:
+        surface:
+          configurable:
+            env:
+              - ROS_DOMAIN_ID
+              - NAV2_EVIDENCE_FILE
+              - NAV2_OBSERVE_SECONDS
+              - NAV2_REQUIRED_TF_EDGES
+              - NAV2_REQUIRED_LIFECYCLE_NODES
+              - NAV2_BASE_FRAME
+              - NAV2_ODOM_FRAME
+              - NAV2_MAP_TOPIC
+              - NAV2_MAP_FRAME
+              - NAV2_LOCALIZATION_OWNERSHIP
+              - NAV2_SCAN_TOPIC
+              - NAV2_OBSERVER_EARLY_EXIT_COSTMAP_TIMING
+              - NAV2_OBSERVER_EARLY_EXIT_MIN_SECONDS
+
+    - name: nav2_mock_substrate
+      description: Publishes bounded mock map, odom, TF, and cmd_vel signals.
+      runtime:
+        type: ros2_node
+        entrypoint: apps/nav2_corridor_probe/nav2_mock_substrate.sh
+        interactive: false
+      deployment:
+        surface:
+          configurable:
+            env:
+              - ROS_DOMAIN_ID
+              - NAV2_MOCK_SUBSTRATE_ENABLED
+              - NAV2_MOCK_SUBSTRATE_SECONDS
+
+    - name: nav2_lifecycle_surface
+      description: >
+        Launches a bounded headless Nav2 lifecycle/action surface probe when
+        explicitly enabled by an experiment.
+      runtime:
+        type: ros2_node
+        entrypoint: apps/nav2_corridor_probe/nav2_lifecycle_surface.sh
+        interactive: false
+      deployment:
+        surface:
+          configurable:
+            env:
+              - ROS_DOMAIN_ID
+              - NAV2_LIFECYCLE_PROBE_ENABLED
+              - NAV2_LIFECYCLE_PROBE_SECONDS
+              - NAV2_LAUNCH_FILE
+              - NAV2_PARAMS_FILE
+              - NAV2_SUBSTRATE_WAIT_SECONDS
+              - NAV2_SUBSTRATE_READINESS_FILE
+              - NAV2_REQUIRED_TF_EDGES
+              - NAV2_BASE_FRAME
+              - NAV2_ODOM_FRAME
+              - NAV2_MAP_TOPIC
+              - NAV2_MAP_FRAME
+              - NAV2_REQUIRE_MAP
+              - NAV2_REQUIRE_MAP_TO_ODOM
+              - NAV2_REQUIRE_SCAN_STAMP_TF
+              - NAV2_LOCALIZATION_OWNERSHIP
+              - NAV2_SCAN_TOPIC
+              - NAV2_CLASSIFY_COSTMAP_TIMING
+              - NAV2_LIFECYCLE_EARLY_EXIT_COSTMAP_TIMING
+              - NAV2_LIFECYCLE_EARLY_EXIT_MIN_SECONDS
+              - NAV2_MPPI_ABLATION
+              - NAV2_MPPI_ABLATION_BASE_PARAMS
+
+    - name: nav2_goal_probe
+      description: >
+        Sends one bounded NavigateToPose goal after substrate, lifecycle, action,
+        and timing preconditions have been observed.
+      runtime:
+        type: ros2_node
+        entrypoint: apps/nav2_corridor_probe/nav2_goal_probe.sh
+        interactive: false
+      deployment:
+        surface:
+          configurable:
+            env:
+              - ROS_DOMAIN_ID
+              - NAV2_GOAL_PROBE_ENABLED
+              - NAV2_GOAL_EVIDENCE_FILE
+              - NAV2_GOAL_ACTION
+              - NAV2_GOAL_TIMEOUT_SECONDS
+              - NAV2_GOAL_PRECONDITION_TIMEOUT_SECONDS
+              - NAV2_GOAL_FRAME
+              - NAV2_GOAL_X
+              - NAV2_GOAL_Y
+              - NAV2_GOAL_YAW
+              - NAV2_CMD_VEL_TOPIC
+              - NAV2_ODOM_TOPIC
+              - NAV2_SUBSTRATE_READINESS_FILE
+              - NAV2_LIFECYCLE_LOG_FILE
+              - NAV2_BASE_FRAME
+              - NAV2_BASE_FOOTPRINT_FRAME
+              - NAV2_REQUIRE_BASE_FOOTPRINT
+              - NAV2_GOAL_REQUIRED_LIFECYCLE_NODES
+              - NAV2_CONTROLLER_CMD_TOPIC
+              - NAV2_BEHAVIOR_CMD_TOPIC
+              - NAV2_MERGED_CMD_TOPIC
+              - NAV2_SMOOTHER_CMD_TOPIC
+              - NAV2_EXPECTED_CONTROLLER_PLUGIN
+              - NAV2_EXPECTED_CONTROLLER_VX_MIN
+              - NAV2_EXPECTED_CONTROLLER_DESIRED_LINEAR_VEL
+              - NAV2_PLAN_TOPICS
+              - NAV2_MPPI_DEBUG_ENABLED
+              - NAV2_MPPI_ABLATION_NAME
+              - NAV2_MPPI_CHANGED_CRITIC
+              - NAV2_MPPI_CHANGE_DESCRIPTION
+              - NAV2_MPPI_CONFIG_BEFORE
+              - NAV2_MPPI_CONFIG_AFTER
+              - NAV2_LOCAL_FEASIBILITY_JOIN_SECONDS
+              - NAV2_MPPI_REFERENCE_CONTROLLER_MAX_LINEAR_X
+              - NAV2_MPPI_REFERENCE_ODOM_DISPLACEMENT
+
+    - name: cmd_vel_polarity_probe
+      description: >
+        Publishes one bounded differential-drive command without Nav2 and
+        records whether odometry moves in the commanded direction.
+      optional:
+        commands:
+          - contract: differential_drive_cmd_vel
+            bindingConfig:
+              name: /cmd_vel
+        observations:
+          - contract: sim_clock
+          - contract: odometry
+      runtime:
+        type: ros2_node
+        entrypoint: apps/nav2_corridor_probe/cmd_vel_polarity_probe.sh
+        interactive: false
+      deployment:
+        surface:
+          configurable:
+            env:
+              - ROS_DOMAIN_ID
+              - CMD_VEL_POLARITY_PROBE_ENABLED
+              - CMD_VEL_POLARITY_EVIDENCE_FILE
+              - CMD_VEL_TOPIC
+              - ODOM_TOPIC
+              - CMD_VEL_LINEAR_X
+              - CMD_VEL_DURATION_SECONDS
+              - CMD_VEL_SETTLE_SECONDS
+              - CMD_VEL_WAIT_SECONDS
+
+    - name: nav2_local_feasibility_probe
+      description: >
+        Records local costmap, footprint, and forward-corridor feasibility
+        around the robot.
+      runtime:
+        type: ros2_node
+        entrypoint: apps/nav2_corridor_probe/nav2_local_feasibility_probe.sh
+        interactive: false
+      deployment:
+        surface:
+          configurable:
+            env:
+              - ROS_DOMAIN_ID
+              - NAV2_LOCAL_FEASIBILITY_ENABLED
+              - NAV2_LOCAL_FEASIBILITY_FILE
+              - NAV2_LOCAL_FEASIBILITY_WAIT_SECONDS
+              - NAV2_LOCAL_COSTMAP_TOPIC
+              - NAV2_FOOTPRINT_TOPIC
+              - NAV2_BASE_FRAME
+              - NAV2_FORWARD_SAMPLE_DISTANCE
+              - NAV2_FORWARD_SAMPLE_STEP
