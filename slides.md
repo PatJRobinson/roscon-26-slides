@@ -80,7 +80,7 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="inspection-pair">
-<div class="terminal-card"><div class="terminal-title">ROS 2 inspection · staged example</div><div class="terminal-body"><div v-click="1" class="terminal-command">❯ ros2 node list</div><div v-click="2" class="terminal-output">robot_node</div><div v-click="3" class="terminal-command">❯ ros2 topic list</div><div v-click="4" class="terminal-output">/tf<br>/tf_static<br>/scan<br>/cmd_vel</div><div v-click="5" class="topic-annotation">What relationships between these?</div></div></div>
+<div class="terminal-card"><div class="terminal-title">ROS 2 inspection · staged example</div><div class="terminal-body"><div v-click="1" class="terminal-command">❯ ros2 node list</div><div v-click="2" class="terminal-output">robot_node</div><div v-click="3" class="terminal-command">❯ ros2 topic list</div><div v-click="4" class="terminal-output">/tf<br>/tf_static<br>/scan<br>/cmd_vel</div></div></div>
 <div v-click="6" class="tf-inspection">
 <div class="terminal-card"><div class="terminal-title">TF2 structure · generated with tf2_tools</div><div class="tf-command">❯ ros2 run tf2_tools view_frames</div></div>
 <div class="system-view"><div class="system-view-header">frames.pdf · schematic frame graph</div><div class="tf-graph"><div class="tf-branch"><span>map</span><i>↓</i><span>odom</span></div><div class="tf-branch"><span>base_link</span><i>↓</i><span>scan</span></div></div></div>
@@ -215,7 +215,7 @@ Authoritative content: say-show-script.md.
 class: simple-slide
 ---
 
-# ROTIFER · REALISATION
+# Rotifer - Realisation
 
 <div class="slide-content code-artifact-slide compact-code-artifact">
 
@@ -256,7 +256,7 @@ Slide 11. Show a simplified excerpt from the selected realisation while inside t
 class: simple-slide
 ---
 
-# ROTIFER · PROVIDER
+# Rotifer - Provider
 
 <div class="slide-content code-artifact-slide">
 
@@ -292,7 +292,7 @@ Slide 12. Show the provider as a reusable description of existing software, insi
 class: simple-slide
 ---
 
-# EXPERIMENT · Presence check
+# Rotifer - Experiment - Presence Check
 
 <div class="slide-content">
 
