@@ -35,7 +35,7 @@ class: simple-slide quiet-question
 </div>
 
 <!--
-Slide 2. Opening · 0:00. Working means a particular configuration, robot, environment and set of conditions.
+Slide 2. Opening - 0:00. Working means a particular configuration, robot, environment and set of conditions.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -80,17 +80,17 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="inspection-pair">
-<div class="terminal-card"><div class="terminal-title">ROS 2 inspection · staged example</div><div class="terminal-body"><div v-click="1" class="terminal-command">❯ ros2 node list</div><div v-click="2" class="terminal-output">robot_node</div><div v-click="3" class="terminal-command">❯ ros2 topic list</div><div v-click="4" class="terminal-output">/tf<br>/tf_static<br>/scan<br>/cmd_vel</div></div></div>
+<div class="terminal-card"><div class="terminal-title">ROS 2 inspection - staged example</div><div class="terminal-body"><div v-click="1" class="terminal-command">❯ ros2 node list</div><div v-click="2" class="terminal-output">robot_node</div><div v-click="3" class="terminal-command">❯ ros2 topic list</div><div v-click="4" class="terminal-output">/tf<br>/tf_static<br>/scan<br>/cmd_vel</div></div></div>
 <div v-click="6" class="tf-inspection">
-<div class="terminal-card"><div class="terminal-title">TF2 structure · generated with tf2_tools</div><div class="tf-command">❯ ros2 run tf2_tools view_frames</div></div>
-<div class="system-view"><div class="system-view-header">frames.pdf · schematic frame graph</div><div class="tf-graph"><div class="tf-branch"><span>map</span><i>↓</i><span>odom</span></div><div class="tf-branch"><span>base_link</span><i>↓</i><span>scan</span></div></div></div>
+<div class="terminal-card"><div class="terminal-title">TF2 structure - generated with tf2_tools</div><div class="tf-command">❯ ros2 run tf2_tools view_frames</div></div>
+<div class="system-view"><div class="system-view-header">frames.pdf - schematic frame graph</div><div class="tf-graph"><div class="tf-branch"><span>map</span><i>↓</i><span>odom</span></div><div class="tf-branch"><span>base_link</span><i>↓</i><span>scan</span></div></div></div>
 </div>
 </div>
 
 </div>
 
 <!--
-Slide 5. First example · 2:00–5:00. ROS tools provide useful observations. The engineer supplies the question and interpretation.
+Slide 5. First example - 2:00–5:00. ROS tools provide useful observations. The engineer supplies the question and interpretation.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -200,7 +200,7 @@ class: simple-slide
 <div class="system-diagram">
 <section class="system-diagram-block remaining-card"><h2>GAZEBO</h2><p>Warehouse world</p><p>Mobile robot</p></section>
 <div class="system-diagram-arrow"><span>ROS bridge</span><strong>↓</strong></div>
-<section class="system-diagram-block remaining-card"><h2>ROS 2 JAZZY</h2><p><span>/odom</span> · <span>/tf</span> · <span>/cmd_vel</span></p><p>Our inspection tools</p></section>
+<section class="system-diagram-block remaining-card"><h2>ROS 2 JAZZY</h2><p><span>/odom</span> - <span>/tf</span> - <span>/cmd_vel</span></p><p>Our inspection tools</p></section>
 </div>
 <p class="system-diagram-question">First question: what does this setup actually make available?</p>
 
@@ -220,7 +220,7 @@ class: simple-slide
 <div class="slide-content code-artifact-slide compact-code-artifact">
 
 <div class="terminal-card code-artifact">
-<div class="terminal-title">realisation.yaml · warehouse_navigation@gazebo_nav2_substrate</div>
+<div class="terminal-title">realisation.yaml - warehouse_navigation@gazebo_nav2_substrate</div>
 
 ````yaml
 spec:
@@ -261,7 +261,7 @@ class: simple-slide
 <div class="slide-content code-artifact-slide">
 
 <div class="terminal-card code-artifact">
-<div class="terminal-title">provider.yaml · gazebo</div>
+<div class="terminal-title">provider.yaml - gazebo</div>
 
 ````yaml
 # Illustrative YAML structure, not a literal source excerpt
@@ -314,7 +314,7 @@ Slide 13. Introduce the authored experiment and its selected probes before openi
 class: simple-slide
 ---
 
-# Presence check · Rotifer workspace
+# Presence check - Rotifer workspace
 
 <div class="slide-content">
 
@@ -351,7 +351,7 @@ Slide 15. Distinguish agreement, disagreement and missing information in the sof
 class: simple-slide
 ---
 
-# Presence check · Rotifer workspace
+# Presence check - Rotifer workspace
 
 <div class="slide-content">
 
@@ -367,16 +367,16 @@ Slide 16. Return to the same prepared REPL session, already entered and with Pre
 class: simple-slide
 ---
 
-# Presence check · What we observed
+# Presence check - What we observed
 
 <div class="slide-content">
 
 <table><thead><tr><th>Inspected</th><th>Observation</th><th>Source</th></tr></thead><tbody>
-<tr><td><code>/odom</code> · <code>/tf</code></td><td>Present</td><td>Mocked REPL · recorded run</td></tr>
-<tr><td>Odometry frames</td><td><code>vehicle_blue/odom → vehicle_blue/chassis</code></td><td>Mocked REPL · recorded run</td></tr>
-<tr><td>Required edge</td><td><code>odom → base_link</code> not observed</td><td>Mocked REPL · recorded run</td></tr>
+<tr><td><code>/odom</code> - <code>/tf</code></td><td>Present</td><td>Mocked REPL - recorded run</td></tr>
+<tr><td>Odometry frames</td><td><code>vehicle_blue/odom → vehicle_blue/chassis</code></td><td>Mocked REPL - recorded run</td></tr>
+<tr><td>Required edge</td><td><code>odom → base_link</code> not observed</td><td>Mocked REPL - recorded run</td></tr>
 </tbody></table>
-<p class="provenance">Gazebo · ROS 2 Jazzy · copied-bundle replay verified.</p>
+<p class="provenance">Gazebo - ROS 2 Jazzy - copied-bundle replay verified.</p>
 
 </div>
 
@@ -388,12 +388,12 @@ Slide 17. Stage 1 recorded observations. Do not imply navigation failure from th
 class: simple-slide
 ---
 
-# Same question · more evidence
+# Same question - more evidence
 
 <div class="slide-content">
 
 <div class="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
-<section class="remaining-card"><div class="card-kicker">BEFORE THE RUN</div><p>Descriptions establish:</p><ul><li><code>/odom</code> and <code>/tf</code> configured</li><li><code>odom → base_link</code> · unknown</li><li>No runtime evidence</li></ul></section>
+<section class="remaining-card"><div class="card-kicker">BEFORE THE RUN</div><p>Descriptions establish:</p><ul><li><code>/odom</code> and <code>/tf</code> configured</li><li><code>odom → base_link</code> - unknown</li><li>No runtime evidence</li></ul></section>
 <section class="remaining-card"><div class="card-kicker">AFTER THE RUN</div><p>Observed:</p><ul><li><code>/odom</code> and <code>/tf</code> present</li><li><code>odom → base_link</code> not observed</li></ul></section>
 </div>
 <p class="mt-8 text-center text-2xl">The descriptions and the run tell us different things. Keep both.</p>
@@ -418,7 +418,7 @@ class: simple-slide
 <dt>Before running</dt><dd>Not established by the software descriptions</dd>
 <dt>Observed</dt><dd><code>/odom</code> and <code>/tf</code> present; required relationship not observed</dd>
 <dt>What we can say</dt><dd>The required relationship was not found during this inspection</dd>
-<dt>Still open</dt><dd>Why it was unavailable · whether navigation would work</dd>
+<dt>Still open</dt><dd>Why it was unavailable - whether navigation would work</dd>
 </dl>
 <p class="provenance">Prepared account view assembled from the experiment, resolved description and recorded evidence.</p>
 
@@ -432,16 +432,16 @@ Slide 19. The current CLI does not produce this combined account automatically; 
 class: simple-slide
 ---
 
-# Stage 1 · Presence
+# Stage 1 - Presence
 
 <div class="slide-content">
 
 <dl class="account-rows">
 <dt>Assumption</dt><dd><code>odom → base_link</code> available</dd>
-<dt>Probe</dt><dd>ROS topics · odometry · TF lookup</dd>
+<dt>Probe</dt><dd>ROS topics - odometry - TF lookup</dd>
 <dt>Evidence</dt><dd><code>/odom</code> and <code>/tf</code> present<br><code>odom → base_link</code> not observed</dd>
 <dt>What this shows</dt><dd>Required relationship not found in this run</dd>
-<dt>Still open</dt><dd>Frame structure · timing · navigation behaviour</dd>
+<dt>Still open</dt><dd>Frame structure - timing - navigation behaviour</dd>
 </dl>
 
 </div>
@@ -454,7 +454,7 @@ Slide 20. Stage 1 bounded claim; transition to the next question about how the f
 class: simple-slide
 ---
 
-# Stage 2 · Required relationships
+# Stage 2 - Required relationships
 
 <div class="slide-content">
 
@@ -480,7 +480,7 @@ class: simple-slide
 <div class="slide-content">
 
 <div v-click="1"><dl class="account-rows"><dt>Experiment</dt><dd>Odometry link</dd><dt>Realisation</dt><dd>warehouse_navigation@gazebo_nav2_tf_substrate</dd><dt>Ownership</dt><dd>Provider/model supplies odometry and TF; the app observes the edge.</dd></dl></div>
-<div v-click="2"><dl class="account-rows"><dt>Retained evidence</dt><dd>odom → base_link present · 20/20 checks passed</dd></dl></div>
+<div v-click="2"><dl class="account-rows"><dt>Retained evidence</dt><dd>odom → base_link present - 20/20 checks passed</dd></dl></div>
 <div v-click="3"><dl class="account-rows"><dt>Bounded update</dt><dd>The selected odometry/TF relationship was observed for this configuration.</dd></dl></div>
 <p class="provenance">Counted real-provider capture; stable talk-bundle replay verified.</p>
 
@@ -517,7 +517,7 @@ class: simple-slide structure-slide
 <div class="structure-chain"><span>odom</span><span>→</span><span>base_link</span><span>→</span><span>scan frame</span></div>
 <div class="structure-facts"><p><strong>Observed:</strong> odom → base_link; the /scan source and frame.</p><p><strong>Scan link:</strong> missing in the scan-only run; present in the final scan-TF run.</p></div>
 <p class="structure-boundary">Structural links established for this setup. Scan timing and navigation remain open.</p>
-<p class="provenance">Three separate configurations · counted captures · copied-bundle replay verified.</p>
+<p class="provenance">Three separate configurations - counted captures - copied-bundle replay verified.</p>
 
 </div>
 
@@ -529,7 +529,7 @@ Slide 24. Stage 2 structural claim and boundary.
 class: simple-slide
 ---
 
-# Stage 3 · Is the transform available in time?
+# Stage 3 - Is the transform available in time?
 
 <div class="slide-content">
 
@@ -602,16 +602,16 @@ Slide 28. Stage 3 timing-compatible result. No goal was attempted.
 class: simple-slide
 ---
 
-# Stage 3 · The updated account
+# Stage 3 - The updated account
 
 <div class="slide-content">
 
 <dl class="account-rows">
 <dt>Assumption</dt><dd>Critical transforms available at scan time</dd>
-<dt>Probe</dt><dd>Runtime surface · scan-time TF · costmap drops</dd>
-<dt>Evidence</dt><dd>First run: scan 153.4 s · latest TF 153.0 s · 2,358 drops<br>Follow-up: 10 Hz · scan/TF at 12.7 s · zero drops</dd>
+<dt>Probe</dt><dd>Runtime surface - scan-time TF - costmap drops</dd>
+<dt>Evidence</dt><dd>First run: scan 153.4 s - latest TF 153.0 s - 2,358 drops<br>Follow-up: 10 Hz - scan/TF at 12.7 s - zero drops</dd>
 <dt>What this shows</dt><dd>Follow-up transform available at scan time; no drops observed</dd>
-<dt>Still open</dt><dd>Localisation · downstream costmap · navigation success</dd>
+<dt>Still open</dt><dd>Localisation - downstream costmap - navigation success</dd>
 </dl>
 <p class="provenance">Selected runs replayed from the stable Stage 3 bundle.</p>
 
@@ -626,15 +626,15 @@ Slide 29. Stage 3 claim uses the order 6 evidence only.
 class: simple-slide compact-body-slide
 ---
 
-# Stage 4 · No forward progress
+# Stage 4 - No forward progress
 
 <div class="slide-content">
 
 <div class="plain-columns">
-<section><h2>Goal and path</h2><ul><li>0.5 m goal accepted · timed out</li><li>Valid path</li><li>No forward command or translational progress</li></ul></section>
-<section><h2>Local corridor check</h2><ul><li>Sampled corridor and robot cell clear</li><li>Footprint present · local motion classified feasible</li></ul></section>
+<section><h2>Goal and path</h2><ul><li>0.5 m goal accepted - timed out</li><li>Valid path</li><li>No forward command or translational progress</li></ul></section>
+<section><h2>Local corridor check</h2><ul><li>Sampled corridor and robot cell clear</li><li>Footprint present - local motion classified feasible</li></ul></section>
 </div>
-<p class="provenance">Gazebo · ROS 2 Jazzy · two separate attempts.</p>
+<p class="provenance">Gazebo - ROS 2 Jazzy - two separate attempts.</p>
 <p class="provenance">The mocked REPL shows recorded topics, not the submitted goal or final-result reply. The saved run goal record reports acceptance and timeout. No GUI video.</p>
 
 </div>
@@ -670,12 +670,12 @@ class: simple-slide
 
 <table><thead><tr><th>Observation</th><th>Result</th><th>Source</th></tr></thead><tbody>
 <tr><td>Goal accepted / timeout</td><td>Recorded</td><td>Saved run goal records</td></tr>
-<tr><td>Global path</td><td>Valid path</td><td>Mocked REPL · recorded path</td></tr>
-<tr><td>Local feasibility</td><td>Free robot cell; sampled corridor 0–0.6 m; footprint present</td><td>Mocked REPL · separate probe</td></tr>
-<tr><td>Forward command</td><td>Zero linear.x</td><td>Mocked REPL · recorded command</td></tr>
-<tr><td>Translation</td><td>None observed</td><td>Mocked REPL · recorded odometry</td></tr>
+<tr><td>Global path</td><td>Valid path</td><td>Mocked REPL - recorded path</td></tr>
+<tr><td>Local feasibility</td><td>Free robot cell; sampled corridor 0–0.6 m; footprint present</td><td>Mocked REPL - separate probe</td></tr>
+<tr><td>Forward command</td><td>Zero linear.x</td><td>Mocked REPL - recorded command</td></tr>
+<tr><td>Translation</td><td>None observed</td><td>Mocked REPL - recorded odometry</td></tr>
 </tbody></table>
-<p class="provenance">Recorder starts 20:33:41Z / 20:38:41Z · the two evidence sources are separate attempts.</p>
+<p class="provenance">Recorder starts 20:33:41Z / 20:38:41Z - the two evidence sources are separate attempts.</p>
 <p class="provenance">The mocked REPL does not show the submitted goal or final-result reply; the saved run goal record reports acceptance and timeout.</p>
 
 </div>
@@ -694,10 +694,10 @@ class: simple-slide
 
 <dl class="account-rows">
 <dt>Assumption</dt><dd>Forward progress towards the accepted goal</dd>
-<dt>Probe</dt><dd>Path · local corridor · command · odometry · goal record</dd>
-<dt>Evidence</dt><dd>Goal accepted · timeout<br>Valid path · free sampled corridor/cell<br>Forward command 0 · translation 0</dd>
+<dt>Probe</dt><dd>Path - local corridor - command - odometry - goal record</dd>
+<dt>Evidence</dt><dd>Goal accepted - timeout<br>Valid path - free sampled corridor/cell<br>Forward command 0 - translation 0</dd>
 <dt>What this shows</dt><dd>No expected forward progress in these runs</dd>
-<dt>Still open</dt><dd>Task geometry · command feasibility · controller/configuration</dd>
+<dt>Still open</dt><dd>Task geometry - command feasibility - controller/configuration</dd>
 </dl>
 <p v-click class="next-question">What do we investigate next?</p>
 <p class="provenance">Evidence establishes the failure, not its cause. No controller defect or general substrate infeasibility is established.</p>
@@ -716,7 +716,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<div class="plain-columns"><section><h2>MPPI</h2><p>No forward progress in Stage 4</p></section><section><h2>Human-selected probe</h2><p>RPP · same named realisation · 0.5 m task</p><p>Result follows</p></section></div>
+<div class="plain-columns"><section><h2>MPPI</h2><p>No forward progress in Stage 4</p></section><section><h2>Human-selected probe</h2><p>RPP - same named realisation - 0.5 m task</p><p>Result follows</p></section></div>
 <p class="provenance">A controlled contrast to narrow the question, not diagnose MPPI. The human chooses the probe.</p>
 
 </div>
@@ -729,7 +729,7 @@ Slide 34. Stage 4 to 5 transition. Preserve the result reveal for the next slide
 class: simple-slide
 ---
 
-# Stage 5 · What happened with RPP?
+# Stage 5 - What happened with RPP?
 
 <div class="slide-content">
 
@@ -752,8 +752,8 @@ class: simple-slide
 
 <dl class="account-rows">
 <dt>Assumption</dt><dd>This setup can move and complete the 0.5 m task</dd>
-<dt>Probe</dt><dd>Controlled contrast · MPPI → RPP<br>Same named realisation · 0.5 m map-frame task</dd>
-<dt>Evidence</dt><dd>MPPI: no progress · goal timeout<br>RPP: forward command · 0.289 m · goal success within 0.25 m XY tolerance</dd>
+<dt>Probe</dt><dd>Controlled contrast - MPPI → RPP<br>Same named realisation - 0.5 m map-frame task</dd>
+<dt>Evidence</dt><dd>MPPI: no progress - goal timeout<br>RPP: forward command - 0.289 m - goal success within 0.25 m XY tolerance</dd>
 <dt>What this shows</dt><dd>Setup moved and completed the task in the RPP run</dd>
 <dt>Still open</dt><dd>Why MPPI stalled</dd>
 </dl>
@@ -774,7 +774,7 @@ class: simple-slide
 
 <div class="slide-content">
 
-<table><thead><tr><th>OLD REALISATION · LASER A</th><th>NEW REALISATION · LASER B</th></tr></thead><tbody><tr><td>Evidence: odom → base_link</td><td>Carry it forward if the odometry source and conditions are unchanged.</td></tr><tr><td>Evidence: scan A source and frame</td><td>Check scan B source and frame.</td></tr><tr><td>Evidence: scan-time transform</td><td>Recheck transform availability when the scan arrives.</td></tr><tr><td>Evidence: navigation result</td><td>Revisit costmap and navigation behaviour.</td></tr></tbody></table><p class="provenance">Earlier evidence remains evidence about Laser A. Illustrative handover view; it does not imply automatic claim reopening.</p>
+<table><thead><tr><th>OLD REALISATION - LASER A</th><th>NEW REALISATION - LASER B</th></tr></thead><tbody><tr><td>Evidence: odom → base_link</td><td>Carry it forward if the odometry source and conditions are unchanged.</td></tr><tr><td>Evidence: scan A source and frame</td><td>Check scan B source and frame.</td></tr><tr><td>Evidence: scan-time transform</td><td>Recheck transform availability when the scan arrives.</td></tr><tr><td>Evidence: navigation result</td><td>Revisit costmap and navigation behaviour.</td></tr></tbody></table><p class="provenance">Earlier evidence remains evidence about Laser A. Illustrative handover view; it does not imply automatic claim reopening.</p>
 
 </div>
 
@@ -803,7 +803,7 @@ What can we reasonably say?
              ↓
 What remains open?</pre>
 <div class="retention-notes">
-<p class="provenance">Prepared interaction over retained run evidence · Rotifer remains in development.</p>
+<p class="provenance">Prepared interaction over retained run evidence - Rotifer remains in development.</p>
 <p class="provenance">Open research questions: practitioner value and what this account misses.</p>
 </div>
 
