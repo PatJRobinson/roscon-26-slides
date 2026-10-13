@@ -335,9 +335,9 @@ class: simple-slide
 <div class="slide-content">
 
 <div class="grid grid-cols-3 gap-5">
-<section class="remaining-card description-result"><div class="description-result-mark">✓</div><h2>THEY AGREE</h2><p>I need <code>/scan</code> as a <code>LaserScan</code>.</p><p>The driver says it provides exactly that.</p></section>
-<section class="remaining-card description-result"><div class="description-result-mark">✕</div><h2>THEY DISAGREE</h2><p>I expect an <code>Image</code> on <code>/camera</code>.</p><p>The driver declares a <code>PointCloud2</code> instead.</p></section>
-<section class="remaining-card description-result"><div class="description-result-mark">?</div><h2>WE DON'T KNOW</h2><p>I need <code>odom → base_link</code>.</p><p>Nothing declares that it's provided.</p></section>
+<section class="remaining-card description-result"><h2>THEY AGREE</h2><p>I need <code>/scan</code> as a <code>LaserScan</code>.</p><p>The driver says it provides exactly that.</p></section>
+<section class="remaining-card description-result"><h2>THEY DISAGREE</h2><p>I expect an <code>Image</code> on <code>/camera</code>.</p><p>The driver declares a <code>PointCloud2</code> instead.</p></section>
+<section class="remaining-card description-result"><h2>WE DON'T KNOW</h2><p>I need <code>odom → base_link</code>.</p><p>Nothing declares that it's provided.</p></section>
 </div>
 <p class="unknown-takeaway">UNKNOWN ≠ FALSE</p>
 

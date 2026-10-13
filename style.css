@@ -1297,12 +1297,6 @@ a.button:hover {
   gap: 0.65rem;
   min-height: 15rem;
 }
-.description-result-mark {
-  color: var(--accent-ink-strong);
-  font-size: 2.3rem;
-  font-weight: 700;
-  line-height: 1;
-}
 .description-result h2 { margin: 0; font-size: 1.05rem; }
 .description-result p { margin: 0; font-size: 1.05rem !important; }
 .unknown-takeaway {
