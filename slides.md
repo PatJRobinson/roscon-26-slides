@@ -1,7 +1,7 @@
 ---
-title: How can a robot move?
+title: How a Robot Moves
 info: |
-  Working understandings, evidence, and a ROS 2 navigation failure
+  Tracing Assumptions in ROS 2 Integration
 class: simple-slide title-slide
 transition: none
 duration: 45min
@@ -11,11 +11,11 @@ drawings:
   persist: false
 ---
 
-# How can a robot move?
+# How a Robot Moves
 
 <div class="slide-content">
 
-<p>Working understandings, evidence, and a ROS 2 navigation failure</p><p>Patrick Robinson<br>ROSCon 2026</p>
+<p>Tracing Assumptions in ROS 2 Integration</p><p>Patrick Robinson<br>ROSCon 2026</p>
 
 </div>
 
