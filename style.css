@@ -1419,6 +1419,14 @@ a.button:hover {
 .simple-slide.title-slide { justify-content: center; }
 .simple-slide.title-slide h1 { font-size: 2.6rem; margin-top: 5rem; }
 .simple-slide.title-slide .slide-content { justify-content: flex-start; }
+.simple-slide.title-slide .title-affiliation-logo {
+  position: absolute;
+  right: 2.5rem;
+  bottom: 2rem;
+  width: 5.5rem;
+  height: 5.5rem;
+  object-fit: contain;
+}
 .simple-slide.plain-account .slide-content { gap: 2.5rem; }
 .simple-slide .spaced-lines { display: flex; flex-direction: column; gap: 1.75rem; }
 .simple-slide .spaced-lines p { font-size: 1.65rem; }

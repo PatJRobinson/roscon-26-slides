@@ -19,6 +19,8 @@ drawings:
 
 </div>
 
+<img class="title-affiliation-logo" src="/uwe-logo.svg" alt="UWE Bristol" />
+
 <!--
 Slide 1. Title slide. Begin the opening on the next slide.
 Authoritative content: say-show-script.md (updated 2026-10-03).
