@@ -63,6 +63,7 @@ class: simple-slide quiet-question
 <div class="slide-content">
 
 <p>The software may travel.<br>The understanding may not.</p>
+<p class="provenance">Topifer · previously Rotifer in the programme</p>
 
 </div>
 
@@ -207,7 +208,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 10. 12:00–14:00. Introduce the Gazebo warehouse robot and ROS 2 Jazzy topics before defining Rotifer's model.
+Slide 10. 12:00–14:00. Introduce the Gazebo warehouse robot and ROS 2 Jazzy topics before defining Topifer's model.
 Authoritative content: say-show-script.md.
 -->
 
@@ -870,7 +871,7 @@ Source audit and projection boundaries: docs/declaration-trace.md.
 class: simple-slide retention-slide
 ---
 
-# What Rotifer tries to retain
+# What Topifer tries to retain
 
 <div class="slide-content ">
 
@@ -883,7 +884,7 @@ Question and authored investigation
 Run and retained observations
              ↓
 Conclusion, its basis and what remains open</pre>
-<div class="retention-notes"><p class="provenance">The worked example connects real declarations and resolved-plan artifacts to retained run evidence. The combined account is a prepared presentation view.</p><p class="provenance">Rotifer remains in development. Research questions: practitioner value and what this account misses.</p></div>
+<div class="retention-notes"><p class="provenance">The worked example connects real declarations and resolved-plan artifacts to retained run evidence. The combined account is a prepared presentation view.</p><p class="provenance">Topifer remains in development. Research questions: practitioner value and what this account misses.</p></div>
 
 </div>
 

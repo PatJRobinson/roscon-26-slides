@@ -42,7 +42,7 @@ const stageData = {
   0: {
     name: 'Command help',
     commands: {
-      'roti -h': `Usage: roti [OPTIONS] [COMMAND]
+      'topi -h': `Usage: topi [OPTIONS] [COMMAND]
 
 Commands:
   select ITEM
@@ -50,7 +50,7 @@ Commands:
   source show   Display experiment configuration
   explain       Show the selected source, resolved plan and prepared evidence view
   run           Execute the selected experiment`,
-      'roti': `workspace: ros_ws
+      'topi': `workspace: ros_ws
 status: ready
 commands: select, source, explain, run`,
       'source show -h': `Usage: source show
@@ -60,13 +60,13 @@ Show a focused projection of the selected declarations and available evidence.`,
       'run -h': `Usage: run
 Execute the selected experiment and record its results.`,
     },
-    suggestions: ['roti -h', 'roti'],
+    suggestions: ['topi -h', 'topi'],
   },
   1: {
     name: 'Presence',
     selectable: ['presence_check'],
     commands: {
-      'roti': `workspace: ros_ws
+      'topi': `workspace: ros_ws
 status: ready
 commands: select, source, explain, run`,
       'select presence_check': 'selected: presence_check',
@@ -204,10 +204,10 @@ const stage = computed(() => stageData[props.stage] || stageData[1])
 const stageLabel = computed(() => props.stage === 0 ? 'REPL introduction' : `Stage ${props.stage}`)
 const insideRepl = ref(props.startInside || (props.stage !== 0 && props.stage !== 1))
 const selectedExperiment = ref(props.stage === 1 && props.startInside ? 'presence_check' : '')
-const promptPrefix = computed(() => insideRepl.value ? `roti${selectedExperiment.value ? `[${selectedExperiment.value}]` : ''}>` : '❯')
+const promptPrefix = computed(() => insideRepl.value ? `topi${selectedExperiment.value ? `[${selectedExperiment.value}]` : ''}>` : '❯')
 const suggestions = computed(() => {
   if (props.stage === 0 && insideRepl.value) return ['source show -h', 'explain -h', 'run -h']
-  if (props.stage === 1 && !insideRepl.value) return ['roti']
+  if (props.stage === 1 && !insideRepl.value) return ['topi']
   return stage.value.suggestions
 })
 const input = ref('')
@@ -217,16 +217,16 @@ const inputId = `mock-repl-stage-${props.stage}${props.startInside ? '-continued
 
 function buildInitial(data) {
   if (props.stage === 0) {
-    return [{ kind: 'notice', text: 'Shell prompt · use roti -h for options, then roti to enter the REPL.' }]
+    return [{ kind: 'notice', text: 'Shell prompt · use topi -h for options, then topi to enter the REPL.' }]
   }
   if (props.stage === 1) {
     if (props.startInside) {
       return [
-        { kind: 'exchange', prompt: '❯', command: 'roti', output: 'Rotifer REPL ready. Select an experiment to inspect its source, account and evidence.' },
-        { kind: 'exchange', prompt: 'roti>', command: 'select presence_check', output: 'selected: presence_check' },
+        { kind: 'exchange', prompt: '❯', command: 'topi', output: 'Topifer REPL ready. Select an experiment to inspect its source, account and evidence.' },
+        { kind: 'exchange', prompt: 'topi>', command: 'select presence_check', output: 'selected: presence_check' },
       ]
     }
-    return [{ kind: 'notice', text: 'Presentation mock · prepared interactions over a recorded Rotifer experiment.' }]
+    return [{ kind: 'notice', text: 'Presentation mock · prepared interactions over a recorded Topifer experiment.' }]
   }
   if (props.stage === 2) {
     return [{ kind: 'notice', text: 'Stage 2 · structural evidence from three retained configurations.' }]
@@ -340,7 +340,7 @@ async function submit(raw = input.value) {
     }
     entries.value.push(entry)
     input.value = ''
-    if ((props.stage === 0 || props.stage === 1) && key === 'roti') insideRepl.value = true
+    if ((props.stage === 0 || props.stage === 1) && key === 'topi') insideRepl.value = true
     if (runDuration) {
       isRunning.value = true
       await nextTick()
@@ -388,7 +388,7 @@ function reset() {
 <template>
   <section class="mock-repl" :aria-label="`${stageLabel} · ${stage.name}`">
     <header class="mock-repl-header">
-      <div class="mock-repl-title"><span class="mock-repl-dot"></span> {{ insideRepl ? 'ros_ws / Rotifer REPL' : 'shell / ros_ws' }}</div>
+      <div class="mock-repl-title"><span class="mock-repl-dot"></span> {{ insideRepl ? 'ros_ws / Topifer REPL' : 'shell / ros_ws' }}</div>
       <div class="mock-repl-disclosure">MOCK · NO LIVE ROS OR SHELL</div>
     </header>
 
