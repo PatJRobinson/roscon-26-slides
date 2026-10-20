@@ -796,13 +796,23 @@ class: simple-slide
 
 <div class="slide-content ">
 
+<div class="grid grid-cols-[minmax(0,1fr)_14rem] gap-4 items-start">
 <MockRepl :stage="5" />
+<aside v-click="1" class="remaining-card" aria-label="Saved run goal record for the RPP attempt">
+<div class="card-kicker">Saved run goal record</div>
+<p>RPP attempt</p>
+<pre class="text-sm saved-goal-record">result: SUCCEEDED
+XY goal tolerance: 0.25 m</pre>
+<p class="provenance">Saved goal record, separate from the REPL topic observations.</p>
+</aside>
+</div>
 <p class="provenance">The experiment selects the RPP parameter file and the same named task realisation. MPPI evidence retains its earlier source; RPP progress requires this run. Native goal evidence supplies the final result.</p>
 
 </div>
 
 <!--
 Slide 33. 33:00–37:00. Keep parameter selection, prior MPPI observations and new RPP evidence distinct. The human chooses the contrast.
+After the RPP run completes, reveal the saved goal record with click 1 before stating that the goal succeeded.
 Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
