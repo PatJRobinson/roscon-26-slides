@@ -916,11 +916,11 @@ class: simple-slide
 
 <div class="slide-content">
 
-<p>Do you work on robotic systems?</p><p>I’m interested in experiences of integration, testing,<br>debugging, deployment and handover.</p><div class="plain-columns"><section><div class="signup-placeholder">Interview sign-up QR<br><small>Link required</small></div></section><section><p>Find out more or express interest.<br>Participation is optional.</p><p class="production-pending">Email: Patrick2.Robinson@live.uwe.ac.uk</p></section></div>
+<p>Do you work on robotic systems?</p><p>I’m interested in experiences of integration, testing,<br>debugging, deployment and handover.</p><div class="plain-columns"><section><img src="/interview-mailing-list.svg" alt="Scan to register interest in a research interview" style="width: 14rem; height: 14rem; object-fit: contain;" /></section><section><p>Find out more or express interest.</p><p style="font-size: 1.5rem; line-height: 1.4;">Email:<br>Patrick2.Robinson@live.uwe.ac.uk</p></section></div>
 
 </div>
 
 <!--
-Slide 38. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
+Slide 38. 44:00–45:00. Separate invitation from the talk. QR code links to the interview contact signup. Thank the audience.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
