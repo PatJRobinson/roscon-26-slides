@@ -1455,4 +1455,6 @@ a.button:hover {
 /* Saved goal evidence uses dark text on the light card surface. */
 .slidev-layout pre.saved-goal-record {
   color: var(--light-text) !important;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
