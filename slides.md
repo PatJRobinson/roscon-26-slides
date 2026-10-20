@@ -727,7 +727,17 @@ class: simple-slide
 
 <div class="slide-content ">
 
+<div class="grid grid-cols-[minmax(0,1fr)_14rem] gap-4 items-start">
 <MockRepl :stage="4" />
+<aside v-click="1" class="remaining-card" aria-label="Saved run goal record for the goal and path attempt">
+<div class="card-kicker">Saved run goal record</div>
+<p>Goal and path attempt</p>
+<pre class="text-sm saved-goal-record">status: ACCEPTED
+result: TIMEOUT</pre>
+<p class="provenance">Saved goal record, separate from the REPL topic observations.</p>
+</aside>
+</div>
+
 <p class="provenance">source show identifies goal, timeout, parameter file and probes. Pre-run explain separates that authored task from evidence still to be collected. Local-corridor evidence comes from a separate attempt.</p>
 
 </div>
@@ -735,30 +745,6 @@ class: simple-slide
 <!--
 Slide 30. 27:00–30:00. Expected progress is an authored investigative question, not a static guarantee or a diagnosis derived by the resolver.
 Source audit and projection boundaries: docs/declaration-trace.md.
--->
-
----
-class: simple-slide
----
-
-# What the mocked REPL shows
-
-<div class="slide-content">
-
-<table><thead><tr><th>Observation</th><th>Result</th><th>Source</th></tr></thead><tbody>
-<tr><td>Goal accepted / timeout</td><td>Recorded</td><td>Saved run goal records</td></tr>
-<tr><td>Global path</td><td>Valid path</td><td>Mocked REPL - recorded path</td></tr>
-<tr><td>Local feasibility</td><td>Free robot cell; sampled corridor 0–0.6 m; footprint present</td><td>Mocked REPL - separate probe</td></tr>
-<tr><td>Forward command</td><td>Zero linear.x</td><td>Mocked REPL - recorded command</td></tr>
-<tr><td>Translation</td><td>None observed</td><td>Mocked REPL - recorded odometry</td></tr>
-</tbody></table>
-<p class="provenance">Recorder starts 20:33:41Z / 20:38:41Z - the two evidence sources are separate attempts.</p>
-<p class="provenance">The mocked REPL does not show the submitted goal or final-result reply; the saved run goal record reports acceptance and timeout.</p>
-
-</div>
-
-<!--
-Slide 31. Stage 4 observation summary. Do not conflate with the older 3.5 m local-feasibility record.
 -->
 
 ---
@@ -782,7 +768,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 32. Stage 4 unresolved question; candidate explanations remain for the probe-selection beat.
+Slide 31. Stage 4 unresolved question; candidate explanations remain for the probe-selection beat.
 -->
 
 ---
@@ -799,7 +785,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 33. Stage 4 to 5 transition. Preserve the result reveal for the next slide.
+Slide 32. Stage 4 to 5 transition. Preserve the result reveal for the next slide.
 -->
 
 ---
@@ -816,7 +802,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 34. 33:00–37:00. Keep parameter selection, prior MPPI observations and new RPP evidence distinct. The human chooses the contrast.
+Slide 33. 33:00–37:00. Keep parameter selection, prior MPPI observations and new RPP evidence distinct. The human chooses the contrast.
 Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
@@ -839,7 +825,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 35. Stage 5 bounded comparison and remaining uncertainties.
+Slide 34. Stage 5 bounded comparison and remaining uncertainties.
 -->
 
 
@@ -848,7 +834,7 @@ Slide 35. Stage 5 bounded comparison and remaining uncertainties.
 class: simple-slide
 ---
 
-# Replace the laser provider
+# What carries forward when the system changes?
 
 <div class="slide-content ">
 
@@ -863,7 +849,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 36. 37:00–39:00. Refer back to the worked source-to-binding-to-probe chain. No automatic claim reopening or evidence transfer is implied.
+Slide 35. 37:00–39:00. Refer back to the worked source-to-binding-to-probe chain. No automatic claim reopening or evidence transfer is implied.
 Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
@@ -889,7 +875,7 @@ Conclusion, its basis and what remains open</pre>
 </div>
 
 <!--
-Slide 37. 39:00–43:00. Close by referring back to specific requirement/source/probe/observation provenance. Preserve the implementation boundary.
+Slide 36. 39:00–43:00. Close by referring back to specific requirement/source/probe/observation provenance. Preserve the implementation boundary.
 Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
@@ -908,7 +894,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 38. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
+Slide 37. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -925,6 +911,6 @@ class: simple-slide
 </div>
 
 <!--
-Slide 39. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
+Slide 38. 44:00–45:00. Separate invitation from the talk. Add the approved study information/sign-up URL and speaker email before presenting. No invented QR destination. Thank the audience.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->

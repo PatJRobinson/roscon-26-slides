@@ -1451,3 +1451,8 @@ a.button:hover {
 .simple-slide .next-question { color: var(--accent-ink-strong); }
 /* Preserve the existing observation/relationship comparison. */
 .simple-slide.warrant-slide .slide-content { display: block; padding-top: 1.5rem; }
+
+/* Saved goal evidence uses dark text on the light card surface. */
+.slidev-layout pre.saved-goal-record {
+  color: var(--light-text) !important;
+}
