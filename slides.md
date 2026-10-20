@@ -760,7 +760,7 @@ class: simple-slide
 <dt>Probe</dt><dd>Path - local corridor - command - odometry - goal record</dd>
 <dt>Evidence</dt><dd>Goal accepted - timeout<br>Valid path - free sampled corridor/cell<br>Forward command 0 - translation 0</dd>
 <dt>What this shows</dt><dd>No expected forward progress in these runs</dd>
-<dt>Still open</dt><dd>Task geometry - command feasibility - controller/configuration</dd>
+<dt>Still open</dt><dd>Why the system made no forward progress.</dd>
 </dl>
 <p v-click class="next-question">What do we investigate next?</p>
 <p class="provenance">Evidence establishes the failure, not its cause. No controller defect or general substrate infeasibility is established.</p>
