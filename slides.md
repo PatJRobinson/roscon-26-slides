@@ -843,29 +843,6 @@ Slide 34. Stage 5 bounded comparison and remaining uncertainties.
 
 
 ---
-class: simple-slide
----
-
-# What carries forward when the system changes?
-
-<div class="slide-content ">
-
-<table><thead><tr><th>Retained basis on Laser A</th><th>Review on Laser B</th></tr></thead><tbody>
-<tr><td>Selected odometry source and lookup evidence</td><td>Review whether that source and its relevant conditions are preserved.</td></tr>
-<tr><td>Laser A contract, binding and observed frame</td><td>Resolve the new binding; inspect the new scan source and frame.</td></tr>
-<tr><td>Scan-time lookup and recorded drops</td><td>Run the timing investigation for the new configuration.</td></tr>
-<tr><td>Task and recorded navigation result</td><td>Review downstream assumptions; collect new task evidence where needed.</td></tr>
-</tbody></table>
-<p class="provenance">Illustrative handover review. Previous evidence remains attached to its source/configuration; the engineer judges what can carry forward.</p>
-
-</div>
-
-<!--
-Slide 35. 37:00–39:00. Refer back to the worked source-to-binding-to-probe chain. No automatic claim reopening or evidence transfer is implied.
-Source audit and projection boundaries: docs/declaration-trace.md.
--->
-
----
 class: simple-slide retention-slide
 ---
 
@@ -887,7 +864,7 @@ Conclusion, its basis and what remains open</pre>
 </div>
 
 <!--
-Slide 36. 39:00–43:00. Close by referring back to specific requirement/source/probe/observation provenance. Preserve the implementation boundary.
+Slide 35. 39:00–43:00. Close by referring back to specific requirement/source/probe/observation provenance. Preserve the implementation boundary.
 Source audit and projection boundaries: docs/declaration-trace.md.
 -->
 
@@ -906,7 +883,7 @@ class: simple-slide
 </div>
 
 <!--
-Slide 37. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
+Slide 36. 43:00–44:00. Ask about systems, teams, tools and existing practices. Invite recognition, qualification and disagreement without a slogan.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
 
@@ -923,6 +900,6 @@ class: simple-slide
 </div>
 
 <!--
-Slide 38. 44:00–45:00. Separate invitation from the talk. QR code links to the interview contact signup. Thank the audience.
+Slide 37. 44:00–45:00. Separate invitation from the talk. QR code links to the interview contact signup. Thank the audience.
 Authoritative content: say-show-script.md (updated 2026-10-03).
 -->
