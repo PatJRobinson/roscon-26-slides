@@ -1,3 +1,71 @@
+# Current rehearsal revision — 20 October 2026
+
+The current deck has **34 slides** and a 40-minute rehearsal target. The script
+and deck now teach the model before its source fields, retain the concrete
+static derivation, and explain the prepared REPL interactions in place.
+
+| Current slides | Purpose |
+|---|---|
+| 10–14 | Warehouse task, Topifer purpose, realisation/provider/app/experiment |
+| 15–19 | First experiment, illustrative uncertainty, concrete model inspection, run and Stage 1 summary |
+| 20–22 | Structural setup, pre-run structural view and Stage 2 summary |
+| 23–25 | Runtime question, two independent timing runs and Stage 3 summary |
+| 26–28 | Goal/path walkthrough, briefly narrated costmap follow-up and Stage 4 summary |
+| 29–31 | Human-selected contrast, RPP attempt and saved goal result, Stage 5 summary |
+| 32–34 | Reflection with the handover point, community questions and interview invitation |
+
+## Stage 2: a source-backed pre-run explanation
+
+`structural_substrate` inspects one selected endpoint arrangement:
+`warehouse_teleop@gazebo_nav2_scan_tf_substrate` (audience alias:
+`warehouse_navigation@gazebo_nav2_scan_tf_substrate`). It is a prepared static
+reading, not an aggregate runtime experiment or a native automatic proof.
+
+- The selected SDF explicitly configures odometry frames `odom` and `base_link`
+  and declares the Gazebo laser topic.
+- The realisation declares the scan bridge and starts a static-transform process.
+- That process connects `base_link` to `vehicle_blue/laser_frame/scan`.
+- These support the intended configuration. They do not verify the sensor frame
+  actually published or the availability of transforms at scan timestamps.
+
+The pinned source copies are `source-excerpts/structure-realisation.yaml`,
+`source-excerpts/structure-model.sdf` and
+`source-excerpts/structure-static-transform.sh`. Paths and SHA-256 hashes are
+in `../data/structural-plan.json`. These come from the available July checkout
+described below; they are not claimed to reproduce the October executions.
+
+`structural_summary` remains a selection alias for compatibility, but resolves
+to the new configuration view. No retained observations are imported into it.
+The three historical structural experiments remain in the evidence data; their
+results do not establish the later timing configuration.
+
+## Delivery and verification
+
+Each REPL action is placed between its spoken motivation and output explanation
+in the script. Goal records on slides 27 and 30 reveal on click 1 after the
+relevant result. On slide 27, click 2 reveals a short account of the separate
+local-costmap experiment; its command walkthrough is omitted. Six-field summaries
+recur throughout: assumption, question,
+static inspection, runtime evidence, claim and still open.
+
+The comparison/uncertainty slide is illustrative; it does not reinstate an
+automatically inferred UNKNOWN result for the optional TF request. Current
+native explain and the prepared combined accounts remain distinct.
+
+Run `node scripts/check-presentation.mjs /path/to/say-show-script.md` to check
+script numbering, all scripted REPL commands and exact outputs, summary fields,
+alias/reset behaviour, independent timing states and pinned structural hashes.
+A timed oral rehearsal is still required; the 40-minute target is not a measured
+delivery duration.
+
+---
+
+# Historical declaration/source audit
+
+The following records the earlier 39-slide revision and its validation. Its slide
+numbers are historical; use the mapping above and the current delivery script.
+Its implementation and evidence boundaries still apply.
+
 # Declaration, resolution and evidence in the revised talk
 
 The first example now follows a concrete source-to-plan derivation. Later

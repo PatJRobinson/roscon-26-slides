@@ -19,3 +19,6 @@ yarn-debug.log*
 # editor
 .vscode/
 .idea/
+
+# local rehearsal timing reports
+rehearsals/

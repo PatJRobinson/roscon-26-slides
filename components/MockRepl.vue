@@ -1,6 +1,6 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
-import { accountBasis, preRunView, sourceView } from './replAccountViews'
+import { accountBasis, preRunView, sourceView, structuralView } from './replAccountViews'
 
 const props = defineProps({
   stage: { type: Number, default: 1 },
@@ -94,38 +94,15 @@ interpretation: required edge not found in this inspection`,
   },
   2: {
     name: 'Structure',
-    selectable: ['structural_summary', 'odometry_link', 'scan_source', 'scan_integration'],
+    selectable: ['structural_substrate'],
+    selectionAliases: { structural_summary: 'structural_substrate' },
     accounts: {
-      odometry_link: { run: 'odometry_link', before: preRunView('odometry_link'), after: 'tf odom -> base_link: OBSERVED\nsource: odometry_link\nstatus: satisfied' },
-      scan_source: { run: 'scan_source', before: preRunView('scan_source'), after: 'topic /scan: present\nframe: vehicle_blue/laser_frame/scan\nbase_link -> scan frame: NOT_OBSERVED\nstatus: incomplete' },
-      scan_integration: { run: 'scan_integration', before: preRunView('scan_integration'), after: 'observations:\n  odom -> base_link: OBSERVED\n  /scan: present\n  base_link -> vehicle_blue/laser_frame/scan: OBSERVED\nstatus: requirements_observed\nsource: scan_integration' },
-      structural_summary: { evidenceReady: true, after: 'evidence:\n  odom -> base_link: OBSERVED [odometry_link]\n  /scan: PRESENT [scan_source]\n  scan frame: vehicle_blue/laser_frame/scan [scan_source]\n  base_link -> scan frame: NOT_OBSERVED [scan_source]\n  base_link -> scan frame: OBSERVED [scan_integration]\nscope: 3 separate configurations\nnot_checked: scan-time availability, navigation' },
+      structural_substrate: { before: structuralView(), after: structuralView() },
     },
     commands: {
-      'source show': `experiments:
-  odometry_link
-  scan_source
-  scan_integration
-ownership:
-  provider/model: odometry, tf, LaserScan
-  realisation: base_link -> scan frame`,
-      'source show odometry_link': sourceView('odometry_link'),
-      'run odometry_link': `checks: 20 passed, 0 failed
-status: complete`,
-      'source show scan_source': sourceView('scan_source'),
-      'run scan_source': `checks: 21 passed, 0 failed
-status: complete`,
-      'source show scan_integration': sourceView('scan_integration'),
-      'run scan_integration': `checks: 19 passed, 0 failed
-status: complete`,
-      'source show structural_summary': `investigation: structural_summary
-evidence:
-  odometry_link -> warehouse_navigation@gazebo_nav2_tf_substrate
-  scan_source -> warehouse_navigation@gazebo_nav2_scan_substrate
-  scan_integration -> warehouse_navigation@gazebo_nav2_scan_tf_substrate
-scope: retained results from 3 separate configurations`,
+      'source show structural_substrate': sourceView('structural_substrate'),
     },
-    suggestions: ['select structural_summary', 'source show', 'explain'],
+    suggestions: ['select structural_substrate', 'source show', 'explain'],
   },
   3: {
     name: 'Runtime',
@@ -165,7 +142,7 @@ costmap scan drops: 0`,
     selectable: ['goal_and_path', 'local_corridor_check'],
     accounts: {
       goal_and_path: { run: 'goal_and_path', before: preRunView('goal_and_path'), after: 'topic_observations.global_path: VALID\ntopic_observations.cmd_vel.positive_x_samples: 0\ntopic_observations.odom.translational_progress_m: 0\nstatus: expected_progress_not_observed' },
-      local_corridor_check: { run: 'local_corridor_check', before: preRunView('local_corridor_check'), after: 'corridor.sampled_clear_to_m: 0.6\nstatus: clear' },
+      local_corridor_check: { run: 'local_corridor_check', before: preRunView('local_corridor_check'), after: 'corridor.sampled_clear_to_m: 0.6\nlocalCostmap.robotCell.classification: free\nfootprint.present: true\nstatus: clear' },
     },
     commands: {
       'source show': `experiments:
@@ -229,7 +206,7 @@ function buildInitial(data) {
     return [{ kind: 'notice', text: 'Presentation mock · prepared interactions over a recorded Topifer experiment.' }]
   }
   if (props.stage === 2) {
-    return [{ kind: 'notice', text: 'Stage 2 · structural evidence from three retained configurations.' }]
+    return [{ kind: 'notice', text: 'Stage 2 · inspect the configured structure before collecting runtime evidence.' }]
   }
   return [{ kind: 'notice', text: `${stageLabel.value} · ${data.name}\nType help to see the commands prepared for this panel.` }]
 }
@@ -312,8 +289,8 @@ async function submit(raw = input.value) {
 
       if (['source show', 'explain', 'run'].includes(key) && !selected) {
         output = 'error: no item selected; use select ITEM'
-      } else if (key === 'run' && selected === 'structural_summary') {
-        output = 'error: structural_summary combines retained runs; select a source experiment to run'
+      } else if (baseCommand === 'run' && resolvedTarget === 'structural_substrate') {
+        output = 'This view inspects configuration only. The next stage runs runtime_surface to collect observations.'
       } else if (account) {
         evidenceAvailable = Boolean(account.evidenceReady || completedRuns.value[account.run || resolvedTarget || accountName])
         output = evidenceAvailable
@@ -434,7 +411,8 @@ function reset() {
     </div>
     <footer class="mock-repl-footer">
       <template v-if="props.stage === 0">Command help · short descriptions for this talk</template>
-      <template v-else>Stage {{ props.stage }} of 5 · source / resolved-plan projections before running; retained observation summaries afterwards.</template>
+      <template v-else-if="props.stage === 2">Stage 2 of 5 · Configuration only; runtime investigation follows in Stage 3.</template>
+      <template v-else>Stage {{ props.stage }} of 5 · Inspect the setup, run an experiment, then review its recorded evidence.</template>
     </footer>
   </section>
 </template>

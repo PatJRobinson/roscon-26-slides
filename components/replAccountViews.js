@@ -1,6 +1,37 @@
 import accountData from '../data/experiment-accounts.json'
+import structuralPlan from '../data/structural-plan.json'
 
 export const experimentAccounts = accountData.accounts
+
+
+// A presentation reading of the pinned source copies, not an automatic runtime claim.
+export function structuralSourceView() {
+  return [
+    'view: structural_substrate',
+    'system: ' + structuralPlan.displayRealisation,
+    'selected arrangement: ' + structuralPlan.sources.realisation.path,
+    'parts to inspect: odometry link, scan source, base-to-scan connection',
+    'basis: selected model, topic adaptation, static-transform launch',
+    'scope: configuration only; navigation is not started here',
+  ].join('\n')
+}
+
+export function structuralView() {
+  const { odometry, scan, staticTransform } = structuralPlan
+  return [
+    'system: ' + structuralPlan.displayRealisation,
+    'model configuration:',
+    '  odometry frames: ' + odometry.parent + ' -> ' + odometry.child,
+    '  LiDAR source: ' + scan.source,
+    'bridge configuration:',
+    '  ' + scan.source + ' -> ' + scan.rosTopic + ' (LaserScan)',
+    'static-transform process:',
+    '  ' + staticTransform.parent + ' -> ' + staticTransform.child,
+    'account: intended structural connections configured',
+    'runtime observations: not collected in this view',
+    'still open: published scan frame, scan-time TF, navigation',
+  ].join('\n')
+}
 
 function requestedEdges(account) {
   const configured = account.roles.nav2_observer?.NAV2_REQUIRED_TF_EDGES
@@ -13,6 +44,7 @@ function observationBindings(account) {
 }
 
 export function sourceView(item) {
+  if (item === 'structural_substrate') return structuralSourceView()
   const account = experimentAccounts[item]
   if (!account) return null
   const lines = [
@@ -101,7 +133,7 @@ export function preRunView(item) {
 }
 
 export function accountBasis(item, afterRun = false) {
-  if (item === 'structural_summary') return 'Retained summary: odometry_link, scan_source, scan_integration - three separate configurations.'
+  if (item === 'structural_substrate') return 'Prepared source reading: selected SDF + scan bridge + static-transform process. No new runtime observations.'
   const account = experimentAccounts[item]
   if (!account) return ''
   const priorEvidence = item === 'rpp_attempt' ? `; prior MPPI evidence: goal_and_path - ${experimentAccounts.goal_and_path.run}` : ''

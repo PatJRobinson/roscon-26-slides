@@ -1,0 +1,183 @@
+apiVersion: rotifer/v0.6
+kind: Realisation
+
+metadata:
+  name: warehouse_teleop@gazebo_nav2_scan_tf_substrate
+  contractVersion: v0.2
+  description: >
+    Gazebo realisation slice that preserves the provider/model-owned scan
+    source and adds a realisation-owned static transform from base_link to the
+    observed scan frame.
+
+spec:
+  providers:
+    - ref: gazebo
+      as: embodiment
+
+  scenarioRef: warehouse_teleop
+
+  scenarioMapping:
+    actors:
+      ego_robot:
+        realisedAs: gazebo_turtlebot_like
+        provider: providers.embodiment.gazebo
+        assumptions:
+          - id: mobile_robot_actor_equivalence
+            statement: >
+              The Gazebo TurtleBot-like robot is treated as an adequate
+              concrete mobile robot for inspecting scan-frame TF connectivity,
+              not as a full Nav2 platform claim.
+
+  provides:
+    platforms:
+      - contract: differential_drive_robot
+
+    commands:
+      - contract: differential_drive_cmd_vel
+        binding:
+          type: ros_topic
+          defaultName: /cmd_vel
+          configurable:
+            - name
+        status: available
+
+    observations:
+      - contract: sim_clock
+        binding:
+          type: ros_topic
+          defaultName: /clock
+          configurable: []
+        required: false
+        status: available
+
+      - contract: odometry
+        binding:
+          type: ros_topic
+          defaultName: /odom
+          configurable:
+            - name
+        required: false
+        status: available
+
+      - contract: tf_tree
+        binding:
+          type: ros_topic
+          defaultTopics:
+            dynamic: /tf
+            static: /tf_static
+          configurable:
+            - dynamicTopic
+            - staticTopic
+            - requiredEdges
+            - requiredChain
+            - rootFrame
+            - baseFrame
+        required: false
+        status: experimental
+        notes:
+          - >
+            This declares host-visible TF topic publication. The odom ->
+            base_link edge is provider/model-owned, while the base_link ->
+            vehicle_blue/laser_frame/scan edge is owned by this realisation's
+            integration/static-transform process.
+
+      - contract: lidar2d
+        binding:
+          type: ros_topic
+          defaultName: /scan
+          messageType: sensor_msgs/msg/LaserScan
+          configurable:
+            - name
+        required: false
+        status: experimental
+        notes:
+          - >
+            This declares a host-visible provider/model-owned LaserScan
+            observation source. Costmap-source plausibility depends on the
+            explicit scan-frame TF connectivity provided by this realisation.
+          - >
+            The runtime scan frame is recorded as observer evidence rather than
+            encoded in the schema-level ros_topic binding.
+
+  runtime:
+    readiness:
+      type: delay
+      durationSeconds: 10
+      reason: >
+        Short provider startup grace. The app-level readiness gate records the
+        actual substrate evidence after this weak fallback delay.
+
+    rendering:
+      mode: offscreen
+
+    implementation:
+      mode: headless_streaming
+      type: docker_compose
+      composeFile: providers/gazebo/docker-compose.yml
+      command: providers/gazebo/run.sh
+      services:
+        - gazebo
+        - bridge
+
+    processes:
+      - name: scan_frame_static_transform
+        type: shell
+        entrypoint: scenarios/warehouse_teleop/gazebo_nav2_scan_tf_substrate/static_scan_transform.sh
+        after:
+          - provider
+
+    infrastructure:
+      containerized: true
+      networking: docker_bridge
+
+    prerequisites:
+      - Existing Gazebo provider images are available locally.
+      - ROS-GZ bridge exposes declared contracts to the host ROS graph.
+      - Host-side tf2_ros is available for the realisation-owned static transform.
+
+  native:
+    world:
+      type: sdf
+      name: warehouse_teleop
+      path: scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf
+
+    robot:
+      name: vehicle_blue
+      source: adapted_from_gazebo_diff_drive_example
+
+    staticTransforms:
+      - parent: base_link
+        child: vehicle_blue/laser_frame/scan
+        ownership: realisation_integration
+        source: scenarios/warehouse_teleop/gazebo_nav2_scan_tf_substrate/static_scan_transform.sh
+        rationale: >
+          Gazebo publishes the scan message with a model-scoped sensor frame.
+          This realisation-owned integration edge connects that frame to the
+          configured robot base frame without making the app repair the
+          substrate.
+
+    topicAdaptation:
+      observations:
+        /clock: /world/warehouse_teleop/clock
+        /odom: /model/vehicle_blue/odometry
+        /tf: /model/vehicle_blue/tf
+        /scan: /model/vehicle_blue/scan
+      commands:
+        /cmd_vel: /model/vehicle_blue/cmd_vel
+
+  constraints:
+    limitations:
+      - >
+        This realisation does not launch Nav2 lifecycle nodes, action servers,
+        map server, localization, or costmaps.
+      - >
+        This is a scan-frame connectivity contrast. It does not prove costmap
+        update behaviour or autonomous navigation.
+
+  tags:
+    - nav2
+    - gazebo
+    - scan_tf_substrate
+    - scan_substrate
+    - substrate
+    - warehouse

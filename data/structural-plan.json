@@ -1,0 +1,40 @@
+{
+  "description": "Prepared static reading of one selected arrangement; no runtime observations are imported.",
+  "displayRealisation": "warehouse_navigation@gazebo_nav2_scan_tf_substrate",
+  "sourceRealisation": "warehouse_teleop@gazebo_nav2_scan_tf_substrate",
+  "odometry": {
+    "parent": "odom",
+    "child": "base_link"
+  },
+  "scan": {
+    "source": "/model/vehicle_blue/scan",
+    "rosTopic": "/scan",
+    "type": "sensor_msgs/msg/LaserScan"
+  },
+  "staticTransform": {
+    "parent": "base_link",
+    "child": "vehicle_blue/laser_frame/scan"
+  },
+  "historicalExperiments": [
+    "odometry_link",
+    "scan_source",
+    "scan_integration"
+  ],
+  "sources": {
+    "realisation": {
+      "path": "scenarios/warehouse_teleop/gazebo_nav2_scan_tf_substrate/realisation.yaml",
+      "excerpt": "docs/source-excerpts/structure-realisation.yaml",
+      "sha256": "55905f50f70fb5119701a1701a5777aed1795c0b08fee5d0782af0286827bad1"
+    },
+    "model": {
+      "path": "scenarios/warehouse_teleop/gazebo/worlds/warehouse_teleop_nav2_scan.sdf",
+      "excerpt": "docs/source-excerpts/structure-model.sdf",
+      "sha256": "3eed02eebdf65623526a1231b033ad366802bd231a0c5d50446d9c81138f0597"
+    },
+    "staticTransform": {
+      "path": "scenarios/warehouse_teleop/gazebo_nav2_scan_tf_substrate/static_scan_transform.sh",
+      "excerpt": "docs/source-excerpts/structure-static-transform.sh",
+      "sha256": "ba514008d77cfd5c54f0b95d35bee32083d7bf0b54ed16a05421e1b0bedd4725"
+    }
+  }
+}
