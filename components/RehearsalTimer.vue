@@ -116,6 +116,10 @@ onMounted(() => {
   window.addEventListener('pagehide', leaving)
 })
 onUnmounted(() => {
+  if (running.value) {
+    session.value = finishSession(session.value, Date.now())
+    persist()
+  }
   clearInterval(heartbeat)
   stopWatch?.()
   window.removeEventListener('pagehide', leaving)
@@ -146,7 +150,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.rehearsal-timer { position: absolute; right: 0.65rem; bottom: 0.35rem; z-index: 100; display: flex; align-items: center; gap: 0.4rem; padding: 0.12rem 0.4rem; border-radius: 0.3rem; background: rgba(247, 244, 240, 0.94); color: #47243e; font: 0.65rem/1.4 ui-monospace, monospace; pointer-events: auto; }
+.rehearsal-timer { position: absolute; right: 6rem; bottom: 0.35rem; z-index: 100; display: flex; align-items: center; gap: 0.4rem; padding: 0.12rem 0.4rem; border-radius: 0.3rem; background: rgba(247, 244, 240, 0.94); color: #47243e; font: 0.65rem/1.4 ui-monospace, monospace; pointer-events: auto; }
 .rehearsal-clock { display: flex; align-items: center; gap: 0.3rem; font-variant-numeric: tabular-nums; }
 .rehearsal-current, .rehearsal-ready { color: #6b5a65; }
 .rehearsal-dot { width: 0.35rem; height: 0.35rem; border-radius: 50%; background: #8c8288; }

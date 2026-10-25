@@ -38,7 +38,13 @@ requires a fresh timed rehearsal including typing, reveals and reading time.
 
 ## Rehearsal timer
 
-The bottom-right timer starts on the first arrival at slide 2, or you can choose
+The bottom-right **Timer** switch is off by default. Turn it on to enable the
+rehearsal timer; it remembers your choice within the current tab, including
+refreshes. While off, the timer does not run or record. Turning it off during
+a run finishes and saves that run; turning it back on restores the completed
+record, with **Start here** available for a new run. Existing recordings are kept.
+
+Once enabled, the timer starts on the first arrival at slide 2, or you can choose
 **Start here** in its **⋯** menu to begin a new run on any slide. It shows total
 elapsed time and time on the current slide. Every slide change closes a split;
 click reveals stay within the current slide. Revisits get their own splits and
